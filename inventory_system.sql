@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 01, 2025 at 10:57 AM
+-- Generation Time: Aug 02, 2025 at 01:06 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -26,8 +26,6 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `brochures`
 --
-CREATE DATABASE IF NOT EXISTS `inventory_system` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `inventory_system`;
 
 CREATE TABLE `brochures` (
   `brochure_id` int(11) NOT NULL,
@@ -35,34 +33,6 @@ CREATE TABLE `brochures` (
   `quantity` int(4) NOT NULL,
   `total_brochure` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `brochures`
---
-
-INSERT INTO `brochures` (`brochure_id`, `brochure_name`, `quantity`, `total_brochure`) VALUES
-(8, 'Trifold', 1, 0),
-(9, 'CSB', 1, 0),
-(10, 'AWS', 1, 0),
-(11, 'Swift', 1, 0),
-(12, 'IC3', 1, 0),
-(13, 'QuickBooks', 1, 0),
-(14, 'Autodesk', 1, 0),
-(15, 'Microsoft Certification', 1, 0),
-(16, 'The Value', 1, 0),
-(17, 'ESB', 1, 0),
-(18, 'Benefits of Microsoft', 1, 0),
-(19, 'One Pager', 1, 0),
-(20, 'Copilot', 1, 0),
-(21, 'Versant', 1, 0),
-(22, 'PMI', 1, 0),
-(23, 'Value of Certification', 1, 0),
-(24, 'Cisco', 1, 0),
-(25, 'Adobe', 1, 0),
-(26, 'Meta', 1, 0),
-(27, 'ITS', 1, 0),
-(28, 'Unity', 1, 0),
-(29, 'CCS', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -96,7 +66,8 @@ CREATE TABLE `event_form` (
   `provide_materials` enum('Yes','No','','') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `request_status` enum('Pending','Approved','Decline','') NOT NULL,
-  `user_id` int(11) DEFAULT NULL
+  `user_id` int(11) DEFAULT NULL,
+  `request_mats` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -149,25 +120,6 @@ CREATE TABLE `marketing_materials` (
   `others` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `marketing_materials`
---
-
-INSERT INTO `marketing_materials` (`material_id`, `material_name`, `quantity`, `others`) VALUES
-(5, 'Door Banner', 1, NULL),
-(6, 'Door Banner Stand', 1, NULL),
-(7, 'Back Drop', 1, NULL),
-(8, 'Back Drop Stand', 1, NULL),
-(9, 'Table Cloth', 1, NULL),
-(10, 'Brochure Rack', 1, NULL),
-(11, 'Acrylic Marketing Stand', 1, NULL),
-(12, 'Handy Props', 1, NULL),
-(13, 'Extension Cord', 1, NULL),
-(14, 'Camera', 1, NULL),
-(15, 'Tripod', 1, NULL),
-(16, 'Jars for Chocolates', 1, NULL),
-(17, 'BIR 2307 for hotel', 1, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -196,21 +148,6 @@ CREATE TABLE `swags` (
   `swags_name` varchar(100) NOT NULL,
   `quantity` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `swags`
---
-
-INSERT INTO `swags` (`swag_id`, `swags_name`, `quantity`) VALUES
-(2, 'Audentes Lanyard', 1),
-(3, 'Microsoft Lanyard', 1),
-(4, 'Pins', 22),
-(5, 'T-shirt', 1),
-(6, 'Stickers', 1),
-(7, 'Ballpens', 1),
-(8, 'Chocolates', 1),
-(9, 'Note Pads', 1),
-(10, 'Mouse Pads', 1);
 
 -- --------------------------------------------------------
 
@@ -252,7 +189,8 @@ ALTER TABLE `brochures`
 --
 ALTER TABLE `event_form`
   ADD PRIMARY KEY (`event_form_id`),
-  ADD KEY `fk_user_id` (`user_id`);
+  ADD KEY `fk_user_id` (`user_id`),
+  ADD KEY `fk_event_form_request_mats` (`request_mats`);
 
 --
 -- Indexes for table `event_form_history`
@@ -293,31 +231,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `brochures`
 --
 ALTER TABLE `brochures`
-  MODIFY `brochure_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `brochure_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `event_form`
 --
 ALTER TABLE `event_form`
-  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `marketing_materials`
 --
 ALTER TABLE `marketing_materials`
-  MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `material_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `material_request_form`
 --
 ALTER TABLE `material_request_form`
-  MODIFY `material_request_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `material_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `swags`
 --
 ALTER TABLE `swags`
-  MODIFY `swag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `swag_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -333,6 +271,8 @@ ALTER TABLE `users`
 -- Constraints for table `event_form`
 --
 ALTER TABLE `event_form`
+  ADD CONSTRAINT `fk_event_form_request_mats` FOREIGN KEY (`request_mats`) REFERENCES `material_request_form` (`material_request_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_eventform_requestmats` FOREIGN KEY (`request_mats`) REFERENCES `material_request_form` (`material_request_id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --

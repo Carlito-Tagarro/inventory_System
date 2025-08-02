@@ -42,22 +42,95 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get user_id from session (assuming it's set at login)
     $user_id = $_SESSION['user_id'];
 
-    // Prepare SQL statement (add user_id to columns and values)
+    // --- NEW: Get selected materials from hidden input ---
+    $selected_materials_json = isset($_POST['selected_materials']) ? $_POST['selected_materials'] : '';
+    $selected_materials = [];
+    if ($selected_materials_json) {
+        $selected_materials = json_decode($selected_materials_json, true);
+    }
+
+    $request_mats = NULL;
+    $conn = CONNECTIVITY();
+    if ($provide_materials === 'Yes' && !empty($selected_materials)) {
+        $first_id = null;
+        $first_row_inserted = false;
+        foreach ($selected_materials as $mat) {
+            $name_brochures = '';
+            $brochure_quantity = '';
+            $name_swag = '';
+            $swag_quantity = '';
+            $name_material = '';
+            $material_quantity = '';
+            if ($mat['type'] === 'Brochure') {
+                $name_brochures = $mat['name'];
+                $brochure_quantity = $mat['qty'];
+            } elseif ($mat['type'] === 'Swag') {
+                $name_swag = $mat['name'];
+                $swag_quantity = $mat['qty'];
+            } elseif ($mat['type'] === 'Marketing Material') {
+                $name_material = $mat['name'];
+                $material_quantity = $mat['qty'];
+            }
+            if (!$first_row_inserted) {
+                // Insert first row with request_mats = 0 (temporary, must be NOT NULL)
+                $stmt = $conn->prepare("INSERT INTO material_request_form (request_mats, name_brochures, brochure_quantity, name_swag, swag_quantity, name_material, material_quantity) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $tmp = 0;
+                $stmt->bind_param(
+                    "issssss",
+                    $tmp,
+                    $name_brochures,
+                    $brochure_quantity,
+                    $name_swag,
+                    $swag_quantity,
+                    $name_material,
+                    $material_quantity
+                );
+                $stmt->execute();
+                $first_id = $conn->insert_id;
+                $stmt->close();
+                // Update the first row to set request_mats = first_id
+                $stmt = $conn->prepare("UPDATE material_request_form SET request_mats = ? WHERE material_request_id = ?");
+                $stmt->bind_param("ii", $first_id, $first_id);
+                $stmt->execute();
+                $stmt->close();
+                $first_row_inserted = true;
+            } else {
+                // For subsequent materials, use the first_id as the group id
+                $stmt = $conn->prepare("INSERT INTO material_request_form (request_mats, name_brochures, brochure_quantity, name_swag, swag_quantity, name_material, material_quantity) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param(
+                    "issssss",
+                    $first_id,
+                    $name_brochures,
+                    $brochure_quantity,
+                    $name_swag,
+                    $swag_quantity,
+                    $name_material,
+                    $material_quantity
+                );
+                $stmt->execute();
+                $stmt->close();
+            }
+        }
+        $request_mats = $first_id;
+    }
+    DISCONNECTIVITY($conn);
+
+    // --- Insert event form, including request_mats (or NULL if none) ---
+    $connection = CONNECTIVITY();
     $sql = "INSERT INTO event_form (
         event_name, event_title, event_date, date_time_ingress, date_time_egress, place, location,
         sponsorship_budg, target_audience, number_audience, set_up, booth_size, booth_inclusion,
         number_tables, number_chairs, speaking_slot, date_time, program_target, technical_team,
-        trainer_needed, ready_to_use, provide_materials, user_id
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        trainer_needed, ready_to_use, provide_materials, user_id, request_mats
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $connection->prepare($sql);
-    // Add i for user_id at the end (23 params)
     $stmt->bind_param(
-        "sssssssssisssiisssssssi",
+        "sssssssssisssiisssssssis",
         $event_name, $event_title, $event_date, $date_time_ingress, $date_time_egress, $place, $location,
         $sponsorship_budg, $target_audience, $number_audience, $set_up, $booth_size, $booth_inclusion,
         $number_tables, $number_chairs, $speaking_slot, $date_time, $program_target, $technical_team,
-        $trainer_needed, $ready_to_use, $provide_materials, $user_id
+        $trainer_needed, $ready_to_use, $provide_materials, $user_id, $request_mats
     );
 
     if ($stmt->execute()) {
@@ -176,7 +249,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a href="logout.php">Logout</a>
         <div class="container">
             <h2>Event Form</h2>
-            <form action="index.php" method="post">
+            <form action="index.php" method="post" id="eventForm">
                 <fieldset>
                     <legend>Event Details</legend>
                     <div class="form-group">
@@ -297,9 +370,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </select>
                     </div>
                 </fieldset>
+                <!-- New fieldset to show selected items from modal -->
+                <fieldset>
+                    <legend>Selected Materials</legend>
+                    <div id="selectedMaterialsPreview" class="form-group full-width" style="margin-top:8px;">
+                        <label style="font-weight:bold; color:#007bff;">Selected Materials:</label>
+                        <table style="width:100%; background:#f8faff; border:1px solid #e3e3e3; border-radius:6px; border-collapse:collapse;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; padding:8px;">Name</th>
+                                    <th style="text-align:left; padding:8px;">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="selectedMaterialsList"></tbody>
+                        </table>
+                    </div>
+                </fieldset>
                 <div class="form-group button-group">
                     <button type="submit">Submit Form</button>
                 </div>
+                <!-- NEW: Hidden input for selected materials -->
+                <input type="hidden" name="selected_materials" id="selected_materials_input">
             </form>
         </div>
         <!-- Modal HTML -->
@@ -312,80 +403,73 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </h3>
                 <p style="text-align:center; color:#555;">Please specify the materials you will provide for this event.</p>
                 <hr style="margin:16px 0;">
-                <!-- Brochures Table -->
-                <h4 style="color:#007bff; margin-bottom:8px;"><i class="fa fa-book"></i> Brochures</h4>
-                <table class="modal-table">
+                <!-- Filter Dropdown -->
+                <div style="margin-bottom:16px;">
+                    <label for="categoryFilter" style="font-weight:600;">Filter by Category:</label>
+                    <select id="categoryFilter" style="padding:4px 8px; border-radius:4px;">
+                        <option value="All">All</option>
+                        <option value="Brochure">Brochure</option>
+                        <option value="Marketing Material">Marketing Material</option>
+                        <option value="Swag">Swag</option>
+                    </select>
+                    <input type="text" id="nameSearch" placeholder="Search by name..." style="margin-left:16px; padding:4px 8px; border-radius:4px; border:1px solid #ccc;">
+                </div>
+                <form id="materialsForm">
+                <table class="modal-table" id="materialsTable">
                     <thead>
                         <tr>
+                            <th>Select</th>
+                            <th>Category</th>
                             <th>Name</th>
-                            <th>Quantity</th>
+                            <th>Available</th>
+                            <th>Others</th>
+                            <th>Quantity to Provide</th>
                         </tr>
                     </thead>
                     <tbody>
                     <?php
-                    // Fetch brochures
-                    $brochures = [];
                     $conn = CONNECTIVITY();
-                    $result = $conn->query("SELECT brochure_name, quantity, total_brochure FROM brochures");
+                    // Brochures
+                    $result = $conn->query("SELECT brochure_id AS id, brochure_name AS name, quantity, '' AS others, 'Brochure' AS category FROM brochures");
                     if ($result) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<tr>
-                                <td>{$row['brochure_name']}</td>
+                            echo "<tr data-category='Brochure'>
+                                <td><input type='checkbox' name='brochures[]' value='{$row['id']}'></td>
+                                <td>Brochure</td>
+                                <td>{$row['name']}</td>
                                 <td>{$row['quantity']}</td>
+                                <td></td>
+                                <td><input type='number' name='brochure_qty_{$row['id']}' min='1' max='{$row['quantity']}' style='width:60px;'></td>
                             </tr>";
                         }
                         $result->free();
                     }
-                    ?>
-                    </tbody>
-                </table>
-                <hr style="margin:16px 0;">
-                <!-- Marketing Materials Table -->
-                <h4 style="color:#007bff; margin-bottom:8px;"><i class="fa fa-bullhorn"></i> Marketing Materials</h4>
-                <table class="modal-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Quantity</th>
-                            <th>Others</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    // Fetch marketing materials
-                    $result = $conn->query("SELECT material_name, quantity, others FROM marketing_materials");
+                    // Marketing Materials
+                    $result = $conn->query("SELECT material_id AS id, material_name AS name, quantity, others, 'Marketing Material' AS category FROM marketing_materials");
                     if ($result) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<tr>
-                                <td>{$row['material_name']}</td>
+                            echo "<tr data-category='Marketing Material'>
+                                <td><input type='checkbox' name='materials[]' value='{$row['id']}'></td>
+                                <td>Marketing Material</td>
+                                <td>{$row['name']}</td>
                                 <td>{$row['quantity']}</td>
                                 <td>{$row['others']}</td>
+                                <td><input type='number' name='material_qty_{$row['id']}' min='1' max='{$row['quantity']}' style='width:60px;'></td>
                             </tr>";
                         }
                         $result->free();
                     }
-                    ?>
-                    </tbody>
-                </table>
-                <hr style="margin:16px 0;">
-                <!-- Swags Table -->
-                <h4 style="color:#007bff; margin-bottom:8px;"><i class="fa fa-gift"></i> Swags</h4>
-                <table class="modal-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Quantity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    // Fetch swags
-                    $result = $conn->query("SELECT swags_name, quantity FROM swags");
+                    // Swags
+                    $result = $conn->query("SELECT swag_id AS id, swags_name AS name, quantity, '' AS others, 'Swag' AS category FROM swags");
                     if ($result) {
                         while ($row = $result->fetch_assoc()) {
-                            echo "<tr>
-                                <td>{$row['swags_name']}</td>
+                            echo "<tr data-category='Swag'>
+                                <td><input type='checkbox' name='swags[]' value='{$row['id']}'></td>
+                                <td>Swag</td>
+                                <td>{$row['name']}</td>
                                 <td>{$row['quantity']}</td>
+                                <td></td>
+                                <td><input type='number' name='swag_qty_{$row['id']}' min='1' max='{$row['quantity']}' style='width:60px;'></td>
                             </tr>";
                         }
                         $result->free();
@@ -394,6 +478,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     ?>
                     </tbody>
                 </table>
+                <div style="text-align:right; margin-top:18px;">
+                    <button type="submit" id="submitMaterialsBtn" style="background:#007bff;color:#fff;border:none;padding:8px 24px;border-radius:4px;font-size:15px;cursor:pointer;">
+                        Submit Selected Materials
+                    </button>
+                </div>
+                </form>
             </div>
         </div>
         <script>
@@ -402,24 +492,153 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             var select = document.getElementById('provide_materials');
             var modal = document.getElementById('materialsModal');
             var closeBtn = document.getElementById('closeModal');
+            var categoryFilter = document.getElementById('categoryFilter');
+            var nameSearch = document.getElementById('nameSearch');
+            var materialsTable = document.getElementById('materialsTable');
             select.addEventListener('change', function() {
                 if (select.value === 'Yes') {
                     modal.style.display = 'block';
                 } else {
                     modal.style.display = 'none';
+                    // Clear selected materials if "No" is chosen
+                    var selectedPreview = document.getElementById('selectedMaterialsPreview');
+                    var selectedList = document.getElementById('selectedMaterialsList');
+                    selectedPreview.style.display = 'none';
+                    selectedList.innerHTML = '';
+                    // Also uncheck all checkboxes and clear quantities in modal
+                    var rows = document.querySelectorAll('#materialsTable tbody tr');
+                    rows.forEach(function(row) {
+                        var checkbox = row.querySelector('input[type="checkbox"]');
+                        var qtyInput = row.querySelector('input[type="number"]');
+                        if (checkbox) checkbox.checked = false;
+                        if (qtyInput) {
+                            qtyInput.value = '';
+                            qtyInput.disabled = true;
+                        }
+                    });
                 }
             });
             closeBtn.onclick = function() {
                 modal.style.display = 'none';
-                select.value = ''; // Optionally reset selection
+                select.value = '';
             };
             window.onclick = function(event) {
                 if (event.target == modal) {
                     modal.style.display = 'none';
                 }
             };
+            // Filter logic
+            function filterTable() {
+                var categoryValue = categoryFilter.value;
+                var searchValue = nameSearch.value.toLowerCase();
+                var rows = materialsTable.querySelectorAll('tbody tr');
+                rows.forEach(function(row) {
+                    var matchesCategory = (categoryValue === 'All' || row.getAttribute('data-category') === categoryValue);
+                    var nameCell = row.querySelector('td:nth-child(3)');
+                    var matchesSearch = nameCell && nameCell.textContent.toLowerCase().includes(searchValue);
+                    if (matchesCategory && matchesSearch) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+            categoryFilter.addEventListener('change', filterTable);
+            nameSearch.addEventListener('input', filterTable);
+
+            // Enable quantity input only if checkbox is checked
+            var table = document.getElementById('materialsTable');
+            table.addEventListener('change', function(e) {
+                if (e.target.type === 'checkbox') {
+                    var row = e.target.closest('tr');
+                    var qtyInput = row.querySelector('input[type="number"]');
+                    if (qtyInput) {
+                        qtyInput.disabled = !e.target.checked;
+                        if (!e.target.checked) qtyInput.value = '';
+                    }
+                }
+                // Quantity input validation
+                if (e.target.type === 'number') {
+                    var row = e.target.closest('tr');
+                    var availableCell = row.querySelector('td:nth-child(4)');
+                    var available = parseInt(availableCell.textContent, 10);
+                    var val = parseInt(e.target.value, 10);
+                    if (val > available) {
+                        e.target.value = available;
+                    } else if (val < 1 && e.target.value !== '') {
+                        e.target.value = 1;
+                    }
+                }
+            });
+            // On page load, disable all quantity inputs
+            var qtyInputs = table.querySelectorAll('input[type="number"]');
+            qtyInputs.forEach(function(input) {
+                input.disabled = true;
+                // Prevent manual input above available
+                input.addEventListener('input', function(e) {
+                    var row = input.closest('tr');
+                    var availableCell = row.querySelector('td:nth-child(4)');
+                    var available = parseInt(availableCell.textContent, 10);
+                    var val = parseInt(input.value, 10);
+                    if (val > available) {
+                        input.value = available;
+                    } else if (val < 1 && input.value !== '') {
+                        input.value = 1;
+                    }
+                });
+            });
+            // Show selected materials outside modal
+            var materialsForm = document.getElementById('materialsForm');
+            var selectedPreview = document.getElementById('selectedMaterialsPreview');
+            var selectedList = document.getElementById('selectedMaterialsList');
+            var submitMaterialsBtn = document.getElementById('submitMaterialsBtn');
+            var selectedMaterialsInput = document.getElementById('selected_materials_input');
+            materialsForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var selected = [];
+                var rows = materialsTable.querySelectorAll('tbody tr');
+                rows.forEach(function(row) {
+                    var checkbox = row.querySelector('input[type="checkbox"]');
+                    var qtyInput = row.querySelector('input[type="number"]');
+                    if (checkbox && checkbox.checked && qtyInput && qtyInput.value) {
+                        var name = row.querySelector('td:nth-child(3)').textContent;
+                        var qty = qtyInput.value;
+                        var type = row.querySelector('td:nth-child(2)').textContent;
+                        selected.push({name: name, qty: qty, type: type});
+                    }
+                });
+                // Store selected materials as JSON in hidden input
+                selectedMaterialsInput.value = JSON.stringify(selected);
+
+                // Display selected materials as table
+                var selectedPreview = document.getElementById('selectedMaterialsPreview');
+                var selectedList = document.getElementById('selectedMaterialsList');
+                if (selected.length > 0) {
+                    selectedPreview.style.display = 'block';
+                    var html = '';
+                    selected.forEach(function(item) {
+                        html += '<tr><td style="padding:8px;">' + item.name + '</td><td style="padding:8px;">' + item.qty + '</td></tr>';
+                    });
+                    selectedList.innerHTML = html;
+                } else {
+                    selectedPreview.style.display = 'none';
+                    selectedList.innerHTML = '';
+                }
+                modal.style.display = 'none';
+                select.value = 'Yes'; // keep selection
+            });
+
+            // --- NEW: On event form submit, ensure selected materials are included ---
+            var eventForm = document.getElementById('eventForm');
+            eventForm.addEventListener('submit', function(e) {
+                // If provide_materials is Yes and no materials selected, prevent submit
+                if (select.value === 'Yes' && !selectedMaterialsInput.value) {
+                    alert('Please select materials to provide.');
+                    e.preventDefault();
+                }
+            });
         });
-    </script>
+        </script>
     </body>
     <style>
         /* ...existing code... */
@@ -477,10 +696,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </html>
     <?php
 }
-?>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- ...existing code... -->
-    </html>
-    <?php
 ?>
 

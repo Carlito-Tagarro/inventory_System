@@ -9,15 +9,72 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
 
 $connection = CONNECTIVITY();
 
-// Fetch event requests with sender email (assuming event_form.user_id exists)
+// Fetch event requests with sender email and requested materials
 $query = "SELECT event_form.*, users.email AS sender_email 
           FROM event_form 
           LEFT JOIN users ON event_form.user_id = users.user_id";
 $result = mysqli_query($connection, $query);
 
-// Fetch history requests (approved/declined)
+// Prepare event requests array with materials
+$event_requests = [];
+while ($row = mysqli_fetch_assoc($result)) {
+    $materials = [];
+    if ($row['request_mats']) {
+        $mat_id = intval($row['request_mats']);
+        $mat_query = "SELECT * FROM material_request_form WHERE request_mats = $mat_id";
+        $mat_result = mysqli_query($connection, $mat_query);
+        while ($mat_row = mysqli_fetch_assoc($mat_result)) {
+            $materials[] = [
+                'Brochure' => [
+                    'name' => $mat_row['name_brochures'],
+                    'qty' => $mat_row['brochure_quantity']
+                ],
+                'Swag' => [
+                    'name' => $mat_row['name_swag'],
+                    'qty' => $mat_row['swag_quantity']
+                ],
+                'Marketing Material' => [
+                    'name' => $mat_row['name_material'],
+                    'qty' => $mat_row['material_quantity']
+                ]
+            ];
+        }
+    }
+    $row['requested_materials'] = $materials;
+    $event_requests[] = $row;
+}
+
+// Fetch history requests (approved/declined) with materials
 $history_query = "SELECT * FROM event_form_history ORDER BY processed_at DESC";
 $history_result = mysqli_query($connection, $history_query);
+
+$history_requests = [];
+while ($row = mysqli_fetch_assoc($history_result)) {
+    $materials = [];
+    if ($row['request_mats']) {
+        $mat_id = intval($row['request_mats']);
+        $mat_query = "SELECT * FROM material_request_form WHERE request_mats = $mat_id";
+        $mat_result = mysqli_query($connection, $mat_query);
+        while ($mat_row = mysqli_fetch_assoc($mat_result)) {
+            $materials[] = [
+                'Brochure' => [
+                    'name' => $mat_row['name_brochures'],
+                    'qty' => $mat_row['brochure_quantity']
+                ],
+                'Swag' => [
+                    'name' => $mat_row['name_swag'],
+                    'qty' => $mat_row['swag_quantity']
+                ],
+                'Marketing Material' => [
+                    'name' => $mat_row['name_material'],
+                    'qty' => $mat_row['material_quantity']
+                ]
+            ];
+        }
+    }
+    $row['requested_materials'] = $materials;
+    $history_requests[] = $row;
+}
 
 DISCONNECTIVITY($connection);
 ?>
@@ -127,96 +184,46 @@ DISCONNECTIVITY($connection);
         }
         .modal-content {
             background: #fff;
-            margin: 5% auto;
-            padding: 28px 30px 18px 30px;
-            width: 440px;
+            position: relative;
+            margin: auto;
+            top: 0; left: 0; right: 0; bottom: 0;
+            /* Center using flexbox */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            width: 900px;
             max-width: 98vw;
             border-radius: 12px;
-            position: relative;
             box-shadow: 0 8px 32px rgba(34,34,59,0.18);
             animation: modalIn 0.25s;
-        }
-        @keyframes modalIn {
-            from { transform: translateY(-40px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .close {
-            position: absolute;
-            top: 14px;
-            right: 22px;
-            cursor: pointer;
-            font-size: 28px;
-            color: #22223b;
-            font-weight: bold;
-            transition: color 0.2s;
-        }
-        .close:hover {
-            color: #c1121f;
-        }
-        #modalBody {
-            font-size: 15px;
-            color: #22223b;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-        .modal-details-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .modal-details-table td {
-            padding: 2px 0 2px 0;
-            vertical-align: top;
-        }
-        .modal-label {
-            color: #2563eb;
-            font-weight: 600;
-            width: 44%;
-            padding-right: 10px;
-            text-align: right;
-        }
-        .modal-value {
-            color: #22223b;
-            font-weight: 400;
-            width: 56%;
-            padding-left: 10px;
-            word-break: break-word;
-        }
-        .modal-divider {
-            border-top: 1px solid #e0e0e0;
-            margin: 12px 0 10px 0;
-        }
-        #modalActions {
-            text-align: right;
-            margin-top: 18px;
-        }
-        #modalActions button {
-            margin-left: 8px;
-            min-width: 80px;
+            padding: 28px 30px 18px 30px;
         }
         @media (max-width: 900px) {
-            .tables-flex {
+            .modal-content {
+                width: 99vw;
+                padding: 12px 2vw 10px 2vw;
+            }
+            .modal-content > div > div {
                 flex-direction: column;
                 gap: 0;
             }
-            .table-container {
+            .modal-left, .modal-right {
+                min-width: 0 !important;
                 width: 99vw;
-                margin-bottom: 30px;
             }
         }
         @media (max-width: 600px) {
             .modal-content {
                 width: 99vw;
-                padding: 12px 2vw 10px 2vw;
+                padding: 8px 1vw 8px 1vw;
             }
-            .modal-label, .modal-value {
-                font-size: 14px;
-            }
-            table {
+        }
+        @media (max-width: 600px) {
+            .modal-content {
                 width: 99vw;
-                font-size: 13px;
-            }
-            .table-container {
-                width: 99vw;
+                padding: 8px 1vw 8px 1vw;
             }
         }
 
@@ -246,7 +253,7 @@ DISCONNECTIVITY($connection);
                     </tr>
                 </thead>
                 <tbody>
-                <?php while($row = mysqli_fetch_assoc($result)): ?>
+                <?php foreach($event_requests as $row): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($row['event_name']); ?></td>
                         <td><?php echo htmlspecialchars($row['event_date']); ?></td>
@@ -258,10 +265,11 @@ DISCONNECTIVITY($connection);
                             <button 
                                 class="view-request"
                                 data-request='<?php echo json_encode($row, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>'
+                                data-materials='<?php echo json_encode($row['requested_materials'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>'
                             >View Details</button>
                         </td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -278,7 +286,7 @@ DISCONNECTIVITY($connection);
                     </tr>
                 </thead>
                 <tbody>
-                <?php while($row = mysqli_fetch_assoc($history_result)): ?>
+                <?php foreach($history_requests as $row): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($row['event_name']); ?></td>
                         <td><?php echo htmlspecialchars($row['event_date']); ?></td>
@@ -288,10 +296,11 @@ DISCONNECTIVITY($connection);
                             <button 
                                 class="view-request"
                                 data-request='<?php echo json_encode($row, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>'
+                                data-materials='<?php echo json_encode($row['requested_materials'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>'
                             >View Details</button>
                         </td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -300,19 +309,92 @@ DISCONNECTIVITY($connection);
     <!-- Modal -->
     <div id="requestModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div id="modalBody"></div>
-            <div class="modal-divider"></div>
-            <div id="modalActions"></div>
+            <div style="position: absolute; top: 18px; right: 24px;">
+                <button class="close" onclick="closeModal()" style="
+                    background: none;
+                    border: none;
+                    font-size: 28px;
+                    color: #2563eb;
+                    cursor: pointer;
+                    font-weight: bold;
+                    transition: color 0.2s;
+                " title="Close">&times;</button>
+            </div>
+            <div style="width:100%;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
+                    <img src="images/images__1_-removebg-preview.png" alt="Event" style="height:38px;">
+                    <span style="font-size: 1.5rem; font-weight: 700; color: #22223b;">Event Request Details</span>
+                </div>
+                <div class="modal-divider"></div>
+                <div style="display: flex; flex-wrap: wrap; gap: 32px;">
+                    <div class="modal-left" id="modalLeft" style="flex:1 1 320px; min-width:260px;"></div>
+                    <div class="modal-right" id="modalRight" style="flex:1 1 320px; min-width:260px;"></div>
+                </div>
+                <div class="modal-divider"></div>
+                <div id="modalActions" style="margin-top: 18px; text-align: right;"></div>
+            </div>
         </div>
     </div>
-
+    <style>
+        .modal-content .modal-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin: 0 0 10px 0;
+            letter-spacing: 0.5px;
+            border-bottom: 1.5px solid #e0e0e0;
+            padding-bottom: 4px;
+        }
+        .modal-details-table th, .modal-details-table td {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .modal-details-table th {
+            background: #f0f8ff;
+            color: #2563eb;
+            font-weight: 600;
+            padding: 8px 0;
+            font-size: 15px;
+        }
+        .modal-details-table td {
+            padding: 6px 0 6px 0;
+            vertical-align: top;
+            font-size: 15px;
+        }
+        .modal-label {
+            color: #2563eb;
+            font-weight: 600;
+            width: 44%;
+            padding-right: 10px;
+            text-align: right;
+        }
+        .modal-value {
+            color: #22223b;
+            font-weight: 400;
+            width: 56%;
+            padding-left: 10px;
+            word-break: break-word;
+        }
+        @media (max-width: 900px) {
+            .modal-content > div > div {
+                flex-direction: column;
+                gap: 0;
+            }
+            .modal-left, .modal-right {
+                min-width: 0 !important;
+                width: 99vw;
+            }
+        }
+    </style>
     <script>
         // Show modal with request details
         document.querySelectorAll('.view-request').forEach(function(link) {
             link.onclick = function(e) {
                 e.preventDefault();
                 var data = JSON.parse(this.getAttribute('data-request'));
+                var materials = [];
+                try {
+                    materials = JSON.parse(this.getAttribute('data-materials'));
+                } catch (err) {}
                 var fields = [
                     {label: "Event Name", key: "event_name"},
                     {label: "Event Title", key: "event_title"},
@@ -322,7 +404,7 @@ DISCONNECTIVITY($connection);
                     {label: "Date Time Egress", key: "date_time_egress"},
                     {label: "Place", key: "place"},
                     {label: "Location", key: "location"},
-                    {label: "Sponsorship Budget", key: "sponsorship_budget"}, // fixed label
+                    {label: "Sponsorship Budget", key: "sponsorship_budget"},
                     {label: "Target Audience", key: "target_audience"},
                     {label: "Number Audience", key: "number_audience"},
                     {label: "Set Up", key: "set_up"},
@@ -343,27 +425,49 @@ DISCONNECTIVITY($connection);
                     {label: "Created At", key: "created_at"},
                     {label: "Request Status", key: "request_status"}
                 ];
-                var table = '<table class="modal-details-table">';
+
+                // Left: Event Details
+                var leftHtml = '<div class="modal-section-title">Event Details</div>';
+                leftHtml += '<table class="modal-details-table" style="width:100%;">';
                 fields.forEach(function(f) {
                     if (data[f.key] !== undefined) {
-                        table += '<tr><td class="modal-label">'+f.label+':</td><td class="modal-value">'+(data[f.key]||'')+'</td></tr>';
+                        leftHtml += '<tr><td class="modal-label">'+f.label+':</td><td class="modal-value">'+(data[f.key]||'')+'</td></tr>';
                     }
                 });
-                table += '</table>';
-                table += '<div class="modal-divider"></div>';
-                table += '<table class="modal-details-table">';
+                leftHtml += '</table>';
+                document.getElementById('modalLeft').innerHTML = leftHtml;
+
+                // Right: Status, Meta, Materials
+                var rightHtml = '<div class="modal-section-title">Status & Meta Info</div>';
+                rightHtml += '<table class="modal-details-table" style="width:100%;">';
                 extraFields.forEach(function(f) {
                     if (data[f.key] !== undefined) {
-                        table += '<tr><td class="modal-label">'+f.label+':</td><td class="modal-value">'+(data[f.key]||'')+'</td></tr>';
+                        rightHtml += '<tr><td class="modal-label">'+f.label+':</td><td class="modal-value">'+(data[f.key]||'')+'</td></tr>';
                     }
                 });
-                table += '</table>';
-                document.getElementById('modalBody').innerHTML = table;
+                rightHtml += '</table>';
+
+                // Requested Materials Section
+                if (materials && materials.length > 0) {
+                    rightHtml += '<div class="modal-section-title" style="margin-top:18px;">Requested Materials</div>';
+                    rightHtml += '<table class="modal-details-table" style="width:100%;">';
+                    rightHtml += '<tr><th>Category</th><th>Name</th><th>Quantity</th></tr>';
+                    materials.forEach(function(mat) {
+                        ['Brochure','Swag','Marketing Material'].forEach(function(type) {
+                            if (mat[type] && mat[type].name && mat[type].qty) {
+                                rightHtml += '<tr><td>'+type+'</td><td>'+mat[type].name+'</td><td>'+mat[type].qty+'</td></tr>';
+                            }
+                        });
+                    });
+                    rightHtml += '</table>';
+                }
+                document.getElementById('modalRight').innerHTML = rightHtml;
+
                 // Actions
                 var actions = '';
                 if (data.request_status === 'Pending') {
-                    actions += '<button onclick="updateStatus('+data.event_form_id+',\'Approved\')">Approve</button>';
-                    actions += '<button onclick="updateStatus('+data.event_form_id+',\'Declined\')">Decline</button>';
+                    actions += '<button onclick="updateStatus('+data.event_form_id+',\'Approved\')" style="background:#2563eb;">Approve</button>';
+                    actions += '<button onclick="updateStatus('+data.event_form_id+',\'Declined\')" style="background:#e53e3e;">Decline</button>';
                 }
                 document.getElementById('modalActions').innerHTML = actions;
                 document.getElementById('requestModal').style.display = 'block';
