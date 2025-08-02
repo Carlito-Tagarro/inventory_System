@@ -115,6 +115,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             button:hover { background: #0056b3; }
             fieldset { border: 1px solid #007bff; border-radius: 4px; padding: 16px; margin-bottom: 16px; }
             legend { font-weight: bold; padding: 0 10px; }
+<<<<<<< HEAD
+=======
+            /* Modal styles */
+            .modal {
+                display: none; 
+                position: fixed; 
+                z-index: 999; 
+                left: 0; top: 0; width: 100%; height: 100%;
+                overflow: auto; background: rgba(0,0,0,0.4);
+            }
+            .modal-content {
+                background: #fff; margin: 5% auto; padding: 32px 24px;
+                border: 1px solid #007bff; width: 900px; border-radius: 12px;
+                position: relative; box-shadow: 0 8px 32px rgba(0,123,255,0.15);
+            }
+            .modal-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 8px;
+                font-size: 14px;
+            }
+            .modal-table th, .modal-table td {
+                border: 1px solid #e3e3e3;
+                padding: 8px 10px;
+                text-align: left;
+            }
+            .modal-table th {
+                background: #f0f8ff;
+                color: #007bff;
+                font-weight: 600;
+            }
+            .modal-table tr:nth-child(even) {
+                background: #f9f9f9;
+            }
+            .modal-table tr:hover {
+                background: #e6f0ff;
+            }
+            .modal-content h4 {
+                font-size: 16px;
+                margin-top: 18px;
+                margin-bottom: 8px;
+                font-weight: 600;
+            }
+            .modal-content hr {
+                border: none;
+                border-top: 1px solid #e3e3e3;
+            }
+            .close {
+                color: #aaa; position: absolute; right: 18px; top: 12px;
+                font-size: 32px; font-weight: bold; cursor: pointer;
+                transition: color 0.2s;
+            }
+            .close:hover { color: #007bff; }
+            @media (max-width: 600px) {
+                .modal-content { width: 98%; padding: 12px; }
+                .modal-table th, .modal-table td { padding: 6px 4px; font-size: 12px; }
+            }
+>>>>>>> 3156dcf (Add your commit message here)
         </style>
     </head>
     <body>
@@ -247,8 +305,193 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </form>
         </div>
+<<<<<<< HEAD
     </body>
     </html>
     <?php
 }
 ?>
+=======
+        <!-- Modal HTML -->
+        <div id="materialsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h3 style="margin-top:0; text-align:center;">
+                    <img src="images/materials_icon.png" alt="Materials" style="height:32px;vertical-align:middle;margin-right:8px;">
+                    Provide Materials
+                </h3>
+                <p style="text-align:center; color:#555;">Please specify the materials you will provide for this event.</p>
+                <hr style="margin:16px 0;">
+                <!-- Brochures Table -->
+                <h4 style="color:#007bff; margin-bottom:8px;"><i class="fa fa-book"></i> Brochures</h4>
+                <table class="modal-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Fetch brochures
+                    $brochures = [];
+                    $conn = CONNECTIVITY();
+                    $result = $conn->query("SELECT brochure_name, quantity, total_brochure FROM brochures");
+                    if ($result) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>
+                                <td>{$row['brochure_name']}</td>
+                                <td>{$row['quantity']}</td>
+                            </tr>";
+                        }
+                        $result->free();
+                    }
+                    ?>
+                    </tbody>
+                </table>
+                <hr style="margin:16px 0;">
+                <!-- Marketing Materials Table -->
+                <h4 style="color:#007bff; margin-bottom:8px;"><i class="fa fa-bullhorn"></i> Marketing Materials</h4>
+                <table class="modal-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Others</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Fetch marketing materials
+                    $result = $conn->query("SELECT material_name, quantity, others FROM marketing_materials");
+                    if ($result) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>
+                                <td>{$row['material_name']}</td>
+                                <td>{$row['quantity']}</td>
+                                <td>{$row['others']}</td>
+                            </tr>";
+                        }
+                        $result->free();
+                    }
+                    ?>
+                    </tbody>
+                </table>
+                <hr style="margin:16px 0;">
+                <!-- Swags Table -->
+                <h4 style="color:#007bff; margin-bottom:8px;"><i class="fa fa-gift"></i> Swags</h4>
+                <table class="modal-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    // Fetch swags
+                    $result = $conn->query("SELECT swags_name, quantity FROM swags");
+                    if ($result) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>
+                                <td>{$row['swags_name']}</td>
+                                <td>{$row['quantity']}</td>
+                            </tr>";
+                        }
+                        $result->free();
+                    }
+                    DISCONNECTIVITY($conn);
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script>
+        // Modal JS
+        document.addEventListener('DOMContentLoaded', function() {
+            var select = document.getElementById('provide_materials');
+            var modal = document.getElementById('materialsModal');
+            var closeBtn = document.getElementById('closeModal');
+            select.addEventListener('change', function() {
+                if (select.value === 'Yes') {
+                    modal.style.display = 'block';
+                } else {
+                    modal.style.display = 'none';
+                }
+            });
+            closeBtn.onclick = function() {
+                modal.style.display = 'none';
+                select.value = ''; // Optionally reset selection
+            };
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        });
+    </script>
+    </body>
+    <style>
+        /* ...existing code... */
+        .modal-content {
+            background: #fff; margin: 5% auto; padding: 32px 24px;
+            border: 1px solid #007bff; width: 900px; border-radius: 12px;
+            position: relative; box-shadow: 0 8px 32px rgba(0,123,255,0.15);
+        }
+        .modal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .modal-table th, .modal-table td {
+            border: 1px solid #e3e3e3;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        .modal-table th {
+            background: #f0f8ff;
+            color: #007bff;
+            font-weight: 600;
+        }
+        .modal-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .modal-table tr:hover {
+            background: #e6f0ff;
+        }
+        .modal-content h4 {
+            font-size: 16px;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .modal-content hr {
+            border: none;
+            border-top: 1px solid #e3e3e3;
+        }
+        .close {
+            color: #aaa; position: absolute; right: 18px; top: 12px;
+            font-size: 32px; font-weight: bold; cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close:hover { color: #007bff; }
+        @media (max-width: 600px) {
+            .modal-content { width: 98%; padding: 12px; }
+            .modal-table th, .modal-table td { padding: 6px 4px; font-size: 12px; }
+        }
+    </style>
+    <!-- Font Awesome for icons (optional, can remove if not available) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ...existing code... -->
+    </html>
+    <?php
+}
+?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ...existing code... -->
+    </html>
+    <?php
+?>
+
+>>>>>>> 3156dcf (Add your commit message here)
