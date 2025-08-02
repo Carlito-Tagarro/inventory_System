@@ -18,34 +18,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $row = mysqli_fetch_assoc($select);
 
             if ($row) {
-                // Insert into history table
-                $fields = array_keys($row);
-                $fields[] = 'processed_at';
-                $fields_str = implode(',', $fields);
+                // Insert into history table using prepared statement
+                $fields = [
+                    'event_form_id','event_name','event_title','event_date','sender_email','date_time_ingress','date_time_egress','place','location','sponsorship_budget','target_audience','number_audience','set_up','booth_size','booth_inclusion','number_tables','number_chairs','speaking_slot','date_time','program_target','technical_team','trainer_needed','ready_to_use','provide_materials','created_at','user_id','request_mats','request_status','processed_at'
+                ];
+                $values = [];
+                foreach ($fields as $field) {
+                    if ($field === 'request_status') {
+                        $values[] = $status;
+                    } elseif ($field === 'processed_at') {
+                        $values[] = date('Y-m-d H:i:s');
+                    } else {
+                        $values[] = isset($row[$field]) ? $row[$field] : '';
+                    }
+                }
+                $sql = "INSERT INTO event_form_history (" . implode(',', $fields) . ") VALUES (" . implode(',', array_fill(0, count($fields), '?')) . ")";
+                $insert_stmt = mysqli_prepare($connection, $sql);
+                $types = str_repeat('s', count($fields));
+                mysqli_stmt_bind_param($insert_stmt, $types, ...$values);
+                mysqli_stmt_execute($insert_stmt);
 
-                $values = array_map(function($v) use ($connection) {
-                    return "'" . mysqli_real_escape_string($connection, $v) . "'";
-                }, array_values($row));
-                $values[] = "NOW()";
-                $values_str = implode(',', $values);
-
-                $insert = mysqli_query($connection, "INSERT INTO event_form_history ($fields_str) VALUES ($values_str)");
-
-                if ($insert) {
+                if (mysqli_stmt_affected_rows($insert_stmt) > 0) {
                     // Delete from main table
                     mysqli_query($connection, "DELETE FROM event_form WHERE event_form_id = $id");
-                    echo "success";
+                    echo json_encode(['success' => true]);
                 } else {
-                    echo "error";
+                    echo json_encode(['success' => false, 'error' => mysqli_error($connection)]);
                 }
+                mysqli_stmt_close($insert_stmt);
             } else {
-                echo "not found";
+                echo json_encode(['success' => false, 'error' => 'not found']);
             }
         } else {
-            echo "success";
+            echo json_encode(['success' => true]);
         }
     } else {
-        echo "error";
+        echo json_encode(['success' => false, 'error' => 'update failed']);
     }
     $stmt->close();
     $connection->close();

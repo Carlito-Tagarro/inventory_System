@@ -44,8 +44,8 @@ while ($row = mysqli_fetch_assoc($result)) {
     $event_requests[] = $row;
 }
 
-// Fetch history requests (approved/declined) with materials
-$history_query = "SELECT * FROM event_form_history ORDER BY processed_at DESC";
+// Fetch history requests (all records, with required columns)
+$history_query = "SELECT event_form_id, event_name, event_title, event_date, sender_email, date_time_ingress, date_time_egress, place, location, sponsorship_budget, target_audience, number_audience, set_up, booth_size, booth_inclusion, number_tables, number_chairs, speaking_slot, date_time, program_target, technical_team, trainer_needed, ready_to_use, provide_materials, created_at, user_id, request_mats, request_status, processed_at FROM event_form_history ORDER BY processed_at DESC";
 $history_result = mysqli_query($connection, $history_query);
 
 $history_requests = [];
@@ -254,6 +254,7 @@ DISCONNECTIVITY($connection);
                 </thead>
                 <tbody>
                 <?php foreach($event_requests as $row): ?>
+                    <?php if($row['request_status'] === 'Pending'): // Only show Pending ?>
                     <tr>
                         <td><?php echo htmlspecialchars($row['event_name']); ?></td>
                         <td><?php echo htmlspecialchars($row['event_date']); ?></td>
@@ -269,6 +270,7 @@ DISCONNECTIVITY($connection);
                             >View Details</button>
                         </td>
                     </tr>
+                    <?php endif; ?>
                 <?php endforeach; ?>
                 </tbody>
             </table>
@@ -479,96 +481,149 @@ DISCONNECTIVITY($connection);
             document.getElementById('requestModal').style.display = 'none';
         }
 
-        // AJAX to update status
+        // AJAX to update status and update history table dynamically
         function updateStatus(id, status) {
+            var row = document.getElementById('status-' + id)?.parentNode;
+            var eventData = null;
+            if (row) {
+                var btn = row.querySelector('.view-request');
+                if (btn) {
+                    try {
+                        eventData = JSON.parse(btn.getAttribute('data-request'));
+                    } catch (e) {}
+                }
+            }
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'update_request_status.php', true);
             xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             xhr.onload = function() {
-                if (xhr.status == 200) {
-                    // Remove the row from the pending table
-                    var row = document.getElementById('status-' + id)?.parentNode;
-                    if (row) row.parentNode.removeChild(row);
+                if (xhr.status == 200) {    
+                    // Remove the row from the pending table (Event Requests)
+                    var statusCell = document.getElementById('status-' + id);
+                    if (statusCell && statusCell.parentNode) {
+                        statusCell.parentNode.parentNode.removeChild(statusCell.parentNode);
+                    } else {
+                        var rows = document.querySelectorAll('.table-container:first-child tbody tr');
+                        rows.forEach(function(tr) {
+                            if (tr.querySelector('[id^="status-"]') &&
+                                tr.querySelector('[id^="status-"]').id === 'status-' + id) {
+                                tr.parentNode.removeChild(tr);
+                            }
+                        });
+                    }
                     closeModal();
 
                     // Parse the returned processed request data (assume backend returns JSON)
                     try {
                         var processed = JSON.parse(xhr.responseText);
-                        if (!processed || !processed.event_form_id) {
-                            // If backend did not return expected JSON, reload page
+                        if (!processed || !processed.success) {
                             location.reload();
                             return;
                         }
-                        // Add to history table
-                        var historyTable = document.querySelector('.table-container:nth-child(2) tbody');
-                        if (historyTable && processed) {
-                            var tr = document.createElement('tr');
-                            tr.innerHTML = 
-                                '<td>' + (processed.event_name || '') + '</td>' +
-                                '<td>' + (processed.event_date || '') + '</td>' +
-                                '<td>' + (processed.request_status || '') + '</td>' +
-                                '<td>' + (processed.processed_at || '') + '</td>' +
-                                '<td><button class="view-request" data-request=\'' + JSON.stringify(processed) + '\'>View Details</button></td>';
-                            historyTable.prepend(tr);
+                        // Add to history table via AJAX fetch
+                        // We'll fetch the latest record from event_form_history and prepend it
+                        var fetchXhr = new XMLHttpRequest();
+                        fetchXhr.open('GET', 'fetch_latest_history.php?id=' + id, true);
+                        fetchXhr.onload = function() {
+                            if (fetchXhr.status == 200) {
+                                try {
+                                    var latest = JSON.parse(fetchXhr.responseText);
+                                    if (latest && latest.event_form_id) {
+                                        var historyTable = document.querySelector('.table-container:nth-child(2) tbody');
+                                        var materials = latest.requested_materials ? JSON.stringify(latest.requested_materials) : '[]';
+                                        var tr = document.createElement('tr');
+                                        tr.innerHTML =
+                                            '<td>' + (latest.event_name || '') + '</td>' +
+                                            '<td>' + (latest.event_date || '') + '</td>' +
+                                            '<td>' + (latest.request_status || '') + '</td>' +
+                                            '<td>' + (latest.processed_at || '') + '</td>' +
+                                            '<td><button class="view-request" data-request=\'' + JSON.stringify(latest) + '\' data-materials=\'' + materials.replace(/'/g, '&#39;') + '\'>View Details</button></td>';
+                                        historyTable.prepend(tr);
 
-                            // Re-attach modal event for new button
-                            tr.querySelector('.view-request').onclick = function(e) {
-                                e.preventDefault();
-                                var data = processed;
-                                // ...existing modal code for showing details...
-                                var fields = [
-                                    {label: "Event Name", key: "event_name"},
-                                    {label: "Event Title", key: "event_title"},
-                                    {label: "Event Date", key: "event_date"},
-                                    {label: "Sender Email", key: "sender_email"},
-                                    {label: "Date Time Ingress", key: "date_time_ingress"},
-                                    {label: "Date Time Egress", key: "date_time_egress"},
-                                    {label: "Place", key: "place"},
-                                    {label: "Location", key: "location"},
-                                    {label: "Sponsorship Budget", key: "sponsorship_budget"}, // fixed label
-                                    {label: "Target Audience", key: "target_audience"},
-                                    {label: "Number Audience", key: "number_audience"},
-                                    {label: "Set Up", key: "set_up"},
-                                    {label: "Booth Size", key: "booth_size"},
-                                    {label: "Booth Inclusion", key: "booth_inclusion"},
-                                    {label: "Number Tables", key: "number_tables"},
-                                    {label: "Number Chairs", key: "number_chairs"},
-                                    {label: "Speaking Slot", key: "speaking_slot"},
-                                    {label: "Date Time", key: "date_time"},
-                                    {label: "Program Target", key: "program_target"},
-                                    {label: "Technical Team", key: "technical_team"},
-                                    {label: "Trainer Needed", key: "trainer_needed"},
-                                    {label: "Ready To Use", key: "ready_to_use"},
-                                    {label: "Provide Materials", key: "provide_materials"}
-                                ];
-                                var extraFields = [
-                                    {label: "Event Form Id", key: "event_form_id"},
-                                    {label: "Created At", key: "created_at"},
-                                    {label: "Request Status", key: "request_status"}
-                                ];
-                                var table = '<table class="modal-details-table">';
-                                fields.forEach(function(f) {
-                                    if (data[f.key] !== undefined) {
-                                        table += '<tr><td class="modal-label">'+f.label+':</td><td class="modal-value">'+(data[f.key]||'')+'</td></tr>';
+                                        // Attach modal event for new button
+                                        tr.querySelector('.view-request').onclick = function(e) {
+                                            e.preventDefault();
+                                            var data = latest;
+                                            var materials = [];
+                                            try {
+                                                materials = JSON.parse(this.getAttribute('data-materials'));
+                                            } catch (err) {}
+                                            // ...existing modal code for showing details...
+                                            var fields = [
+                                                {label: "Event Name", key: "event_name"},
+                                                {label: "Event Title", key: "event_title"},
+                                                {label: "Event Date", key: "event_date"},
+                                                {label: "Sender Email", key: "sender_email"},
+                                                {label: "Date Time Ingress", key: "date_time_ingress"},
+                                                {label: "Date Time Egress", key: "date_time_egress"},
+                                                {label: "Place", key: "place"},
+                                                {label: "Location", key: "location"},
+                                                {label: "Sponsorship Budget", key: "sponsorship_budget"},
+                                                {label: "Target Audience", key: "target_audience"},
+                                                {label: "Number Audience", key: "number_audience"},
+                                                {label: "Set Up", key: "set_up"},
+                                                {label: "Booth Size", key: "booth_size"},
+                                                {label: "Booth Inclusion", key: "booth_inclusion"},
+                                                {label: "Number Tables", key: "number_tables"},
+                                                {label: "Number Chairs", key: "number_chairs"},
+                                                {label: "Speaking Slot", key: "speaking_slot"},
+                                                {label: "Date Time", key: "date_time"},
+                                                {label: "Program Target", key: "program_target"},
+                                                {label: "Technical Team", key: "technical_team"},
+                                                {label: "Trainer Needed", key: "trainer_needed"},
+                                                {label: "Ready To Use", key: "ready_to_use"},
+                                                {label: "Provide Materials", key: "provide_materials"}
+                                            ];
+                                            var extraFields = [
+                                                {label: "Event Form Id", key: "event_form_id"},
+                                                {label: "Created At", key: "created_at"},
+                                                {label: "Request Status", key: "request_status"}
+                                            ];
+                                            var leftHtml = '<div class="modal-section-title">Event Details</div>';
+                                            leftHtml += '<table class="modal-details-table" style="width:100%;">';
+                                            fields.forEach(function(f) {
+                                                if (data[f.key] !== undefined) {
+                                                    leftHtml += '<tr><td class="modal-label">'+f.label+':</td><td class="modal-value">'+(data[f.key]||'')+'</td></tr>';
+                                                }
+                                            });
+                                            leftHtml += '</table>';
+                                            document.getElementById('modalLeft').innerHTML = leftHtml;
+
+                                            var rightHtml = '<div class="modal-section-title">Status & Meta Info</div>';
+                                            rightHtml += '<table class="modal-details-table" style="width:100%;">';
+                                            extraFields.forEach(function(f) {
+                                                if (data[f.key] !== undefined) {
+                                                    rightHtml += '<tr><td class="modal-label">'+f.label+':</td><td class="modal-value">'+(data[f.key]||'')+'</td></tr>';
+                                                }
+                                            });
+                                            rightHtml += '</table>';
+
+                                            if (materials && materials.length > 0) {
+                                                rightHtml += '<div class="modal-section-title" style="margin-top:18px;">Requested Materials</div>';
+                                                rightHtml += '<table class="modal-details-table" style="width:100%;">';
+                                                rightHtml += '<tr><th>Category</th><th>Name</th><th>Quantity</th></tr>';
+                                                materials.forEach(function(mat) {
+                                                    ['Brochure','Swag','Marketing Material'].forEach(function(type) {
+                                                        if (mat[type] && mat[type].name && mat[type].qty) {
+                                                            rightHtml += '<tr><td>'+type+'</td><td>'+mat[type].name+'</td><td>'+mat[type].qty+'</td></tr>';
+                                                        }
+                                                    });
+                                                });
+                                                rightHtml += '</table>';
+                                            }
+                                            document.getElementById('modalRight').innerHTML = rightHtml;
+                                            document.getElementById('modalActions').innerHTML = '';
+                                            document.getElementById('requestModal').style.display = 'block';
+                                            document.getElementById('requestModal').setAttribute('data-id', data.event_form_id);
+                                        };
                                     }
-                                });
-                                table += '</table>';
-                                table += '<div class="modal-divider"></div>';
-                                table += '<table class="modal-details-table">';
-                                extraFields.forEach(function(f) {
-                                    if (data[f.key] !== undefined) {
-                                        table += '<tr><td class="modal-label">'+f.label+':</td><td class="modal-value">'+(data[f.key]||'')+'</td></tr>';
-                                    }
-                                });
-                                table += '</table>';
-                                document.getElementById('modalBody').innerHTML = table;
-                                document.getElementById('modalActions').innerHTML = '';
-                                document.getElementById('requestModal').style.display = 'block';
-                                document.getElementById('requestModal').setAttribute('data-id', data.event_form_id);
-                            };
-                        }
+                                } catch (err) {
+                                    location.reload();
+                                }
+                            }
+                        };
+                        fetchXhr.send();
                     } catch (e) {
-                        // fallback: reload page if backend does not return JSON
                         location.reload();
                     }
                 }
