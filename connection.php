@@ -2,11 +2,7 @@
 function CONNECTIVITY() {
     $servername = "localhost"; 
     $username = "root"; 
-<<<<<<< HEAD
-    $password = ""; 
-=======
     $password = "SANTANDER13"; 
->>>>>>> 3156dcf (Add your commit message here)
     $dbname = "inventory_system"; 
 
     

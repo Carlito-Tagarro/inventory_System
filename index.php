@@ -115,8 +115,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             button:hover { background: #0056b3; }
             fieldset { border: 1px solid #007bff; border-radius: 4px; padding: 16px; margin-bottom: 16px; }
             legend { font-weight: bold; padding: 0 10px; }
-<<<<<<< HEAD
-=======
             /* Modal styles */
             .modal {
                 display: none; 
@@ -172,7 +170,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 .modal-content { width: 98%; padding: 12px; }
                 .modal-table th, .modal-table td { padding: 6px 4px; font-size: 12px; }
             }
->>>>>>> 3156dcf (Add your commit message here)
         </style>
     </head>
     <body>
@@ -305,13 +302,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </form>
         </div>
-<<<<<<< HEAD
-    </body>
-    </html>
-    <?php
-}
-?>
-=======
         <!-- Modal HTML -->
         <div id="materialsModal" class="modal">
             <div class="modal-content">
@@ -494,4 +484,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php
 ?>
 
->>>>>>> 3156dcf (Add your commit message here)
