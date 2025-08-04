@@ -217,10 +217,10 @@ DISCONNECTIVITY($connection);
     <nav>
         <a href="admin.php"><img src="images/images__1_-removebg-preview.png" alt="Company Logo"></a>
     <div class="nav-container">
+        <a href="admin.php">Dashboard</a>
         <a href="brochure_inventory.php">Brochure Inventory</a>
         <a href="marketing_inventory.php">Materials Inventory</a>
         <a href="swags_inventory.php">Swags Inventory</a>
-        <a href="admin_request.php">Event Requests</a>
     </div>
     </nav>
     

@@ -398,7 +398,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="modal-content">
                 <span class="close" id="closeModal">&times;</span>
                 <h3 style="margin-top:0; text-align:center;">
-                    <img src="images/materials_icon.png" alt="Materials" style="height:32px;vertical-align:middle;margin-right:8px;">
                     Provide Materials
                 </h3>
                 <p style="text-align:center; color:#555;">Please specify the materials you will provide for this event.</p>
