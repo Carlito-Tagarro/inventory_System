@@ -47,7 +47,6 @@ while ($row = mysqli_fetch_assoc($result)) {
 // Fetch history requests (all records, with required columns)
 $history_query = "SELECT event_form_id, event_name, event_title, event_date, sender_email, date_time_ingress, date_time_egress, place, location, sponsorship_budget, target_audience, number_audience, set_up, booth_size, booth_inclusion, number_tables, number_chairs, speaking_slot, date_time, program_target, technical_team, trainer_needed, ready_to_use, provide_materials, created_at, user_id, request_mats, request_status, processed_at FROM event_form_history ORDER BY processed_at DESC";
 $history_result = mysqli_query($connection, $history_query);
-
 $history_requests = [];
 while ($row = mysqli_fetch_assoc($history_result)) {
     $materials = [];
@@ -233,10 +232,10 @@ DISCONNECTIVITY($connection);
     <nav>
         <a href="admin.php"><img src="images/images__1_-removebg-preview.png" alt="Company Logo"></a>
     <div class="nav-container">
+        <a href="admin.php">Dashboard</a>
         <a href="brochure_inventory.php">Brochure Inventory</a>
         <a href="marketing_inventory.php">Materials Inventory</a>
         <a href="swags_inventory.php">Swags Inventory</a>
-        <a href="admin_request.php">Event Requests</a>
     </div>
     </nav>
     <div class="tables-flex">
