@@ -6,6 +6,6 @@
 
 <h2>Features</h2>
 
-<h3>Inventory</h3>
+<p>Inventory</p>
 
 
