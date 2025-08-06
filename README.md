@@ -6,6 +6,6 @@
 
 <h2>Features</h2>
 
-<p>Inventory</p>
-
-
+<p>Inventory Track</p>
+<p>Event Form Request</p>
+<p>Material Request Auto Deducts to Inventory if Approved</p>
