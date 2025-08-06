@@ -8,6 +8,7 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'trainer') {
     exit;
 }
 $connection = CONNECTIVITY();
+// $connection->query("PRAGMA journal_mode = WAL;"); // Sqlite WAL mode
 
 // Simple input sanitization
 function clean($data) {
@@ -39,10 +40,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ready_to_use = clean($_POST['ready_to_use']);
     $provide_materials = clean($_POST['provide_materials']);
 
-    // Get user_id from session (assuming it's set at login)
+    
     $user_id = $_SESSION['user_id'];
 
-    // --- NEW: Get selected materials from hidden input ---
+    // NEW: Get selected materials from hidden input 
     $selected_materials_json = isset($_POST['selected_materials']) ? $_POST['selected_materials'] : '';
     $selected_materials = [];
     if ($selected_materials_json) {
@@ -143,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
     $connection->close();
 } else {
-    // Show the form on GET request (no redirect)
+    
     DISCONNECTIVITY($connection);
     ?>
     <html lang="en">
@@ -162,10 +163,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 display: flex; 
                 flex-direction: column; 
             }
-            /* Add this to prevent button from stretching */
+            
             .form-group.button-group {
                 flex: 1 1 100%;
-                align-items: center; /* center horizontally */
+                align-items: center; 
                 width: 100%;
             }
             label { margin-bottom: 4px; font-weight: bold; }
