@@ -151,7 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Inventory System</title>
+        <title>Event Form</title>
         <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png">
         <style>
             body { font-family: Arial, sans-serif; background: #f7f7f7; }
