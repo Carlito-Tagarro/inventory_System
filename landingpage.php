@@ -179,7 +179,7 @@ include 'connection.php';
                 <p style="font-size: 1.1rem; max-width: 500px; margin-top: 10px;">
                     With 5+ years of experience in the technology and education space, we envision ourselves to become the leading technology partner of schools and universities, providing internationally-recognized certificates through training as a service.
                 </p>
-                <a href="admin.php" style="display: inline-block; margin-top: 28px; background: #a94d4d; color: #fff; padding: 12px 32px; border-radius: 24px; font-weight: 600; text-decoration: none; font-size: 1rem;">GET STARTED</a>
+                <a href="index.php" style="display: inline-block; margin-top: 28px; background: #a94d4d; color: #fff; padding: 12px 32px; border-radius: 24px; font-weight: 600; text-decoration: none; font-size: 1rem;">GET STARTED</a>
             </div>
         </div>
         
