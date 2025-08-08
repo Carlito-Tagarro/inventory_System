@@ -154,6 +154,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <title>Event Form</title>
         <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png">
         <style>
+            nav {
+            
+            padding: 16px 0;
+            margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            gap: 20px;
+        }
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            width: 100%;
+        }
+        nav img {
+            height: 50px;
+            margin-left: 20px;
+        }
+        nav a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
             body { font-family: Arial, sans-serif; background: #f7f7f7; }
             .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px #ccc; }
             h2 { text-align: center; }
@@ -247,7 +272,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </style>
     </head>
     <body>
-        <a href="logout.php">Logout</a>
+        <nav>
+        <a href="admin.php"><img src="images/AUDENTES LOGO.png" alt="Company Logo"></a>
+        <div class="nav-container">
+            <a href="landingpage.php">HOME</a>
+            <a href="https://www.facebook.com/audentestechnologies">ABOUT</a>
+            <a href="https://www.facebook.com/audentestechnologies">CONTACT US</a>
+            <a href="logout.php">LOGOUT</a>
+        </div>
+    </nav>
         <div class="container">
             <h2>Event Form</h2>
             <form action="index.php" method="post" id="eventForm">
