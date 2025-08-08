@@ -46,6 +46,7 @@ include 'connection.php';
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
     <nav>
         <a href="admin.php"><img src="images/AUDENTES LOGO.png" alt="Company Logo"></a>
         <div class="nav-container">
@@ -56,14 +57,14 @@ include 'connection.php';
     </nav>
 
     <div style="display: flex; gap: 40px; align-items: flex-start; min-height: 500px;">
-        <!-- Left Section -->
+        
         <div style="flex: 1; position: relative; padding: 40px 0 0 40px;">
-            <!-- Circles -->
+            
             <div style="position: absolute; top: 10px; left: 40px; width: 120px; height: 120px; background: #cfa7a7; border-radius: 50%; opacity: 0.7;"></div>
             <div style="position: absolute; top: -30px; left: 320px; width: 70px; height: 70px; background: #cfa7a7; border-radius: 50%; opacity: 0.7;"></div>
             <div style="position: absolute; top: 220px; left: 260px; width: 180px; height: 180px; background: #cfa7a7; border-radius: 50%; opacity: 0.7;"></div>
             <div style="position: absolute; top: 340px; left: 120px; width: 110px; height: 110px; background: #cfa7a7; border-radius: 50%; opacity: 0.7;"></div>
-            <!-- Content -->
+           
             <div style="position: relative; z-index: 1;">
                 <h1 style="font-size: 2.2rem; font-weight: bold; margin-bottom: 0;">
                     <span style="font-family: 'Segoe UI', Arial, sans-serif;">AUDENTES</span>
@@ -75,7 +76,7 @@ include 'connection.php';
                 <a href="admin.php" style="display: inline-block; margin-top: 28px; background: #a94d4d; color: #fff; padding: 12px 32px; border-radius: 24px; font-weight: 600; text-decoration: none; font-size: 1rem;">GET STARTED</a>
             </div>
         </div>
-        <!-- Right Section -->
+        
         <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
             <div style="width: 350px; height: 350px; background: #a94d4d; display: flex; align-items: center; justify-content: center;">
                 <span style="color: #fff; font-size: 1.5rem; letter-spacing: 0.25em; text-align: center; font-family: 'Segoe UI', Arial, sans-serif;">
@@ -85,7 +86,7 @@ include 'connection.php';
         </div>
     </div>
 
-    <footer style="margin-top: 60px;">
+    <footer s>
         <div style="background: #a94d4d; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 18px 32px; font-size: 1rem;">
             <div>
                 <span style="margin-right: 18px;">
