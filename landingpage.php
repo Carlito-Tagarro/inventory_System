@@ -11,6 +11,8 @@ include 'connection.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audentes Technologies</title>
     <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png">
+    <!-- Replace the incorrect Font Awesome link with the CDN version -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
           body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -43,6 +45,110 @@ include 'connection.php';
             font-weight: 600;
             font-size: 1.1rem;
         }
+
+        /* Footer Styles */
+        .footersection {
+            background: #a94d4d;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 1rem;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100vw;
+            z-index: 100;
+            margin: 0;
+        }
+
+        /* Carousel Styles */
+        * {box-sizing:border-box}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+/* Hide the images by default */
+.mySlides {
+  display: none;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+/* The dots/bullets/indicators */
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {opacity: .4}
+  to {opacity: 1}
+}
     </style>
 </head>
 <body>
@@ -78,39 +184,83 @@ include 'connection.php';
         </div>
         
         <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
-            <div style="width: 350px; height: 350px; background: #a94d4d; display: flex; align-items: center; justify-content: center;">
-                <span style="color: #fff; font-size: 1.5rem; letter-spacing: 0.25em; text-align: center; font-family: 'Segoe UI', Arial, sans-serif;">
-                    CAROUSEL<br>BROCHURE
-                </span>
-            </div>
-        </div>
-    </div>
+           <div class="slideshow-container">
 
-    <footer s>
+  <!-- Carousel -->
+  <div class="mySlides fade">
+    <!-- <div class="numbertext">1 / 3</div> -->
+    <img src="images/CCS_Program_Datasheet_page-0001.jpg" style="width:100%">
+    
+  </div>
+
+  <div class="mySlides fade">
+    <!-- <div class="numbertext">2 / 3</div> -->
+    <img src="images/Cisco Program Overview 1124 PRINT_page-0001.jpg" style="width:100%">
+    
+  </div>
+
+  <div class="mySlides fade">
+    <!-- <div class="numbertext">3 / 3</div> -->
+    <img src="images/Hospitality and Culinary Arts Careers - Culinary Foundations - Infographic_page-0001.jpg" style="width:100%">
+    
+  </div>
+
+  <!-- Next and previous buttons -->
+  <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+  <a class="next" onclick="plusSlides(1)">&#10095;</a>
+</div>
+<br>
+
+<!-- The dots/circles -->
+<!-- <div style="text-align:center">
+  <span class="dot" onclick="currentSlide(1)"></span>
+  <span class="dot" onclick="currentSlide(2)"></span>
+  <span class="dot" onclick="currentSlide(3)"></span>
+</div>
+        </div>
+    </div> -->
+
+    <footer class="footersection">
         <div style="background: #a94d4d; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 18px 32px; font-size: 1rem;">
             <div>
                 <span style="margin-right: 18px;">
-                    <img src="images/email_icon.png" alt="Email" style="height: 18px; vertical-align: middle; margin-right: 6px;">
+                    <i class="fa-solid fa-envelope"></i>
                     info@audentestechnologies.com
                 </span>
                 <span style="margin-right: 18px;">
-                    <img src="images/phone_icon.png" alt="Phone" style="height: 18px; vertical-align: middle; margin-right: 6px;">
+                    <i class="fa-solid fa-phone"></i>
                     +639206028971
                 </span>
-                <span>
-                    <img src="images/linkedin_icon.png" alt="LinkedIn" style="height: 18px; vertical-align: middle; margin-right: 6px;">
-                    <img src="images/facebook_icon.png" alt="Facebook" style="height: 18px; vertical-align: middle;">
-                </span>
+                <div class="social-icons" style="display: inline-block; margin-left: 20px; text-decoration: none;">
+                    <a href="https://www.linkedin.com/company/audentestechnologies/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://www.facebook.com/audentestechnologies" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                </div>
             </div>
             <div style="text-align: center;">
                 All rights reserved &copy;<br>
                 Audentes Technologies 2018
             </div>
             <div style="text-align: right;">
-                <img src="images/location_icon.png" alt="Location" style="height: 18px; vertical-align: middle; margin-right: 6px;">
+               <i class="fa-light fa-location-dot"></i>
                 VCC BUILDING B16 L2 SAN AGUSTIN VILLAGE, BARANGAY SAN FRANCISCO, BIÑAN, LAGUNA, Biñan, Philippines
             </div>
         </div>
     </footer>
+    <script>
+let slideIndex = 0;
+showSlides();
+
+function showSlides() {
+  let i;
+  let slides = document.getElementsByClassName("mySlides");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";
+  }
+  slideIndex++;
+  if (slideIndex > slides.length) {slideIndex = 1}
+  slides[slideIndex-1].style.display = "block";
+  setTimeout(showSlides, 4000); // Change image every 2 seconds
+}
+    </script>
 </body>
 </html>
