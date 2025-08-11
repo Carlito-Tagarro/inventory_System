@@ -151,6 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
         <title>Event Form</title>
         <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png">
         <style>
@@ -180,11 +181,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-size: 1.1rem;
         }
             body { font-family: Arial, sans-serif; background: #f7f7f7; }
-            .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px #ccc; }
+            .container { 
+                max-width: 1200px;
+                margin: 40px auto;
+                background: #fff;
+                padding: 30px;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px #ccc;
+            }
             h2 { text-align: center; }
-            form { display: flex; flex-wrap: wrap; gap: 16px; }
+            form { 
+                display: flex; 
+                flex-wrap: wrap; 
+                gap: 16px; 
+                justify-content: center; /* Center fieldsets horizontally */
+            }
+            fieldset {
+                border: 1px solid #007bff;
+                border-radius: 4px;
+                padding: 16px;
+                margin-bottom: 16px;
+                min-width: 220px;
+                width: 20%; /* Make fieldsets equal width and responsive */
+                box-sizing: border-box;
+            }
             .form-group { 
-                flex: 1 1 45%; 
+                flex: 1 1 100%; /* Take full width inside fieldset */
                 display: flex; 
                 flex-direction: column; 
             }
@@ -223,9 +245,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 overflow: auto; background: rgba(0,0,0,0.4);
             }
             .modal-content {
-                background: #fff; margin: 5% auto; padding: 32px 24px;
-                border: 1px solid #007bff; width: 900px; border-radius: 12px;
-                position: relative; box-shadow: 0 8px 32px rgba(0,123,255,0.15);
+                background: #fff; 
+                margin: 5% auto; 
+                padding: 32px 24px;
+                border: 1px solid #007bff; 
+                width: 1200px; /* Increased from 900px */
+                border-radius: 12px;
+                position: relative; 
+                box-shadow: 0 8px 32px rgba(0,123,255,0.15);
             }
             .modal-table {
                 width: 100%;
@@ -265,9 +292,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 transition: color 0.2s;
             }
             .close:hover { color: #007bff; }
+            @media (max-width: 900px) {
+                .container { max-width: 98%; }
+                form { flex-direction: column; align-items: center; }
+                fieldset { width: 98%; min-width: unset; }
+            }
             @media (max-width: 600px) {
+                .container { max-width: 98%; }
                 .modal-content { width: 98%; padding: 12px; }
                 .modal-table th, .modal-table td { padding: 6px 4px; font-size: 12px; }
+                fieldset { width: 98%; min-width: unset; }
             }
         </style>
     </head>
@@ -677,7 +711,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         /* ...existing code... */
         .modal-content {
             background: #fff; margin: 5% auto; padding: 32px 24px;
-            border: 1px solid #007bff; width: 900px; border-radius: 12px;
+            border: 1px solid #007bff; width: 1200px; /* Increased from 900px */
+            border-radius: 12px;
             position: relative; box-shadow: 0 8px 32px rgba(0,123,255,0.15);
         }
         .modal-table {
@@ -719,6 +754,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         .close:hover { color: #007bff; }
         @media (max-width: 600px) {
+            .container { max-width: 98%; }
             .modal-content { width: 98%; padding: 12px; }
             .modal-table th, .modal-table td { padding: 6px 4px; font-size: 12px; }
         }
