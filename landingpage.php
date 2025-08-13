@@ -260,7 +260,7 @@ nav a {
                 </span>
                 <span style="margin-right: 18px;">
                     <i class="fa-solid fa-phone"></i>
-                    +639206028971
+                    +63-000-000-0000
                 </span>
                 <div class="social-icons" style="display: inline-block; margin-left: 20px; text-decoration: none;">
                     <a href="https://www.linkedin.com/company/audentestechnologies/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>

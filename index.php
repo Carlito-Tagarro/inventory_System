@@ -155,31 +155,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <title>Event Form</title>
         <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png">
         <style>
-            nav {
-            
-            padding: 16px 0;
-            margin-bottom: 32px;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            align-items: center;
-            gap: 20px;
-        }
-        .nav-container {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            width: 100%;
-        }
-        nav img {
-            height: 50px;
-            margin-left: 20px;
-        }
-        nav a {
-            color: #333;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
+        nav {
+    padding: 16px 0;
+    margin-bottom: 32px;
+    margin-top: 32px; /* Added margin-top */
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 20px;
+    background-color: #fff;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: center;
+    gap: 104px; /* Increased gap from 32px to 84px */
+    width: 100%;
+}
+
+nav img {
+    height: 50px;
+    margin-left: 50px;
+
+}
+
+nav a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 1.1rem;
+    transition: 0.2s;
+    
+}
+nav a:hover {
+    color: #007bff;
+}
+nav a[href="logout.php"]:hover {
+    color: red;
+}
+
             body { font-family: Arial, sans-serif; background: #f7f7f7; }
             .container { 
                 max-width: 1200px;
@@ -195,6 +209,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 flex-wrap: wrap; 
                 gap: 16px; 
                 justify-content: center; /* Center fieldsets horizontally */
+                gap: 50px
             }
             fieldset {
                 border: 1px solid #007bff;
@@ -204,11 +219,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 min-width: 220px;
                 width: 20%; /* Make fieldsets equal width and responsive */
                 box-sizing: border-box;
+                
             }
             .form-group { 
                 flex: 1 1 100%; /* Take full width inside fieldset */
                 display: flex; 
-                flex-direction: column; 
+                flex-direction: column;
+                margin-top: 20px; 
             }
             
             .form-group.button-group {
@@ -220,8 +237,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             input, select, textarea { padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
             .full-width { flex: 1 1 100%; }
             button { 
-                padding: 4px 12px;
-                font-size: 12px;
+                padding: 6px 12px;
+                font-size: 15px;
                 width: auto;
                 min-width: 0;
                 max-width: 120px; /* limit button width */
@@ -231,11 +248,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 border-radius: 4px; 
                 cursor: pointer;
                 display: inline-block;
-                margin: 16px 0 0 0;
+                /* margin: 16px 0 0 0; */
             }
             button:hover { background: #0056b3; }
             fieldset { border: 1px solid #007bff; border-radius: 4px; padding: 16px; margin-bottom: 16px; }
-            legend { font-weight: bold; padding: 0 10px; }
+            legend { font-weight: 500; font-size: 1.1rem; padding: 0 10px; }
             /* Modal styles */
             .modal {
                 display: none; 
@@ -307,13 +324,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </head>
     <body>
         <nav>
-        <a href="admin.php"><img src="images/AUDENTES LOGO.png" alt="Company Logo"></a>
+            <img src="images/AUDENTES LOGO.png" alt="Company Logo">
         <div class="nav-container">
             <a href="landingpage.php">HOME</a>
             <a href="https://www.facebook.com/audentestechnologies">ABOUT</a>
             <a href="https://www.facebook.com/audentestechnologies">CONTACT US</a>
             <a href="logout.php">LOGOUT</a>
         </div>
+        
     </nav>
         <div class="container">
             <h2>Event Form</h2>
