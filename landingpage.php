@@ -287,7 +287,7 @@ nav a {
             }
             slideIndex = (slideIndex % slides.length) + 1;
             slides[slideIndex - 1].style.display = "block";
-            setTimeout(showSlides, 4000);
+            setTimeout(showSlides, 2000);
         }
         showSlides();
     </script>

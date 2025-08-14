@@ -1,42 +1,67 @@
 // Modal rendering logic
 function renderModal(data, materials, isPending) {
-    const fields = [
-        {label: "Event Name", key: "event_name"},
-        {label: "Event Title", key: "event_title"},
-        {label: "Event Date", key: "event_date"},
-        {label: "Sender Email", key: "sender_email"},
-        {label: "Date Time Ingress", key: "date_time_ingress"},
-        {label: "Date Time Egress", key: "date_time_egress"},
-        {label: "Place", key: "place"},
-        {label: "Location", key: "location"},
-        {label: "Sponsorship Budget", key: "sponsorship_budget"},
-        {label: "Target Audience", key: "target_audience"},
-        {label: "Number Audience", key: "number_audience"},
-        {label: "Set Up", key: "set_up"},
-        {label: "Booth Size", key: "booth_size"},
-        {label: "Booth Inclusion", key: "booth_inclusion"},
-        {label: "Number Tables", key: "number_tables"},
-        {label: "Number Chairs", key: "number_chairs"},
-        {label: "Speaking Slot", key: "speaking_slot"},
-        {label: "Date Time", key: "date_time"},
-        {label: "Program Target", key: "program_target"},
-        {label: "Technical Team", key: "technical_team"},
-        {label: "Trainer Needed", key: "trainer_needed"},
-        {label: "Ready To Use", key: "ready_to_use"},
-        {label: "Provide Materials", key: "provide_materials"}
+    // Group fields by section
+    const sections = [
+        {
+            title: "Event Details",
+            fields: [
+                {label: "Event Name", key: "event_name"},
+                {label: "Event Title", key: "event_title"},
+                {label: "Event Date", key: "event_date"},
+                {label: "Sender Email", key: "sender_email"},
+                {label: "Date Time Ingress", key: "date_time_ingress"},
+                {label: "Date Time Egress", key: "date_time_egress"},
+                {label: "Place", key: "place"},
+                {label: "Location", key: "location"}
+            ]
+        },
+        {
+            title: "Budgeting & Audience",
+            fields: [
+                {label: "Sponsorship Budget", key: "sponsorship_budget"},
+                {label: "Target Audience", key: "target_audience"},
+                {label: "Number Audience", key: "number_audience"}
+            ]
+        },
+        {
+            title: "Booth & Other Setup",
+            fields: [
+                {label: "Set Up", key: "set_up"},
+                {label: "Booth Size", key: "booth_size"},
+                {label: "Booth Inclusion", key: "booth_inclusion"},
+                {label: "Number Tables", key: "number_tables"},
+                {label: "Number Chairs", key: "number_chairs"},
+                {label: "Speaking Slot", key: "speaking_slot"},
+                {label: "Date Time", key: "date_time"}
+            ]
+        },
+        {
+            title: "Programs & Marketing",
+            fields: [
+                {label: "Program Target", key: "program_target"},
+                {label: "Technical Team", key: "technical_team"},
+                {label: "Trainer Needed", key: "trainer_needed"},
+                {label: "Ready To Use", key: "ready_to_use"},
+                {label: "Provide Materials", key: "provide_materials"}
+            ]
+        }
     ];
     const extraFields = [
         {label: "Event Form Id", key: "event_form_id"},
         {label: "Created At", key: "created_at"},
         {label: "Request Status", key: "request_status"}
     ];
-    let leftHtml = '<div class="modal-section-title">Event Details</div><table class="modal-details-table" style="width:100%;">';
-    fields.forEach(f => {
-        if (data[f.key] !== undefined) {
-            leftHtml += `<tr><td class="modal-label">${f.label}:</td><td class="modal-value">${data[f.key]||''}</td></tr>`;
-        }
+
+    let leftHtml = '';
+    sections.forEach(section => {
+        leftHtml += `<div class="modal-section-title">${section.title}</div><table class="modal-details-table" style="width:100%;">`;
+        section.fields.forEach(f => {
+            if (data[f.key] !== undefined) {
+                leftHtml += `<tr><td class="modal-label">${f.label}:</td><td class="modal-value">${data[f.key]||''}</td></tr>`;
+            }
+        });
+        leftHtml += '</table>';
     });
-    leftHtml += '</table>';
     document.getElementById('modalLeft').innerHTML = leftHtml;
 
     let rightHtml = '<div class="modal-section-title">Status & Meta Info</div><table class="modal-details-table" style="width:100%;">';

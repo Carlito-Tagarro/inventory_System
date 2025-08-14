@@ -92,28 +92,32 @@ button:hover {
     z-index: 1000;
     top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(34,34,59,0.25);
+    overflow-y: auto;
 }
 .modal-content {
     background: #fff;
     position: relative;
-    margin: auto;
+    margin: 40px auto 40px auto;
     top: 0; left: 0; right: 0; bottom: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     min-height: 300px;
-    width: 900px;
+    width: 650px;
     max-width: 98vw;
+    max-height: 90vh;
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(34,34,59,0.18);
     animation: modalIn 0.25s;
     padding: 28px 30px 18px 30px;
+    overflow-y: auto;
 }
 @media (max-width: 900px) {
     .modal-content {
         width: 99vw;
         padding: 12px 2vw 10px 2vw;
+        max-height: 95vh;
     }
     .modal-content > div > div {
         flex-direction: column;
@@ -128,6 +132,7 @@ button:hover {
     .modal-content {
         width: 99vw;
         padding: 8px 1vw 8px 1vw;
+        max-height: 98vh;
     }
 }
 .modal-content .modal-section-title {
