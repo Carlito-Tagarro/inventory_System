@@ -1,4 +1,8 @@
+
 <?php
+
+//ADMIN INVENTORY AND REQUESTS FUNCTIONS !!!
+
 include 'connection.php';
 session_start();
 
