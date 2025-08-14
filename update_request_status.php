@@ -2,6 +2,8 @@
 include 'connection.php';
 session_start();
 
+date_default_timezone_set('Asia/Manila'); // Set timezone before any date() calls
+
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
     echo json_encode(['success' => false, 'error' => 'Unauthorized']);
     exit;
@@ -102,7 +104,7 @@ if ($event_row && $event_row['request_mats'] && $status === 'Approved') {
                 if ($field === 'request_status') {
                     $values[] = $status;
                 } elseif ($field === 'processed_at') {
-                    $values[] = date('Y-m-d H:i:s');
+                    $values[] = date('Y-m-d H:i:s'); // Use PHP date with correct timezone
                 } else {
                     $values[] = isset($row[$field]) ? $row[$field] : '';
                 }
@@ -130,14 +132,5 @@ if ($event_row && $event_row['request_mats'] && $status === 'Approved') {
     DISCONNECTIVITY($connection);
 }
 
-?>
-            echo json_encode(['success' => false, 'error' => 'not found']);
-        }
-    } else {
-        echo json_encode(['success' => false, 'error' => 'update failed']);
-    }
-    $stmt->close();
-    DISCONNECTIVITY($connection);
-}
 
-?>
+   
