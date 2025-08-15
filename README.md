@@ -1,16 +1,30 @@
-﻿# inventory_System
+# 📦 Inventory System
 
-<h1>Inventory System</h1>
+This project is designed for **Sales Inventory Management** and **Event Form Requests**. It supports both administrative functions and user-level requests with real-time inventory updates.
 
-<p>This project is made for Sales Inventory and Event Forms</p>
+---
 
-<h2>Features</h2>
+## 🔧 Features
 
-<h3>Admin Features</h3>
-<p>Inventory Track</p>
-<p> Approve or Decline Request<p>
+### 🛠️ Admin Features
 
-<h3>User Features</h3>  
-<p>Event Form Request</p>
-<p>Material Request Auto Deducts to Inventory if Approved</p>
+#### Inventory Tracking
+- Add Items  
+- Edit Items  
+- Delete Items  
+
+#### Request Review
+- Approve Requests  
+- Decline Requests  
+
+---
+
+### 👤 User Features
+
+- Submit Event Form Requests  
+- Material Requests (auto-deducts from inventory if approved)
+
+---
+
+
 
