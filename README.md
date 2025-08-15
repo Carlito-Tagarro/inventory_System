@@ -12,11 +12,15 @@
 <li>Edit Items</li>
 <li>Delete Items</li>
 <br>
-<ul> Approve or Decline Request<ul>
+<ul>Request Review</ul>
+<li>Decline Request</li>
+<li>Approve Request</li>
 </div>
+  
 <h3>User Features</h3>  
 <p>Event Form Request</p>
 <p>Material Request Auto Deducts to Inventory if Approved</p>
+
 
 
 
