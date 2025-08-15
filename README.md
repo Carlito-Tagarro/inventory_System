@@ -5,18 +5,19 @@
 <p>This project is made for Sales Inventory and Event Forms</p>
 
 <h2>Features</h2>
-
+<div>
 <h3>Admin Features</h3>
-<ol>Inventory Tracking<ol>
+<ul>Inventory Tracking<ul>
 <li>Add Items</li>
 <li>Edit Items</li>
 <li>Delete Items</li>
 <br>
-<ol> Approve or Decline Request<ol>
-
+<ul> Approve or Decline Request<ul>
+</div>
 <h3>User Features</h3>  
 <p>Event Form Request</p>
 <p>Material Request Auto Deducts to Inventory if Approved</p>
+
 
 
 
