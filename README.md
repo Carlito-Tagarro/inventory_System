@@ -7,16 +7,17 @@
 <h2>Features</h2>
 
 <h3>Admin Features</h3>
-<p>Inventory Tracking</p>
+<ol>Inventory Tracking<ol>
 <li>Add Items</li>
 <li>Edit Items</li>
 <li>Delete Items</li>
 <br>
-<p> Approve or Decline Request<p>
+<ol> Approve or Decline Request<ol>
 
 <h3>User Features</h3>  
 <p>Event Form Request</p>
 <p>Material Request Auto Deducts to Inventory if Approved</p>
+
 
 
 
