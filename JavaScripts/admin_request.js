@@ -18,7 +18,7 @@ function renderModal(data, materials, isPending) {
         {
             title: "Budgeting & Audience",
             fields: [
-                {label: "Sponsorship Budget", key: "sponsorship_budget"},
+                {label: "Sponsorship Budget", key: "sponsorship_budg"},
                 {label: "Target Audience", key: "target_audience"},
                 {label: "Number Audience", key: "number_audience"}
             ]

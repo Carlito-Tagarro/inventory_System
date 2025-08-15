@@ -4,7 +4,7 @@ include 'connection.php';
 $connection = CONNECTIVITY();
 
 $fields = [
-    'event_form_id','event_name','event_title','event_date','sender_email','date_time_ingress','date_time_egress','place','location','sponsorship_budget','target_audience','number_audience','set_up','booth_size','booth_inclusion','number_tables','number_chairs','speaking_slot','date_time','program_target','technical_team','trainer_needed','ready_to_use','provide_materials','created_at','user_id','request_status','processed_at'
+    'event_form_id','event_name','event_title','event_date','sender_email','date_time_ingress','date_time_egress','place','location','sponsorship_budg','target_audience','number_audience','set_up','booth_size','booth_inclusion','number_tables','number_chairs','speaking_slot','date_time','program_target','technical_team','trainer_needed','ready_to_use','provide_materials','created_at','user_id','request_status','processed_at'
 ];
 
 $values = [];

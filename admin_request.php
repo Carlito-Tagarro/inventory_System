@@ -63,7 +63,16 @@ $total_history_count = intval($total_history_row['cnt']);
 $total_history_pages = ceil($total_history_count / $history_per_page);
 
 // Fetch paginated history requests
-$history_query = "SELECT event_form_id, event_name, event_title, event_date, sender_email, date_time_ingress, date_time_egress, place, location, sponsorship_budget, target_audience, number_audience, set_up, booth_size, booth_inclusion, number_tables, number_chairs, speaking_slot, date_time, program_target, technical_team, trainer_needed, ready_to_use, provide_materials, created_at, user_id, request_mats, request_status, processed_at FROM event_form_history ORDER BY processed_at DESC LIMIT ? OFFSET ?";
+$history_query = "SELECT h.event_form_id, h.event_name, h.event_title, h.event_date, 
+    COALESCE(h.sender_email, u.email) AS sender_email, 
+    h.date_time_ingress, h.date_time_egress, h.place, h.location, h.sponsorship_budg, 
+    h.target_audience, h.number_audience, h.set_up, h.booth_size, h.booth_inclusion, 
+    h.number_tables, h.number_chairs, h.speaking_slot, h.date_time, h.program_target, 
+    h.technical_team, h.trainer_needed, h.ready_to_use, h.provide_materials, 
+    h.created_at, h.user_id, h.request_mats, h.request_status, h.processed_at
+    FROM event_form_history h
+    LEFT JOIN users u ON h.user_id = u.user_id
+    ORDER BY h.processed_at DESC LIMIT ? OFFSET ?";
 $stmt = mysqli_prepare($connection, $history_query);
 mysqli_stmt_bind_param($stmt, "ii", $history_per_page, $history_offset);
 mysqli_stmt_execute($stmt);
@@ -224,6 +233,6 @@ DISCONNECTIVITY($connection);
             </div>
         </div>
     </div>
-    <script src="Javascripts/admin_request.js"></script>
+    <script src="JavaScripts/admin_request.js"></script>
 </body>
 </html>
