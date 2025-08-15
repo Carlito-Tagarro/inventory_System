@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
 }
 
 $connection = CONNECTIVITY();
-// Get count of pending event_form requests
+//COUNT PENDING REQUEST
 $pending_count = 0;
 $sql = "SELECT COUNT(*) as cnt FROM event_form WHERE request_status = 'Pending'";
 $result = mysqli_query($connection, $sql);
