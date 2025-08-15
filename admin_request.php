@@ -95,6 +95,7 @@ DISCONNECTIVITY($connection);
     <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png"> 
     <title>Requests</title>
     <link rel="stylesheet" href="CSS/admin_request.css">
+    
 </head>
 <body>
     <nav>
@@ -234,5 +235,6 @@ DISCONNECTIVITY($connection);
         </div>
     </div>
     <script src="JavaScripts/admin_request.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>

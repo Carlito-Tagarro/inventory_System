@@ -31,13 +31,13 @@ function renderModal(data, materials, isPending) {
                 {label: "Booth Inclusion", key: "booth_inclusion"},
                 {label: "Number Tables", key: "number_tables"},
                 {label: "Number Chairs", key: "number_chairs"},
-                {label: "Speaking Slot", key: "speaking_slot"},
-                {label: "Date Time", key: "date_time"}
             ]
         },
         {
             title: "Programs & Marketing",
             fields: [
+                {label: "Speaking Slot", key: "speaking_slot"},
+                {label: "Date Time", key: "date_time"},
                 {label: "Program Target", key: "program_target"},
                 {label: "Technical Team", key: "technical_team"},
                 {label: "Trainer Needed", key: "trainer_needed"},
@@ -64,7 +64,9 @@ function renderModal(data, materials, isPending) {
     });
     document.getElementById('modalLeft').innerHTML = leftHtml;
 
-    let rightHtml = '<div class="modal-section-title">Status & Meta Info</div><table class="modal-details-table" style="width:100%;">';
+    // FIX: Initialize rightHtml before using it
+    let rightHtml = '';
+    rightHtml += '<div class="modal-section-title">Status & Meta Info</div><table class="modal-details-table" style="width:100%;">';
     extraFields.forEach(f => {
         if (data[f.key] !== undefined) {
             rightHtml += `<tr><td class="modal-label">${f.label}:</td><td class="modal-value">${data[f.key]||''}</td></tr>`;
@@ -89,6 +91,8 @@ function renderModal(data, materials, isPending) {
     if (isPending) {
         actions += `<button onclick="updateStatus(${data.event_form_id},'Approved')" style="background:#2563eb;">Approve</button>`;
         actions += `<button onclick="updateStatus(${data.event_form_id},'Declined')" style="background:#e53e3e;">Decline</button>`;
+    } else {
+        actions += `<button onclick="downloadRequestPDF()" style="background:#2563eb;">Download PDF</button>`;
     }
     document.getElementById('modalActions').innerHTML = actions;
     document.getElementById('requestModal').style.display = 'block';
@@ -151,6 +155,37 @@ function updateStatus(id, status) {
         }
     };
     xhr.send('id=' + id + '&status=' + status);
+}
+
+// PDF generation using html2pdf.js
+function downloadRequestPDF() {
+    // Clone modal content for PDF (excluding modal overlay)
+    let modalContent = document.querySelector('#requestModal .modal-content').cloneNode(true);
+
+    // Remove the close button and actions from the clone
+    let closeBtn = modalContent.querySelector('.close');
+    if (closeBtn) closeBtn.parentNode.removeChild(closeBtn);
+    let actions = modalContent.querySelector('#modalActions');
+    if (actions) actions.parentNode.removeChild(actions);
+
+    // Optional: Add a title/header for the PDF
+    let header = document.createElement('div');
+    header.style.textAlign = 'center';
+    header.style.marginBottom = '18px';
+    header.innerHTML = `<h2 style="color:#22223b;">Event Request Details</h2>`;
+    modalContent.insertBefore(header, modalContent.firstChild);
+
+    // Set options for html2pdf with pagebreak enabled
+    let opt = {
+        margin:       0.5,
+        filename:     'event_request_' + (document.getElementById('requestModal').getAttribute('data-id') || 'details') + '.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'Portrait' },
+        pagebreak:    { mode: ['css', 'legacy'] } // Ensures content flows to next page
+    };
+
+    html2pdf().set(opt).from(modalContent).save();
 }
 
 window.onclick = function(event) {
