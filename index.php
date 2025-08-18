@@ -144,14 +144,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->close();
     $connection->close();
 } else {
-    
+
+    // --- Fetch booked event dates and names ---
+    $connection = CONNECTIVITY();
+    $booked_events = [];
+    // Only fetch events with request_status = 'Approved'
+    $result = $connection->query("SELECT event_date, event_name FROM event_form_history WHERE request_status = 'Approved'");
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $booked_events[] = [
+                'date' => $row['event_date'],
+                'name' => $row['event_name']
+            ];
+        }
+        $result->free();
+    }
     DISCONNECTIVITY($connection);
     ?>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
         <title>Event Form</title>
         <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png">
         <style>
@@ -333,6 +346,14 @@ nav a[href="logout.php"]:hover {
         </div>
         
     </nav>
+    <div style="display:flex; gap:40px;">
+    <div class="container">
+        <!-- ...your form code... -->
+    </div>
+    <div style="flex:1;">
+        <div id="calendar"></div>
+    </div>
+    </div>
         <div class="container">
             <h2>Event Form</h2>
             <form action="index.php" method="post" id="eventForm">
@@ -723,6 +744,108 @@ nav a[href="logout.php"]:hover {
                 }
             });
         });
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Pass booked events from PHP to JS ---
+            var bookedEvents = <?php echo json_encode($booked_events); ?>;
+
+            // --- FullCalendar setup ---
+            var calendarEl = document.getElementById('calendar');
+            var calendarEvents = bookedEvents.map(function(ev) {
+                return {
+                    title: ev.name,
+                    start: ev.date,
+                    allDay: true,
+                    backgroundColor: '#dc3545', // red for booked
+                    borderColor: '#dc3545',
+                    textColor: '#fff'
+                };
+            });
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: 500,
+                events: calendarEvents
+            });
+            calendar.render();
+
+            // --- Disable booked dates in event_date input ---
+            var eventDateInput = document.getElementById('event_date');
+            var eventNameInput = document.getElementById('event_name');
+            var bookedDates = bookedEvents.map(function(ev) { return ev.date; });
+
+            // Helper to format date to yyyy-mm-dd
+            function formatDate(date) {
+                var d = new Date(date);
+                var month = '' + (d.getMonth() + 1);
+                var day = '' + d.getDate();
+                var year = d.getFullYear();
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
+                return [year, month, day].join('-');
+            }
+
+            // Disable booked dates on input[type="date"]
+            eventDateInput.addEventListener('focus', function() {
+                // Remove any previous min/max restrictions
+                eventDateInput.removeAttribute('min');
+                eventDateInput.removeAttribute('max');
+            });
+
+            eventDateInput.addEventListener('input', function() {
+                var selected = eventDateInput.value;
+                if (bookedDates.includes(selected)) {
+                    alert('This date is already booked for another event.');
+                    eventDateInput.value = '';
+                }
+            });
+
+            // Prevent manual entry of booked dates
+            eventDateInput.addEventListener('keydown', function(e) {
+                setTimeout(function() {
+                    var selected = eventDateInput.value;
+                    if (bookedDates.includes(selected)) {
+                        alert('This date is already booked for another event.');
+                        eventDateInput.value = '';
+                    }
+                }, 10);
+            });
+
+            // Show event name on calendar when selecting a new date
+            eventDateInput.addEventListener('change', function() {
+                var date = eventDateInput.value;
+                var name = eventNameInput.value || 'Event';
+                calendar.removeAllEvents();
+                // Add booked events
+                calendarEvents.forEach(function(ev) { calendar.addEvent(ev); });
+                // Add new event if not booked
+                if (date && !bookedDates.includes(date)) {
+                    calendar.addEvent({
+                        title: name,
+                        start: date,
+                        allDay: true,
+                        backgroundColor: '#007bff',
+                        borderColor: '#007bff',
+                        textColor: '#fff'
+                    });
+                }
+            });
+            // Also update event name if changed
+            eventNameInput.addEventListener('input', function() {
+                var date = eventDateInput.value;
+                var name = eventNameInput.value || 'Event';
+                calendar.removeAllEvents();
+                calendarEvents.forEach(function(ev) { calendar.addEvent(ev); });
+                if (date && !bookedDates.includes(date)) {
+                    calendar.addEvent({
+                        title: name,
+                        start: date,
+                        allDay: true,
+                        backgroundColor: '#007bff',
+                        borderColor: '#007bff',
+                        textColor: '#fff'
+                    });
+                }
+            });
+        });
         </script>
     </body>
     <style>
@@ -779,6 +902,8 @@ nav a[href="logout.php"]:hover {
     </style>
     <!-- Font Awesome for icons (optional, can remove if not available) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <!-- ...existing code... -->
     </html>
     <?php
