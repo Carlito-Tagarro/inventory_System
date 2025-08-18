@@ -333,6 +333,15 @@ nav a[href="logout.php"]:hover {
                 .modal-table th, .modal-table td { padding: 6px 4px; font-size: 12px; }
                 fieldset { width: 98%; min-width: unset; }
             }
+            /*Center event name of Calender*/
+            .fc-event-title, .fc-event-main {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+                text-align: center;
+            }
         </style>
     </head>
     <body>
@@ -346,10 +355,9 @@ nav a[href="logout.php"]:hover {
         </div>
         
     </nav>
-    <div style="display:flex; gap:40px;">
+    <!-- <div style="display:flex; gap:40px;">
     <div class="container">
-        <!-- ...your form code... -->
-    </div>
+    </div> -->
     <div style="flex:1;">
         <div id="calendar"></div>
     </div>
