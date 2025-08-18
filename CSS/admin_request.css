@@ -107,7 +107,7 @@ button:hover {
     width: 650px;
     max-width: 98vw;
     max-height: 90vh;
-    border-radius: 12px;
+    /* border-radius: 12px; */
     box-shadow: 0 8px 32px rgba(34,34,59,0.18);
     animation: modalIn 0.25s;
     padding: 28px 30px 18px 30px;
@@ -139,17 +139,17 @@ button:hover {
     font-size: 1.1rem;
     font-weight: 700;
     color: #2563eb;
-    margin: 0 0 10px 0;
+    margin: 28px 0 10px 0; /* Added margin-top: 28px for spacing above titles */
     letter-spacing: 0.5px;
-    border-bottom: 1.5px solid #e0e0e0;
+    /* border-bottom: 1.5px solid #e0e0e0; */
     padding-bottom: 4px;
 }
 .modal-details-table th, .modal-details-table td {
-    border-bottom: 1px solid #f0f0f0;
+    /* border-bottom: 1px solid #f0f0f0; */
 }
 .modal-details-table th {
-    background: #f0f8ff;
-    color: #2563eb;
+    background: #fff;
+    color: #000000;
     font-weight: 600;
     padding: 8px 0;
     font-size: 15px;
@@ -160,11 +160,11 @@ button:hover {
     font-size: 15px;
 }
 .modal-label {
-    color: #2563eb;
+    color: #0d0d0e;
     font-weight: 600;
     width: 44%;
     padding-right: 10px;
-    text-align: right;
+    text-align: left;
 }
 .modal-value {
     color: #22223b;
@@ -172,4 +172,5 @@ button:hover {
     width: 56%;
     padding-left: 10px;
     word-break: break-word;
+    text-align: center;
 }

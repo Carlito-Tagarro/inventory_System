@@ -221,8 +221,7 @@ DISCONNECTIVITY($connection);
             </div>
             <div style="width:100%;">
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
-                    <img src="images/images__1_-removebg-preview.png" alt="Event" style="height:38px;">
-                    <span style="font-size: 1.5rem; font-weight: 700; color: #22223b;">Event Request Details</span>
+                    <!-- <img src="images/AUDENTES LOGO.png" alt="Event" style="height:60px; width: 60px;"> -->
                 </div>
                 <div class="modal-divider"></div>
                 <div style="display: flex; flex-wrap: wrap; gap: 32px;">

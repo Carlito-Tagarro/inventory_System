@@ -2,13 +2,14 @@
 function renderModal(data, materials, isPending) {
     // Group fields by section
     const sections = [
+
         {
-            title: "Event Details",
+            title: "I. Event Details",
             fields: [
+                {label: "Sender Email", key: "sender_email"},
                 {label: "Event Name", key: "event_name"},
                 {label: "Event Title", key: "event_title"},
                 {label: "Event Date", key: "event_date"},
-                {label: "Sender Email", key: "sender_email"},
                 {label: "Date Time Ingress", key: "date_time_ingress"},
                 {label: "Date Time Egress", key: "date_time_egress"},
                 {label: "Place", key: "place"},
@@ -16,7 +17,7 @@ function renderModal(data, materials, isPending) {
             ]
         },
         {
-            title: "Budgeting & Audience",
+            title: "II. Budgeting & Audience",
             fields: [
                 {label: "Sponsorship Budget", key: "sponsorship_budg"},
                 {label: "Target Audience", key: "target_audience"},
@@ -24,7 +25,7 @@ function renderModal(data, materials, isPending) {
             ]
         },
         {
-            title: "Booth & Other Setup",
+            title: "III. Booth & Other Setup",
             fields: [
                 {label: "Set Up", key: "set_up"},
                 {label: "Booth Size", key: "booth_size"},
@@ -34,7 +35,7 @@ function renderModal(data, materials, isPending) {
             ]
         },
         {
-            title: "Programs & Marketing",
+            title: "IV. Programs & Marketing",
             fields: [
                 {label: "Speaking Slot", key: "speaking_slot"},
                 {label: "Date Time", key: "date_time"},
@@ -74,7 +75,8 @@ function renderModal(data, materials, isPending) {
     });
     rightHtml += '</table>';
     if (materials && materials.length > 0) {
-        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">Requested Materials</div>';
+        // Change section title to include Roman numeral V.
+        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">V. Requested Materials</div>';
         rightHtml += '<table class="modal-details-table" style="width:100%;"><tr><th>Category</th><th>Name</th><th>Quantity</th></tr>';
         materials.forEach(mat => {
             ['Brochure','Swag','Marketing Material'].forEach(type => {
@@ -97,7 +99,29 @@ function renderModal(data, materials, isPending) {
     document.getElementById('modalActions').innerHTML = actions;
     document.getElementById('requestModal').style.display = 'block';
     document.getElementById('requestModal').setAttribute('data-id', data.event_form_id);
+   
+
+    // Add border to all tables inside modal
+    setTimeout(() => {
+        document.querySelectorAll('#requestModal .modal-details-table').forEach(table => {
+            table.style.border = '1px solid #22223b';
+            table.style.borderCollapse = 'collapse';
+            table.querySelectorAll('td, th').forEach(cell => {
+                cell.style.border = '1px solid #22223b';
+                cell.style.padding = '6px 10px';
+            });
+        });
+        // Optional: style section titles
+        document.querySelectorAll('#requestModal .modal-section-title').forEach(title => {
+            // title.style.background = '#f3f3f3';
+            title.style.fontWeight = 'bold';
+            title.style.padding = '8px 10px';
+            // title.style.borderLeft = '4px solid #22223b';
+            title.style.marginBottom = '0px';
+        });
+    }, 0);
 }
+
 
 // Event delegation for view-request buttons
 document.body.addEventListener('click', function(e) {
@@ -159,7 +183,6 @@ function updateStatus(id, status) {
 
 // PDF generation using html2pdf.js
 function downloadRequestPDF() {
-    // Clone modal content for PDF (excluding modal overlay)
     let modalContent = document.querySelector('#requestModal .modal-content').cloneNode(true);
 
     // Remove the close button and actions from the clone
@@ -168,21 +191,108 @@ function downloadRequestPDF() {
     let actions = modalContent.querySelector('#modalActions');
     if (actions) actions.parentNode.removeChild(actions);
 
+    // Remove overflow and max-height styles for PDF rendering
+    modalContent.style.overflow = 'visible';
+    modalContent.style.maxHeight = 'none';
+    modalContent.style.height = 'auto';
+
+    // Change flex layout to block for PDF rendering
+    let flexWrap = modalContent.querySelector('div[style*="display: flex"]');
+    if (flexWrap) flexWrap.style.display = 'block';
+
+    // Prevent page breaks inside tables
+    let tables = modalContent.querySelectorAll('table');
+    tables.forEach(table => {
+        table.style.pageBreakInside = 'avoid';
+        table.style.breakInside = 'avoid';
+        // Set solid border, remove border-radius
+        table.style.border = '1px solid #22223b';
+        table.style.borderCollapse = 'collapse';
+        table.style.borderRadius = '0';
+        table.querySelectorAll('td, th').forEach(cell => {
+            cell.style.border = '1px solid #22223b';
+            cell.style.padding = '6px 10px';
+            cell.style.borderRadius = '0';
+        });
+    });
+
+    // --- Add custom header with logo and company info ---
+    let pdfHeader = document.createElement('div');
+    pdfHeader.style.display = 'flex';
+    pdfHeader.style.alignItems = 'flex-start';
+    pdfHeader.style.justifyContent = 'space-between';
+    pdfHeader.style.marginBottom = '18px';
+    pdfHeader.style.width = '100%';
+    pdfHeader.innerHTML = `
+        <div style="flex:1; text-align:left; padding-right:32px;">
+            <div style="font-weight:bold;font-size:1.15em;">AUDENTES TECHNOLOGIES INC.</div>
+            <div style="font-style:italic;font-size:0.95em;">Be PHENOMENAL or Be FORGOTTEN</div>
+            <div style="margin-top:8px;font-size:0.95em;">
+                Block 16 Lot 2 San Augustin Village<br>
+                San Francisco (Halang) 4024<br>
+                City of Biñan, Philippines<br>
+                +63 2 624-6414 | +63 985 931 9156<br>
+                certification@audentestechnologies.com
+            </div>
+        </div>
+        <div style="width:auto; text-align:right;">
+            <img src="images/AUDENTES LOGO.png" alt="Audentes Logo" style="height:130px; width:130px; display:inline-block;">
+        </div>
+    `;
+    // NOTE: Replace the src URL above with your actual logo image URL or base64 if needed.
+
+    modalContent.insertBefore(pdfHeader, modalContent.firstChild);
+
     // Optional: Add a title/header for the PDF
     let header = document.createElement('div');
     header.style.textAlign = 'center';
-    header.style.marginBottom = '18px';
+    // header.style.marginBottom = '10px';
     header.innerHTML = `<h2 style="color:#22223b;">Event Request Details</h2>`;
-    modalContent.insertBefore(header, modalContent.firstChild);
+    modalContent.insertBefore(header, pdfHeader.nextSibling);
 
-    // Set options for html2pdf with pagebreak enabled
+    // Move "Booth & Other Setup" section to start of second page in PDF
+    let boothSection = Array.from(modalContent.querySelectorAll('.modal-section-title'))
+        .find(el => el.textContent.trim().startsWith('III. Booth & Other Setup'));
+    if (boothSection) {
+        // Insert a page break before Booth section
+        boothSection.style.pageBreakBefore = 'always';
+        // Optionally add extra spacing if needed
+        boothSection.style.marginTop = '220px';
+    }
+
+    // Move "Booth & Other Setup" section to start of second page in PDF
+    let materialSection = Array.from(modalContent.querySelectorAll('.modal-section-title'))
+        .find(el => el.textContent.trim().startsWith('V. Requested Materials'));
+    if (materialSection) {
+        // Insert a page break before Material section
+        materialSection.style.pageBreakBefore = 'always';
+        // Optionally add extra spacing if needed
+        materialSection.style.marginTop = '150px';
+    }
+
+    // Add spacing before each section title except the first
+    let sectionTitles = modalContent.querySelectorAll('.modal-section-title');
+    sectionTitles.forEach((el, idx) => {
+        if (idx > 0) {
+            let spacer = document.createElement('div');
+            spacer.style.height = '30px';
+            el.parentNode.insertBefore(spacer, el);
+        }
+    });
+
+    // Remove any forced page breaks between sections
+    sectionTitles.forEach((el) => {
+        el.style.pageBreakBefore = '';
+    });
+
+    // Set options for html2pdf with pagebreak enabled (css/legacy)
     let opt = {
         margin:       0.5,
         filename:     'event_request_' + (document.getElementById('requestModal').getAttribute('data-id') || 'details') + '.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2 },
         jsPDF:        { unit: 'in', format: 'a4', orientation: 'Portrait' },
-        pagebreak:    { mode: ['css', 'legacy'] } // Ensures content flows to next page
+        pagebreak:    { mode: ['css', 'legacy'] }
     };
 
     html2pdf().set(opt).from(modalContent).save();
@@ -192,3 +302,4 @@ window.onclick = function(event) {
     let modal = document.getElementById('requestModal');
     if (event.target == modal) closeModal();
 }
+
