@@ -1,5 +1,5 @@
 <?php
-include 'connection.php';
+include '../connection.php';
 $connection = CONNECTIVITY();
 $id = intval($_GET['id']);
 $query = "SELECT * FROM event_form_history WHERE event_form_id = $id ORDER BY processed_at DESC LIMIT 1";

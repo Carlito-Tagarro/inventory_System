@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 15, 2025 at 09:08 AM
+-- Generation Time: Aug 19, 2025 at 05:55 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,11 +39,11 @@ CREATE TABLE `brochures` (
 --
 
 INSERT INTO `brochures` (`brochure_id`, `brochure_name`, `quantity`, `total_brochure`) VALUES
-(1, 'BROCHURE 1', 18, 0),
-(2, 'BROCHURE 2', 13, 0),
-(3, 'BROCHURE 3', 13, 0),
-(4, 'BROCHURE 4', 15, 0),
-(5, 'BROCHURE 5', 15, 0);
+(1, 'BROCHURE 1', 5, 0),
+(2, 'BROCHURE 2', 5, 0),
+(3, 'BROCHURE 3', 20, 0),
+(4, 'BROCHURE 4', 20, 0),
+(5, 'BROCHURE 5', 20, 0);
 
 -- --------------------------------------------------------
 
@@ -124,17 +124,7 @@ CREATE TABLE `event_form_history` (
 --
 
 INSERT INTO `event_form_history` (`event_form_id`, `event_name`, `event_title`, `event_date`, `sender_email`, `date_time_ingress`, `date_time_egress`, `place`, `location`, `sponsorship_budg`, `target_audience`, `number_audience`, `set_up`, `booth_size`, `booth_inclusion`, `number_tables`, `number_chairs`, `speaking_slot`, `date_time`, `program_target`, `technical_team`, `trainer_needed`, `ready_to_use`, `provide_materials`, `created_at`, `request_status`, `processed_at`, `user_id`, `request_mats`) VALUES
-(14, 'TESTING', 'TESTING', '2025-08-29', '', '2025-08-15 11:15:00', '2025-08-15 11:16:00', 'uuwi nalng', 'sd', 'Sponsorship', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '3323', 'No', 'No', '', 'No', '2025-08-15 11:16:15', 'Approved', '2025-08-15 11:16:26', 14, 0),
-(15, 'LETS GO', 'GUMAGANA NA', '2025-08-15', '', '2025-08-15 11:19:00', '2025-08-15 11:19:00', 'EZ', 'AF', 'Free', 'GYATS', 100, 'Yes', 'BIG BOI', 'LAHAT', 50, 100, 'Diddy', '2025-08-15 11:18:00', 'GYAT AND HUZZ', 'No', 'No', 'OIL', 'Yes', '2025-08-15 11:19:17', 'Approved', '2025-08-15 11:21:14', 14, 260),
-(16, 'SENDER EMAIL TESTING', 'TESTING', '2025-08-15', '', '2025-08-15 11:27:00', '2025-08-15 11:27:00', 'AYAW MAG FETCH NG EMAIL OF SENDER', 'UMAY', 'Sponsorship', 'BADTRIP', 123, 'Yes', 'SAMGYUPSAL', 'LAHAT NG MERON', 123, 123, 'IAMSAM', '2025-08-15 11:28:00', 'SAMGYUPSAL', 'No', 'No', 'LUTUAN', 'No', '2025-08-15 11:28:22', 'Approved', '2025-08-15 11:41:58', 14, 0),
-(17, 'SENDER EMAIL', 'SENDER EMAIL TEST', '2025-08-15', '', '2025-08-15 11:42:00', '2025-08-15 11:42:00', 'uuwi nalng', 'sa susunod na lang', 'Sponsorship', '123', 200, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'No', '2025-08-15 11:43:23', 'Declined', '2025-08-15 11:49:11', 14, 0),
-(18, 'TESTING', 'TESTING', '2025-08-15', '', '2025-08-15 13:05:00', '2025-08-15 13:05:00', 'EZ', 'ew3434', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'No', '2025-08-15 13:05:48', 'Approved', '2025-08-15 13:06:09', 14, 0),
-(19, 'TESTING', 'TESTING', '2025-08-15', '', '2025-08-15 13:16:00', '2025-08-15 13:16:00', 'uuwi nalng', 'SDSDS', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'No', '2025-08-15 13:16:54', 'Declined', '2025-08-15 13:18:54', 14, 0),
-(20, 'KvK', 'Rise of Kingdoms', '2025-08-15', 'carlitotagarro27@gmail.com', '2025-08-15 13:23:00', '2025-08-15 13:23:00', 'UMAY LODS', 'sd', 'Free', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'No', '2025-08-15 13:23:51', 'Approved', '2025-08-15 13:24:08', 14, 0),
-(21, 'Umay Lods', 'MEmew', '2025-08-15', '', '2025-08-15 13:26:00', '2025-08-15 13:26:00', 'uuwi nalng', 'sa susunod na lang', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'No', '2025-08-15 13:26:13', 'Approved', '2025-08-15 13:26:27', 14, 0),
-(22, 'GUMAGANA NA', 'ANG DATING PLINAPLANO', '2025-08-15', 'carlitotagarro27@gmail.com', '2025-08-15 13:27:00', '2025-08-15 13:27:00', 'NIGG NIGG', 'BRUV', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'No', '2025-08-15 13:27:46', 'Approved', '2025-08-15 13:27:59', 14, 0),
-(23, 'TESTING PDF generation', 'TESTINGERS', '2025-08-15', 'carlitotagarro27@gmail.com', '2025-08-15 14:24:00', '2025-08-15 14:24:00', 'uuwi nalng', 'sa susunod na lang', 'Sponsorship', 'ASD', 12, 'Yes', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'Yes', 'Yes', '', 'Yes', '2025-08-15 14:25:21', 'Approved', '2025-08-15 14:25:40', 14, 275),
-(24, 'PDF GENERATION TEST', 'PDF TEST', '2025-08-15', 'carlitotagarro27@gmail.com', '2025-08-15 14:30:00', '2025-08-15 14:30:00', 'UMAY LODS', 'sa susunod na lang', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'No', '2025-08-15 14:30:23', 'Declined', '2025-08-15 14:46:39', 14, 0);
+(44, 'TESTING OPERATION OF THE SYSTEM', 'OH NO', '2025-08-19', 'ch4rlestzy27@gmail.com', '2025-08-19 11:44:00', '2025-08-19 11:44:00', 'AGILE TECH', 'SOUTHWOODS', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'Yes', '2025-08-19 11:44:45', 'Approved', '2025-08-19 11:48:03', 16, 293);
 
 -- --------------------------------------------------------
 
@@ -154,11 +144,11 @@ CREATE TABLE `marketing_materials` (
 --
 
 INSERT INTO `marketing_materials` (`material_id`, `material_name`, `quantity`, `others`) VALUES
-(6, 'MATERIALS 1', 19, NULL),
-(7, 'MATERIALS 2', 14, NULL),
-(8, 'MATERIALS 3', 14, NULL),
-(9, 'MATERIALS 4', 15, NULL),
-(10, 'MATERIALS 5', 15, NULL);
+(6, 'MATERIALS 1', 5, NULL),
+(7, 'MATERIALS 2', 5, NULL),
+(8, 'MATERIALS 3', 20, NULL),
+(9, 'MATERIALS 4', 20, NULL),
+(10, 'MATERIALS 5', 20, NULL);
 
 -- --------------------------------------------------------
 
@@ -182,98 +172,35 @@ CREATE TABLE `material_request_form` (
 --
 
 INSERT INTO `material_request_form` (`material_request_id`, `request_mats`, `name_brochures`, `brochure_quantity`, `name_swag`, `swag_quantity`, `name_material`, `material_quantity`) VALUES
-(186, 186, 'BROCHURE 1', 1, '', 0, '', 0),
-(187, 186, '', 0, '', 0, 'MATERIALS 1', 1),
-(188, 186, '', 0, 'SWAGS 1', 1, '', 0),
-(189, 189, 'BROCHURE 1', 1, '', 0, '', 0),
-(190, 189, 'BROCHURE 2', 1, '', 0, '', 0),
-(191, 189, '', 0, '', 0, 'MATERIALS 1', 1),
-(192, 189, '', 0, '', 0, 'MATERIALS 2', 1),
-(193, 189, '', 0, 'SWAGS 1', 1, '', 0),
-(194, 189, '', 0, 'SWAGS 2', 1, '', 0),
-(195, 195, 'BROCHURE 1', 1, '', 0, '', 0),
-(196, 195, '', 0, '', 0, 'MATERIALS 1', 1),
-(197, 195, '', 0, 'SWAGS 1', 1, '', 0),
-(198, 198, 'BROCHURE 1', 1, '', 0, '', 0),
-(199, 198, 'BROCHURE 2', 1, '', 0, '', 0),
-(200, 198, 'BROCHURE 3', 1, '', 0, '', 0),
-(201, 198, 'BROCHURE 4', 1, '', 0, '', 0),
-(202, 198, 'BROCHURE 5', 1, '', 0, '', 0),
-(203, 198, '', 0, '', 0, 'MATERIALS 1', 1),
-(204, 198, '', 0, '', 0, 'MATERIALS 2', 1),
-(205, 198, '', 0, '', 0, 'MATERIALS 3', 1),
-(206, 198, '', 0, '', 0, 'MATERIALS 4', 1),
-(207, 198, '', 0, '', 0, 'MATERIALS 5', 1),
-(208, 198, '', 0, 'SWAGS 1', 1, '', 0),
-(209, 198, '', 0, 'SWAGS 2', 1, '', 0),
-(210, 198, '', 0, 'SWAGS 3', 1, '', 0),
-(211, 198, '', 0, 'SWAGS 4', 1, '', 0),
-(212, 198, '', 0, 'SWAGS 5', 1, '', 0),
-(213, 213, 'BROCHURE 1', 3, '', 0, '', 0),
-(214, 213, 'BROCHURE 2', 3, '', 0, '', 0),
-(215, 213, 'BROCHURE 3', 3, '', 0, '', 0),
-(216, 213, 'BROCHURE 4', 3, '', 0, '', 0),
-(217, 213, 'BROCHURE 5', 3, '', 0, '', 0),
-(218, 213, '', 0, '', 0, 'MATERIALS 1', 3),
-(219, 213, '', 0, '', 0, 'MATERIALS 2', 3),
-(220, 213, '', 0, '', 0, 'MATERIALS 3', 3),
-(221, 213, '', 0, '', 0, 'MATERIALS 4', 3),
-(222, 213, '', 0, '', 0, 'MATERIALS 5', 3),
-(223, 213, '', 0, 'SWAGS 1', 3, '', 0),
-(224, 213, '', 0, 'SWAGS 2', 3, '', 0),
-(225, 213, '', 0, 'SWAGS 3', 3, '', 0),
-(226, 213, '', 0, 'SWAGS 4', 3, '', 0),
-(227, 213, '', 0, 'SWAGS 5', 3, '', 0),
-(228, 228, 'BROCHURE 1', 1, '', 0, '', 0),
-(229, 228, '', 0, '', 0, 'MATERIALS 1', 1),
-(230, 228, '', 0, 'SWAGS 1', 1, '', 0),
-(231, 231, 'BROCHURE 2', 1, '', 0, '', 0),
-(232, 231, 'BROCHURE 3', 1, '', 0, '', 0),
-(233, 231, '', 0, '', 0, 'MATERIALS 2', 1),
-(234, 231, '', 0, '', 0, 'MATERIALS 3', 1),
-(235, 231, '', 0, 'SWAGS 2', 1, '', 0),
-(236, 231, '', 0, 'SWAGS 3', 1, '', 0),
-(237, 237, 'BROCHURE 1', 1, '', 0, '', 0),
-(238, 237, '', 0, '', 0, 'MATERIALS 1', 1),
-(239, 237, '', 0, 'SWAGS 1', 1, '', 0),
-(240, 240, 'BROCHURE 1', 1, '', 0, '', 0),
-(241, 240, 'BROCHURE 2', 1, '', 0, '', 0),
-(242, 240, 'BROCHURE 3', 1, '', 0, '', 0),
-(243, 240, 'BROCHURE 4', 1, '', 0, '', 0),
-(244, 240, 'BROCHURE 5', 1, '', 0, '', 0),
-(245, 240, '', 0, '', 0, 'MATERIALS 1', 1),
-(246, 240, '', 0, '', 0, 'MATERIALS 2', 1),
-(247, 240, '', 0, '', 0, 'MATERIALS 3', 1),
-(248, 240, '', 0, '', 0, 'MATERIALS 4', 1),
-(249, 240, '', 0, '', 0, 'MATERIALS 5', 1),
-(250, 240, '', 0, 'SWAGS 1', 1, '', 0),
-(251, 240, '', 0, 'SWAGS 2', 1, '', 0),
-(252, 240, '', 0, 'SWAGS 3', 1, '', 0),
-(253, 240, '', 0, 'SWAGS 4', 1, '', 0),
-(254, 240, '', 0, 'SWAGS 5', 1, '', 0),
-(255, 255, 'BROCHURE 1', 1, '', 0, '', 0),
-(256, 255, '', 0, '', 0, 'MATERIALS 1', 1),
-(257, 255, '', 0, 'SWAGS 1', 1, '', 0),
-(258, 258, 'BROCHURE 1', 1, '', 0, '', 0),
-(259, 258, 'BROCHURE 2', 1, '', 0, '', 0),
-(260, 260, 'BROCHURE 1', 1, '', 0, '', 0),
-(261, 260, 'BROCHURE 2', 1, '', 0, '', 0),
-(262, 260, 'BROCHURE 3', 1, '', 0, '', 0),
-(263, 260, 'BROCHURE 4', 1, '', 0, '', 0),
-(264, 260, 'BROCHURE 5', 1, '', 0, '', 0),
-(265, 260, '', 0, '', 0, 'MATERIALS 1', 1),
-(266, 260, '', 0, '', 0, 'MATERIALS 2', 1),
-(267, 260, '', 0, '', 0, 'MATERIALS 3', 1),
-(268, 260, '', 0, '', 0, 'MATERIALS 4', 1),
-(269, 260, '', 0, '', 0, 'MATERIALS 5', 1),
-(270, 260, '', 0, 'SWAGS 1', 1, '', 0),
-(271, 260, '', 0, 'SWAGS 2', 1, '', 0),
-(272, 260, '', 0, 'SWAGS 3', 1, '', 0),
-(273, 260, '', 0, 'SWAGS 4', 1, '', 0),
-(274, 260, '', 0, 'SWAGS 5', 1, '', 0),
-(275, 275, 'BROCHURE 1', 1, '', 0, '', 0),
-(276, 275, 'BROCHURE 2', 1, '', 0, '', 0),
-(277, 275, 'BROCHURE 3', 1, '', 0, '', 0);
+(293, 293, 'BROCHURE 1', 23, '', 0, '', 0),
+(294, 293, 'BROCHURE 2', 21, '', 0, '', 0),
+(295, 293, '', 0, '', 0, 'MATERIALS 1', 23),
+(296, 293, '', 0, '', 0, 'MATERIALS 2', 21),
+(297, 293, '', 0, 'SWAGS 1', 23, '', 0),
+(298, 293, '', 0, 'SWAGS 2', 21, '', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `material_return_request`
+--
+
+CREATE TABLE `material_return_request` (
+  `request_id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `items_json` text NOT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'Pending',
+  `requested_at` datetime NOT NULL,
+  `reviewed_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `material_return_request`
+--
+
+INSERT INTO `material_return_request` (`request_id`, `event_id`, `user_id`, `items_json`, `status`, `requested_at`, `reviewed_at`) VALUES
+(8, 44, 16, '[{\"type\":\"Brochure\",\"name\":\"BROCHURE 1\",\"qty\":5},{\"type\":\"Brochure\",\"name\":\"BROCHURE 2\",\"qty\":5},{\"type\":\"Marketing Material\",\"name\":\"MATERIALS 1\",\"qty\":5},{\"type\":\"Marketing Material\",\"name\":\"MATERIALS 2\",\"qty\":5},{\"type\":\"Swag\",\"name\":\"SWAGS 1\",\"qty\":5},{\"type\":\"Swag\",\"name\":\"SWAGS 2\",\"qty\":5}]', 'Approved', '2025-08-19 11:51:16', '2025-08-19 11:52:27');
 
 -- --------------------------------------------------------
 
@@ -292,11 +219,11 @@ CREATE TABLE `swags` (
 --
 
 INSERT INTO `swags` (`swag_id`, `swags_name`, `quantity`) VALUES
-(1, 'SWAGS 1', 19),
-(2, 'SWAGS 2', 14),
-(3, 'SWAGS 3', 14),
-(4, 'SWAGS 4', 15),
-(5, 'SWAGS 5', 15);
+(1, 'SWAGS 1', 5),
+(2, 'SWAGS 2', 5),
+(3, 'SWAGS 3', 20),
+(4, 'SWAGS 4', 20),
+(5, 'SWAGS 5', 20);
 
 -- --------------------------------------------------------
 
@@ -312,17 +239,18 @@ CREATE TABLE `users` (
   `user_type` enum('admin','trainer','','') DEFAULT NULL,
   `position` varchar(100) NOT NULL,
   `verification_code` varchar(10) NOT NULL,
-  `verified` tinyint(1) DEFAULT 0
+  `verified` tinyint(1) DEFAULT 0,
+  `full_name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `user_type`, `position`, `verification_code`, `verified`) VALUES
-(13, 'administration', '$2y$10$CP9GOla6e9kfDWiDpgDTsux.PJ0UpiXL2hBTudOpsGPAKeArFDr.W', 'carlitotagarro0@gmail.com', 'admin', '', '921859', 1),
-(14, 'user', '$2y$10$nZLjh4MA0DRpnCwQ7l4JTuXl6qwc6WQF28Zpt13eLpaamtPE7tPAW', 'carlitotagarro27@gmail.com', 'trainer', '', '290166', 1),
-(15, 'msfelice', '$2y$10$zJEnOPwvoO6mnKm1Zvq6H.I4YTstT.DtteGg8y8PC7UIwDJ1.fLI6', 'felicejoyjuliano75@gmail.com', 'trainer', '', '247727', 1);
+INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `user_type`, `position`, `verification_code`, `verified`, `full_name`) VALUES
+(13, 'administration', '$2y$10$CP9GOla6e9kfDWiDpgDTsux.PJ0UpiXL2hBTudOpsGPAKeArFDr.W', 'carlitotagarro0@gmail.com', 'admin', '', '921859', 1, ''),
+(14, 'user', '$2y$10$nZLjh4MA0DRpnCwQ7l4JTuXl6qwc6WQF28Zpt13eLpaamtPE7tPAW', 'carlitotagarro27@gmail.com', 'trainer', '', '290166', 1, ''),
+(16, 'Joseph', '$2y$10$cmBgp4rPBQ9OeNkUsVlSd.Fk0BsnC1OSX.pvpaONNsmJGx0DOm/vC', 'ch4rlestzy27@gmail.com', 'trainer', '', '470291', 1, '');
 
 --
 -- Indexes for dumped tables
@@ -362,6 +290,12 @@ ALTER TABLE `material_request_form`
   ADD PRIMARY KEY (`material_request_id`);
 
 --
+-- Indexes for table `material_return_request`
+--
+ALTER TABLE `material_return_request`
+  ADD PRIMARY KEY (`request_id`);
+
+--
 -- Indexes for table `swags`
 --
 ALTER TABLE `swags`
@@ -387,7 +321,7 @@ ALTER TABLE `brochures`
 -- AUTO_INCREMENT for table `event_form`
 --
 ALTER TABLE `event_form`
-  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `marketing_materials`
@@ -399,7 +333,13 @@ ALTER TABLE `marketing_materials`
 -- AUTO_INCREMENT for table `material_request_form`
 --
 ALTER TABLE `material_request_form`
-  MODIFY `material_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=278;
+  MODIFY `material_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=299;
+
+--
+-- AUTO_INCREMENT for table `material_return_request`
+--
+ALTER TABLE `material_return_request`
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `swags`
@@ -411,7 +351,7 @@ ALTER TABLE `swags`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Constraints for dumped tables

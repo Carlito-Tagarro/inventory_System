@@ -3,7 +3,7 @@
 
 //ADMIN INVENTORY AND REQUESTS FUNCTIONS !!!
 
-include 'connection.php';
+include '../connection.php';
 session_start();
 
 date_default_timezone_set('Asia/Manila'); // Set timezone before any date() calls

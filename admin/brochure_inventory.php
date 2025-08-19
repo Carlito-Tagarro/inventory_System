@@ -1,6 +1,6 @@
 <?php
 
-    include 'connection.php';
+    include '../connection.php';
     session_start();
 
     if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
@@ -66,7 +66,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png"> 
+    <link rel="icon" type="image/x-icon" href="../images/images__1_-removebg-preview.png"> 
     <title>Brochure Inventory</title>
     <style>
         body {
@@ -221,7 +221,7 @@
 <body>
     <!-- Navigation Bar -->
     <nav>
-        <a href="admin.php"><img src="images/images__1_-removebg-preview.png" alt="Company Logo"></a>
+        <a href="admin.php"><img src="../images/images__1_-removebg-preview.png" alt="Company Logo"></a>
     <div class="nav-container">
         <a href="admin.php">Dashboard</a>
         <a href="brochure_inventory.php">Brochure Inventory</a>

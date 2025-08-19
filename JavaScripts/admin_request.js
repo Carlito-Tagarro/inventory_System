@@ -236,7 +236,7 @@ function downloadRequestPDF() {
             </div>
         </div>
         <div style="width:auto; text-align:right;">
-            <img src="images/AUDENTES LOGO.png" alt="Audentes Logo" style="height:130px; width:130px; display:inline-block;">
+            <img src="../images/AUDENTES LOGO.png" alt="Audentes Logo" style="height:130px; width:130px; display:inline-block;">
         </div>
     `;
     // NOTE: Replace the src URL above with your actual logo image URL or base64 if needed.

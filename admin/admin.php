@@ -1,9 +1,9 @@
 <?php 
-include 'connection.php';
+include '../connection.php';
 session_start();
 
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
-    header("Location: login.php"); 
+    header("Location: /..login.php"); 
     exit;
 }
 
@@ -31,7 +31,7 @@ DISCONNECTIVITY($connection);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png"> 
+    <link rel="icon" type="image/x-icon" href="../images/images__1_-removebg-preview.png"> 
     <title>Admin</title>
     <style>
         body {
@@ -104,6 +104,7 @@ DISCONNECTIVITY($connection);
 </head>
 <body>
     <div class="container">
+        <!-- <img src="../images/images__1_-removebg-preview.png" alt=""> -->
         <h1>Welcome to the Admin Page</h1>
         <p>This is a protected area for administrators.</p>
         <div class="btn-group">
@@ -127,7 +128,7 @@ DISCONNECTIVITY($connection);
                 </button>
             </a>
         </div>
-        <a class="logout-link" href="logout.php">Logout</a>
+        <a class="logout-link" href="../logout.php">Logout</a>
     </div>
 </body>
 </html>
