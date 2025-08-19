@@ -16,6 +16,14 @@ if ($result && $row = mysqli_fetch_assoc($result)) {
     $pending_count = (int)$row['cnt'];
 }
 
+// COUNT PENDING RETURN REQUESTS
+$return_pending_count = 0;
+$sql_return = "SELECT COUNT(*) as cnt FROM material_return_request WHERE status = 'Pending'";
+$result_return = mysqli_query($connection, $sql_return);
+if ($result_return && $row_return = mysqli_fetch_assoc($result_return)) {
+    $return_pending_count = (int)$row_return['cnt'];
+}
+
 DISCONNECTIVITY($connection);
 ?>
 <!DOCTYPE html>
@@ -107,6 +115,14 @@ DISCONNECTIVITY($connection);
                     View Requests
                     <?php if ($pending_count > 0): ?>
                         <span class="notification-badge"><?php echo $pending_count; ?></span>
+                    <?php endif; ?>
+                </button>
+            </a>
+            <a href="admin_return_requests.php">
+                <button type="button">
+                    Return Requests
+                    <?php if ($return_pending_count > 0): ?>
+                        <span class="notification-badge"><?php echo $return_pending_count; ?></span>
                     <?php endif; ?>
                 </button>
             </a>

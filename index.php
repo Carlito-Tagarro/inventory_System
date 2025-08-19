@@ -507,6 +507,12 @@ nav a[href="logout.php"]:hover {
                 <!-- NEW: Hidden input for selected materials -->
                 <input type="hidden" name="selected_materials" id="selected_materials_input">
             </form>
+            <!-- Add link/button to open return request form -->
+            <div style="text-align:right; margin-bottom:16px;">
+                <a href="return_request.php" style="background:#28a745;color:#fff;padding:8px 18px;border-radius:4px;text-decoration:none;">
+                    Return Unused Materials
+                </a>
+            </div>
         </div>
         <!-- Modal HTML -->
         <div id="materialsModal" class="modal">
