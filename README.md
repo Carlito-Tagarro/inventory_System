@@ -17,7 +17,6 @@ This project is designed for **Sales Inventory Management** and **Event Form Req
 - Approve Event Requests  
 - Decline Event Requests  
 - Generate PDF of the Event
----
 #### Return Material Request Review
 - Approve Return
 - Decline Return
@@ -28,6 +27,7 @@ This project is designed for **Sales Inventory Management** and **Event Form Req
 - Material Requests (auto-deducts from inventory if approved)
 - Request return of materials (auto-add to inventory if approved)
 ---
+
 
 
 
