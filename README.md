@@ -13,18 +13,22 @@ This project is designed for **Sales Inventory Management** and **Event Form Req
 - Edit Items  
 - Delete Items  
 
-#### Request Review
-- Approve Requests  
-- Decline Requests  
-
+####  Event Request Review
+- Approve Event Requests  
+- Decline Event Requests  
+- Generate PDF of the Event
 ---
-
+#### Return Material Request Review
+- Approve Return
+- Decline Return
+---
 ### 👤 User Features
 
 - Submit Event Form Requests  
 - Material Requests (auto-deducts from inventory if approved)
-
+- Request return of materials (auto-add to inventory if approved)
 ---
+
 
 
 
