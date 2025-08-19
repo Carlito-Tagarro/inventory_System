@@ -1,177 +1,42 @@
 <?php
 include 'connection.php';
-session_start();
+?>
 
-
-if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'trainer') {
-    header("Location: login.php"); 
-    exit;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audentes Technologies</title>
+    <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Reset and page layout */
+html, body {
+    height: 100%;
+    margin: 0;
 }
-$connection = CONNECTIVITY();
-// $connection->query("PRAGMA journal_mode = WAL;"); // Sqlite WAL mode
 
-// Simple input sanitization
-function clean($data) {
-    return htmlspecialchars(trim($data));
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f6f8;
+    box-sizing: border-box;
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect and sanitize form data
-    $event_name = clean($_POST['event_name']);
-    $event_title = clean($_POST['event_title']);
-    $event_date = clean($_POST['event_date']);
-    $date_time_ingress = clean($_POST['date_time_ingress']);
-    $date_time_egress = clean($_POST['date_time_egress']);
-    $place = clean($_POST['place']);
-    $location = clean($_POST['location']);
-    $sponsorship_budg = clean($_POST['sponsorship_budg']);
-    $target_audience = clean($_POST['target_audience']);
-    $number_audience = intval($_POST['number_audience']);
-    $set_up = clean($_POST['set_up']);
-    $booth_size = clean($_POST['booth_size']);
-    $booth_inclusion = clean($_POST['booth_inclusion']);
-    $number_tables = intval($_POST['number_tables']);
-    $number_chairs = intval($_POST['number_chairs']);
-    $speaking_slot = clean($_POST['speaking_slot']);
-    $date_time = clean($_POST['date_time']);
-    $program_target = clean($_POST['program_target']);
-    $technical_team = clean($_POST['technical_team']);
-    $trainer_needed = clean($_POST['trainer_needed']);
-    $ready_to_use = clean($_POST['ready_to_use']);
-    $provide_materials = clean($_POST['provide_materials']);
+/* Main content takes available space */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-    
-    $user_id = $_SESSION['user_id'];
-
-    // NEW: Get selected materials from hidden input 
-    $selected_materials_json = isset($_POST['selected_materials']) ? $_POST['selected_materials'] : '';
-    $selected_materials = [];
-    if ($selected_materials_json) {
-        $selected_materials = json_decode($selected_materials_json, true);
-    }
-
-    $request_mats = NULL;
-    $conn = CONNECTIVITY();
-    if ($provide_materials === 'Yes' && !empty($selected_materials)) {
-        $first_id = null;
-        $first_row_inserted = false;
-        foreach ($selected_materials as $mat) {
-            $name_brochures = '';
-            $brochure_quantity = '';
-            $name_swag = '';
-            $swag_quantity = '';
-            $name_material = '';
-            $material_quantity = '';
-            if ($mat['type'] === 'Brochure') {
-                $name_brochures = $mat['name'];
-                $brochure_quantity = $mat['qty'];
-            } elseif ($mat['type'] === 'Swag') {
-                $name_swag = $mat['name'];
-                $swag_quantity = $mat['qty'];
-            } elseif ($mat['type'] === 'Marketing Material') {
-                $name_material = $mat['name'];
-                $material_quantity = $mat['qty'];
-            }
-            if (!$first_row_inserted) {
-                // Insert first row with request_mats = 0 (temporary, must be NOT NULL)
-                $stmt = $conn->prepare("INSERT INTO material_request_form (request_mats, name_brochures, brochure_quantity, name_swag, swag_quantity, name_material, material_quantity) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $tmp = 0;
-                $stmt->bind_param(
-                    "issssss",
-                    $tmp,
-                    $name_brochures,
-                    $brochure_quantity,
-                    $name_swag,
-                    $swag_quantity,
-                    $name_material,
-                    $material_quantity
-                );
-                $stmt->execute();
-                $first_id = $conn->insert_id;
-                $stmt->close();
-                // Update the first row to set request_mats = first_id
-                $stmt = $conn->prepare("UPDATE material_request_form SET request_mats = ? WHERE material_request_id = ?");
-                $stmt->bind_param("ii", $first_id, $first_id);
-                $stmt->execute();
-                $stmt->close();
-                $first_row_inserted = true;
-            } else {
-                // For subsequent materials, use the first_id as the group id
-                $stmt = $conn->prepare("INSERT INTO material_request_form (request_mats, name_brochures, brochure_quantity, name_swag, swag_quantity, name_material, material_quantity) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param(
-                    "issssss",
-                    $first_id,
-                    $name_brochures,
-                    $brochure_quantity,
-                    $name_swag,
-                    $swag_quantity,
-                    $name_material,
-                    $material_quantity
-                );
-                $stmt->execute();
-                $stmt->close();
-            }
-        }
-        $request_mats = $first_id;
-    }
-    DISCONNECTIVITY($conn);
-
-    // --- Insert event form, including request_mats (or NULL if none) ---
-    $connection = CONNECTIVITY();
-    $sql = "INSERT INTO event_form (
-        event_name, event_title, event_date, date_time_ingress, date_time_egress, place, location,
-        sponsorship_budg, target_audience, number_audience, set_up, booth_size, booth_inclusion,
-        number_tables, number_chairs, speaking_slot, date_time, program_target, technical_team,
-        trainer_needed, ready_to_use, provide_materials, user_id, request_mats
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    $stmt = $connection->prepare($sql);
-    $stmt->bind_param(
-        "sssssssssisssiisssssssis",
-        $event_name, $event_title, $event_date, $date_time_ingress, $date_time_egress, $place, $location,
-        $sponsorship_budg, $target_audience, $number_audience, $set_up, $booth_size, $booth_inclusion,
-        $number_tables, $number_chairs, $speaking_slot, $date_time, $program_target, $technical_team,
-        $trainer_needed, $ready_to_use, $provide_materials, $user_id, $request_mats
-    );
-
-    if ($stmt->execute()) {
-        echo "<h2>Event submitted successfully!</h2>";
-        echo '<a href="index.php">Back to form</a>';
-    } else {
-        echo "<h2>Error submitting event: " . $stmt->error . "</h2>";
-        echo '<a href="index.php">Back to form</a>';
-    }
-    $stmt->close();
-    $connection->close();
-} else {
-
-    // --- Fetch booked event dates and names ---
-    $connection = CONNECTIVITY();
-    $booked_events = [];
-    // Only fetch events with request_status = 'Approved'
-    $result = $connection->query("SELECT event_date, event_name FROM event_form_history WHERE request_status = 'Approved'");
-    if ($result) {
-        while ($row = $result->fetch_assoc()) {
-            $booked_events[] = [
-                'date' => $row['event_date'],
-                'name' => $row['event_name']
-            ];
-        }
-        $result->free();
-    }
-    DISCONNECTIVITY($connection);
-    ?>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Event Form</title>
-        <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png">
-        <style>
-        nav {
+/* Navigation */
+nav {
     padding: 16px 0;
     margin-bottom: 32px;
-    margin-top: 32px; /* Added margin-top */
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
@@ -182,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 .nav-container {
     display: flex;
     justify-content: center;
-    gap: 104px; /* Increased gap from 32px to 84px */
+    gap: 84px; /* Increased gap from 32px to 84px */
     width: 100%;
 }
 
@@ -195,730 +60,236 @@ nav img {
 nav a {
     color: #333;
     text-decoration: none;
-    font-weight: 400;
+    font-weight: 600;
     font-size: 1.1rem;
-    transition: 0.2s;
     
 }
-nav a:hover {
-    color: #007bff;
-}
-nav a[href="logout.php"]:hover {
-    color: red;
+
+/* Main content spacing */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
 }
 
-            body { font-family: Arial, sans-serif; background: #f7f7f7; }
-            .container { 
-                max-width: 1200px;
-                margin: 40px auto;
-                background: #fff;
-                padding: 30px;
-                border-radius: 8px;
-                box-shadow: 0 2px 8px #ccc;
-            }
-            h2 { text-align: center; }
-            form { 
-                display: flex; 
-                flex-wrap: wrap; 
-                gap: 16px; 
-                justify-content: center; /* Center fieldsets horizontally */
-                gap: 50px
-            }
-            fieldset {
-                border: 1px solid #007bff;
-                border-radius: 4px;
-                padding: 16px;
-                margin-bottom: 16px;
-                min-width: 220px;
-                width: 20%; /* Make fieldsets equal width and responsive */
-                box-sizing: border-box;
-                
-            }
-            .form-group { 
-                flex: 1 1 100%; /* Take full width inside fieldset */
-                display: flex; 
-                flex-direction: column;
-                margin-top: 20px; 
-            }
-            
-            .form-group.button-group {
-                flex: 1 1 100%;
-                align-items: center; 
-                width: 100%;
-            }
-            label { margin-bottom: 4px; font-weight: bold; }
-            input, select, textarea { padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
-            .full-width { flex: 1 1 100%; }
-            button { 
-                padding: 6px 12px;
-                font-size: 15px;
-                width: auto;
-                min-width: 0;
-                max-width: 120px; /* limit button width */
-                background: #007bff; 
-                color: #fff; 
-                border: none; 
-                border-radius: 4px; 
-                cursor: pointer;
-                display: inline-block;
-                /* margin: 16px 0 0 0; */
-            }
-            button:hover { background: #0056b3; }
-            fieldset { border: 1px solid #007bff; border-radius: 4px; padding: 16px; margin-bottom: 16px; }
-            legend { font-weight: 500; font-size: 1.1rem; padding: 0 10px; }
-            /* Modal styles */
-            .modal {
-                display: none; 
-                position: fixed; 
-                z-index: 999; 
-                left: 0; top: 0; width: 100%; height: 100%;
-                overflow: auto; background: rgba(0,0,0,0.4);
-            }
-            .modal-content {
-                background: #fff; 
-                margin: 5% auto; 
-                padding: 32px 24px;
-                border: 1px solid #007bff; 
-                width: 1200px; /* Increased from 900px */
-                border-radius: 12px;
-                position: relative; 
-                box-shadow: 0 8px 32px rgba(0,123,255,0.15);
-            }
-            .modal-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 8px;
-                font-size: 14px;
-            }
-            .modal-table th, .modal-table td {
-                border: 1px solid #e3e3e3;
-                padding: 8px 10px;
-                text-align: left;
-            }
-            .modal-table th {
-                background: #f0f8ff;
-                color: #007bff;
-                font-weight: 600;
-            }
-            .modal-table tr:nth-child(even) {
-                background: #f9f9f9;
-            }
-            .modal-table tr:hover {
-                background: #e6f0ff;
-            }
-            .modal-content h4 {
-                font-size: 16px;
-                margin-top: 18px;
-                margin-bottom: 8px;
-                font-weight: 600;
-            }
-            .modal-content hr {
-                border: none;
-                border-top: 1px solid #e3e3e3;
-            }
-            .close {
-                color: #aaa; position: absolute; right: 18px; top: 12px;
-                font-size: 32px; font-weight: bold; cursor: pointer;
-                transition: color 0.2s;
-            }
-            .close:hover { color: #007bff; }
-            @media (max-width: 900px) {
-                .container { max-width: 98%; }
-                form { flex-direction: column; align-items: center; }
-                fieldset { width: 98%; min-width: unset; }
-            }
-            @media (max-width: 600px) {
-                .container { max-width: 98%; }
-                .modal-content { width: 98%; padding: 12px; }
-                .modal-table th, .modal-table td { padding: 6px 4px; font-size: 12px; }
-                fieldset { width: 98%; min-width: unset; }
-            }
-            /*Center event name of Calender*/
-            .fc-event-title, .fc-event-main {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 100%;
-                width: 100%;
-                text-align: center;
-            }
-        </style>
-    </head>
-    <body>
+/* Footer */
+.footersection {
+    background: #a94d4d;
+    color: #fff;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.footersection > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    flex-wrap: wrap;
+}
+
+.footersection a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Carousel */
+* { box-sizing: border-box; }
+
+.slideshow-container {
+    max-width: 1000px;
+    position: relative;
+    margin: auto;
+}
+
+.slideshow-container img {
+    max-width: 100%;
+    max-height: 700px;
+    display: block;
+    margin-right: 180px;
+    border-radius: 12px;
+}
+
+.mySlides {
+    display: none;
+}
+
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    margin-top: -22px;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    user-select: none;
+}
+
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgba(0,0,0,0.8);
+}
+
+.dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+    background-color: #717171;
+}
+
+.fade {
+    animation-name: fade;
+    animation-duration: 1.5s;
+}
+
+@keyframes fade {
+    from { opacity: .4; }
+    to { opacity: 1; }
+}
+
+/* Grouped circle styles */
+.circle {
+    position: absolute;
+    background: #cfa7a7;
+    border-radius: 50%;
+    opacity: 0.7;
+}
+.circle1 { top: 10px; left: 40px; width: 120px; height: 120px; }
+.circle2 { top: -30px; left: 320px; width: 70px; height: 70px; }
+.circle3 { top: 220px; left: 260px; width: 180px; height: 180px; }
+.circle4 { top: 340px; left: 120px; width: 110px; height: 110px; }
+
+.main-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+.main-title span:last-child {
+    color: #a94d4d;
+    font-weight: normal;
+}
+.main-desc {
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin-top: 10px;
+}
+.get-started-btn {
+    display: inline-block;
+    margin-top: 28px;
+    background: #a94d4d;
+    color: #fff;
+    padding: 12px 32px;
+    border-radius: 24px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1rem;
+}
+    </style>
+</head>
+<body>
+  <main>
+    <div class="main-content">
         <nav>
             <img src="images/AUDENTES LOGO.png" alt="Company Logo">
-        <div class="nav-container">
-            <a href="landingpage.php">HOME</a>
-            <a href="https://www.facebook.com/audentestechnologies">ABOUT</a>
-            <a href="https://www.facebook.com/audentestechnologies">CONTACT US</a>
-            <a href="logout.php">LOGOUT</a>
-        </div>
-        
-    </nav>
-    <!-- <div style="display:flex; gap:40px;">
-    <div class="container">
-    </div> -->
-    <div style="flex:1;">
-        <div id="calendar"></div>
-    </div>
-    </div>
-        <div class="container">
-            <h2>Event Form</h2>
-            <form action="index.php" method="post" id="eventForm">
-                <fieldset>
-                    <legend>Event Details</legend>
-                    <div class="form-group">
-                        <label for="event_name">Event Name</label>
-                        <input type="text" name="event_name" id="event_name" maxlength="100" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="event_title">Event Title</label>
-                        <input type="text" name="event_title" id="event_title" maxlength="100" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="event_date">Event Date</label>
-                        <input type="date" name="event_date" id="event_date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="date_time_ingress">Date Time Ingress</label>
-                        <input type="datetime-local" name="date_time_ingress" id="date_time_ingress" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="date_time_egress">Date Time Egress</label>
-                        <input type="datetime-local" name="date_time_egress" id="date_time_egress" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="place">Place</label>
-                        <input type="text" name="place" id="place" maxlength="100" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="location">Location</label>
-                        <input type="text" name="location" id="location" maxlength="255" required>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend>Budgeting & Audience</legend>
-                    <div class="form-group">
-                        <label for="sponsorship_budg">Sponsorship Budget</label>
-                        <select name="sponsorship_budg" id="sponsorship_budg">
-                            <option value="">--Select--</option>
-                            <option value="Free">Free</option>
-                            <option value="Sponsorship">Sponsorship</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="target_audience">Target Audience</label>
-                        <textarea name="target_audience" id="target_audience"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="number_audience">Number Audience</label>
-                        <input type="number" name="number_audience" id="number_audience" min="0">
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend>Booth & Other Setup</legend>
-                    <div class="form-group">
-                        <label for="set_up">Set Up</label>
-                        <select name="set_up" id="set_up">
-                            <option value="">--Select--</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="booth_size">Booth Size</label>
-                        <textarea name="booth_size" id="booth_size"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="booth_inclusion">Booth Inclusion</label>
-                        <textarea name="booth_inclusion" id="booth_inclusion"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="number_tables">Number of Tables</label>
-                        <input type="number" name="number_tables" id="number_tables" min="0" max="999">
-                    </div>
-                    <div class="form-group">
-                        <label for="number_chairs">Number of Chairs</label>
-                        <input type="number" name="number_chairs" id="number_chairs" min="0" max="999">
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <legend>Programs & Marketing</legend>
-                    <div class="form-group">
-                        <label for="speaking_slot">Speaking Slot</label>
-                        <input type="text" name="speaking_slot" id="speaking_slot" maxlength="255">
-                    </div>
-                    <div class="form-group">
-                        <label for="date_time">Date Time</label>
-                        <input type="datetime-local" name="date_time" id="date_time">
-                    </div>
-                    <div class="form-group">
-                        <label for="program_target">Program Target</label>
-                        <input type="text" name="program_target" id="program_target" maxlength="255">
-                    </div>
-                    <div class="form-group">
-                        <label for="technical_team">Technical Team</label>
-                        <select name="technical_team" id="technical_team" required>
-                            <option value="">--Select--</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="trainer_needed">Trainer Needed</label>
-                        <select name="trainer_needed" id="trainer_needed" required>
-                            <option value="">--Select--</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="ready_to_use">Ready to Use</label>
-                        <textarea name="ready_to_use" id="ready_to_use"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="provide_materials">Provide Materials</label>
-                        <select name="provide_materials" id="provide_materials" required>
-                            <option value="">--Select--</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                </fieldset>
-                <!-- New fieldset to show selected items from modal -->
-                <fieldset>
-                    <legend>Selected Materials</legend>
-                    <div id="selectedMaterialsPreview" class="form-group full-width" style="margin-top:8px;">
-                        <label style="font-weight:bold; color:#007bff;">Selected Materials:</label>
-                        <table style="width:100%; background:#f8faff; border:1px solid #e3e3e3; border-radius:6px; border-collapse:collapse;">
-                            <thead>
-                                <tr>
-                                    <th style="text-align:left; padding:8px;">Name</th>
-                                    <th style="text-align:left; padding:8px;">Quantity</th>
-                                </tr>
-                            </thead>
-                            <tbody id="selectedMaterialsList"></tbody>
-                        </table>
-                    </div>
-                </fieldset>
-                <div class="form-group button-group">
-                    <button type="submit">Submit Form</button>
+            <div class="nav-container">
+                <a href="landingpage.php">HOME</a>
+                <a href="https://www.facebook.com/audentestechnologies">ABOUT</a>
+                <a href="https://www.facebook.com/audentestechnologies">CONTACT US</a>
+            </div>
+        </nav>
+        <br><br>
+
+        <div style="display: flex; gap: 0px; align-items: flex-start; flex: 1; height: 100%;">
+            <div style="flex: 1; position: relative; padding: 40px 0 0 40px; margin-left: 200px;">
+                <div class="circle circle1"></div>
+                <div class="circle circle2"></div>
+                <div class="circle circle3"></div>
+                <div class="circle circle4"></div>
+                <div style="position: relative; z-index: 1;">
+                    <h1 class="main-title">
+                        <span>AUDENTES</span>
+                        <span>TECHNOLOGIES</span>
+                    </h1>
+                    <p class="main-desc">
+                        With 5+ years of experience in the technology and education space, we envision ourselves to become the leading technology partner of schools and universities, providing internationally-recognized certificates through training as a service.
+                    </p>
+                    <a href="userpage.php" class="get-started-btn">GET STARTED</a>
                 </div>
-                <!-- NEW: Hidden input for selected materials -->
-                <input type="hidden" name="selected_materials" id="selected_materials_input">
-            </form>
-            <!-- Add link/button to open return request form -->
-            <div style="text-align:right; margin-bottom:16px;">
-                <a href="return_request.php" style="background:#28a745;color:#fff;padding:8px 18px;border-radius:4px;text-decoration:none;">
-                    Return Unused Materials
-                </a>
+            </div>
+            
+            <div style="flex: 1; display: flex; justify-content: center; align-items: center;">
+               <div class="slideshow-container">
+                  <div class="mySlides fade">
+                    <img src="images/CCS_Program_Datasheet_page-0001.jpg" alt="Slide 1">
+                  </div>
+                  <div class="mySlides fade">
+                    <img src="images/Cisco Program Overview 1124 PRINT_page-0001.jpg" alt="Slide 2">
+                  </div>
+                  <div class="mySlides fade">
+                    <img src="images/Hospitality and Culinary Arts Careers - Culinary Foundations - Infographic_page-0001.jpg" alt="Slide 3">
+                  </div>
+               </div>
             </div>
         </div>
-        <!-- Modal HTML -->
-        <div id="materialsModal" class="modal">
-            <div class="modal-content">
-                <span class="close" id="closeModal">&times;</span>
-                <h3 style="margin-top:0; text-align:center;">
-                    Provide Materials
-                </h3>
-                <p style="text-align:center; color:#555;">Please specify the materials you will provide for this event.</p>
-                <hr style="margin:16px 0;">
-                <!-- Filter Dropdown -->
-                <div style="margin-bottom:16px;">
-                    <label for="categoryFilter" style="font-weight:600;">Filter by Category:</label>
-                    <select id="categoryFilter" style="padding:4px 8px; border-radius:4px;">
-                        <option value="All">All</option>
-                        <option value="Brochure">Brochure</option>
-                        <option value="Marketing Material">Marketing Material</option>
-                        <option value="Swag">Swag</option>
-                    </select>
-                    <input type="text" id="nameSearch" placeholder="Search by name..." style="margin-left:16px; padding:4px 8px; border-radius:4px; border:1px solid #ccc;">
+    </div>
+
+    <div class="second-content"></div>
+   </main> 
+
+    <footer class="footersection">
+        <div style="background: #a94d4d; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 18px 32px; font-size: 1rem;">
+            <div>
+                <span style="margin-right: 18px;">
+                    <i class="fa-solid fa-envelope"></i>
+                    info@audentestechnologies.com
+                </span>
+                <span style="margin-right: 18px;">
+                    <i class="fa-solid fa-phone"></i>
+                    +63-000-000-0000
+                </span>
+                <div class="social-icons" style="display: inline-block; margin-left: 20px; text-decoration: none;">
+                    <a href="https://www.linkedin.com/company/audentestechnologies/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="https://www.facebook.com/audentestechnologies" target="_blank"><i class="fa-brands fa-facebook"></i></a>
                 </div>
-                <form id="materialsForm">
-                <table class="modal-table" id="materialsTable">
-                    <thead>
-                        <tr>
-                            <th>Select</th>
-                            <th>Category</th>
-                            <th>Name</th>
-                            <th>Available</th>
-                            <th>Others</th>
-                            <th>Quantity to Provide</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    $conn = CONNECTIVITY();
-                    // Brochures
-                    $result = $conn->query("SELECT brochure_id AS id, brochure_name AS name, quantity, '' AS others, 'Brochure' AS category FROM brochures");
-                    if ($result) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr data-category='Brochure'>
-                                <td><input type='checkbox' name='brochures[]' value='{$row['id']}'></td>
-                                <td>Brochure</td>
-                                <td>{$row['name']}</td>
-                                <td>{$row['quantity']}</td>
-                                <td></td>
-                                <td><input type='number' name='brochure_qty_{$row['id']}' min='1' max='{$row['quantity']}' style='width:60px;'></td>
-                            </tr>";
-                        }
-                        $result->free();
-                    }
-                    // Marketing Materials
-                    $result = $conn->query("SELECT material_id AS id, material_name AS name, quantity, others, 'Marketing Material' AS category FROM marketing_materials");
-                    if ($result) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr data-category='Marketing Material'>
-                                <td><input type='checkbox' name='materials[]' value='{$row['id']}'></td>
-                                <td>Marketing Material</td>
-                                <td>{$row['name']}</td>
-                                <td>{$row['quantity']}</td>
-                                <td>{$row['others']}</td>
-                                <td><input type='number' name='material_qty_{$row['id']}' min='1' max='{$row['quantity']}' style='width:60px;'></td>
-                            </tr>";
-                        }
-                        $result->free();
-                    }
-                    // Swags
-                    $result = $conn->query("SELECT swag_id AS id, swags_name AS name, quantity, '' AS others, 'Swag' AS category FROM swags");
-                    if ($result) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr data-category='Swag'>
-                                <td><input type='checkbox' name='swags[]' value='{$row['id']}'></td>
-                                <td>Swag</td>
-                                <td>{$row['name']}</td>
-                                <td>{$row['quantity']}</td>
-                                <td></td>
-                                <td><input type='number' name='swag_qty_{$row['id']}' min='1' max='{$row['quantity']}' style='width:60px;'></td>
-                            </tr>";
-                        }
-                        $result->free();
-                    }
-                    DISCONNECTIVITY($conn);
-                    ?>
-                    </tbody>
-                </table>
-                <div style="text-align:right; margin-top:18px;">
-                    <button type="submit" id="submitMaterialsBtn" style="background:#007bff;color:#fff;border:none;padding:8px 24px;border-radius:4px;font-size:15px;cursor:pointer;">
-                        Submit Selected Materials
-                    </button>
-                </div>
-                </form>
+            </div>
+            <div style="text-align: center;">
+                &copy; 2018 Audentes Technologies. All rights reserved.
+            </div>
+            <div style="text-align: right;">
+               <i class="fa-solid fa-location-dot"></i>
+                VCC BUILDING B16 L2 SAN AGUSTIN VILLAGE,<br> BRGY. SAN FRANCISCO, BIÑAN, LAGUNA, Biñan, Philippines
             </div>
         </div>
-        <script>
-        // Modal JS
-        document.addEventListener('DOMContentLoaded', function() {
-            var select = document.getElementById('provide_materials');
-            var modal = document.getElementById('materialsModal');
-            var closeBtn = document.getElementById('closeModal');
-            var categoryFilter = document.getElementById('categoryFilter');
-            var nameSearch = document.getElementById('nameSearch');
-            var materialsTable = document.getElementById('materialsTable');
-            select.addEventListener('change', function() {
-                if (select.value === 'Yes') {
-                    modal.style.display = 'block';
-                } else {
-                    modal.style.display = 'none';
-                    // Clear selected materials if "No" is chosen
-                    var selectedPreview = document.getElementById('selectedMaterialsPreview');
-                    var selectedList = document.getElementById('selectedMaterialsList');
-                    selectedPreview.style.display = 'none';
-                    selectedList.innerHTML = '';
-                    // Also uncheck all checkboxes and clear quantities in modal
-                    var rows = document.querySelectorAll('#materialsTable tbody tr');
-                    rows.forEach(function(row) {
-                        var checkbox = row.querySelector('input[type="checkbox"]');
-                        var qtyInput = row.querySelector('input[type="number"]');
-                        if (checkbox) checkbox.checked = false;
-                        if (qtyInput) {
-                            qtyInput.value = '';
-                            qtyInput.disabled = true;
-                        }
-                    });
-                }
-            });
-            closeBtn.onclick = function() {
-                modal.style.display = 'none';
-                select.value = '';
-            };
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            };
-            // Filter logic
-            function filterTable() {
-                var categoryValue = categoryFilter.value;
-                var searchValue = nameSearch.value.toLowerCase();
-                var rows = materialsTable.querySelectorAll('tbody tr');
-                rows.forEach(function(row) {
-                    var matchesCategory = (categoryValue === 'All' || row.getAttribute('data-category') === categoryValue);
-                    var nameCell = row.querySelector('td:nth-child(3)');
-                    var matchesSearch = nameCell && nameCell.textContent.toLowerCase().includes(searchValue);
-                    if (matchesCategory && matchesSearch) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
+    </footer>
+
+    <script>
+        // Optimized carousel JS
+        let slideIndex = 0;
+        function showSlides() {
+            const slides = document.getElementsByClassName("mySlides");
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
             }
-            categoryFilter.addEventListener('change', filterTable);
-            nameSearch.addEventListener('input', filterTable);
-
-            // Enable quantity input only if checkbox is checked
-            var table = document.getElementById('materialsTable');
-            table.addEventListener('change', function(e) {
-                if (e.target.type === 'checkbox') {
-                    var row = e.target.closest('tr');
-                    var qtyInput = row.querySelector('input[type="number"]');
-                    if (qtyInput) {
-                        qtyInput.disabled = !e.target.checked;
-                        if (!e.target.checked) qtyInput.value = '';
-                    }
-                }
-                // Quantity input validation
-                if (e.target.type === 'number') {
-                    var row = e.target.closest('tr');
-                    var availableCell = row.querySelector('td:nth-child(4)');
-                    var available = parseInt(availableCell.textContent, 10);
-                    var val = parseInt(e.target.value, 10);
-                    if (val > available) {
-                        e.target.value = available;
-                    } else if (val < 1 && e.target.value !== '') {
-                        e.target.value = 1;
-                    }
-                }
-            });
-            // On page load, disable all quantity inputs
-            var qtyInputs = table.querySelectorAll('input[type="number"]');
-            qtyInputs.forEach(function(input) {
-                input.disabled = true;
-                // Prevent manual input above available
-                input.addEventListener('input', function(e) {
-                    var row = input.closest('tr');
-                    var availableCell = row.querySelector('td:nth-child(4)');
-                    var available = parseInt(availableCell.textContent, 10);
-                    var val = parseInt(input.value, 10);
-                    if (val > available) {
-                        input.value = available;
-                    } else if (val < 1 && input.value !== '') {
-                        input.value = 1;
-                    }
-                });
-            });
-            // Show selected materials outside modal
-            var materialsForm = document.getElementById('materialsForm');
-            var selectedPreview = document.getElementById('selectedMaterialsPreview');
-            var selectedList = document.getElementById('selectedMaterialsList');
-            var submitMaterialsBtn = document.getElementById('submitMaterialsBtn');
-            var selectedMaterialsInput = document.getElementById('selected_materials_input');
-            materialsForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                var selected = [];
-                var rows = materialsTable.querySelectorAll('tbody tr');
-                rows.forEach(function(row) {
-                    var checkbox = row.querySelector('input[type="checkbox"]');
-                    var qtyInput = row.querySelector('input[type="number"]');
-                    if (checkbox && checkbox.checked && qtyInput && qtyInput.value) {
-                        var name = row.querySelector('td:nth-child(3)').textContent;
-                        var qty = qtyInput.value;
-                        var type = row.querySelector('td:nth-child(2)').textContent;
-                        selected.push({name: name, qty: qty, type: type});
-                    }
-                });
-                // Store selected materials as JSON in hidden input
-                selectedMaterialsInput.value = JSON.stringify(selected);
-
-                // Display selected materials as table
-                var selectedPreview = document.getElementById('selectedMaterialsPreview');
-                var selectedList = document.getElementById('selectedMaterialsList');
-                if (selected.length > 0) {
-                    selectedPreview.style.display = 'block';
-                    var html = '';
-                    selected.forEach(function(item) {
-                        html += '<tr><td style="padding:8px;">' + item.name + '</td><td style="padding:8px;">' + item.qty + '</td></tr>';
-                    });
-                    selectedList.innerHTML = html;
-                } else {
-                    selectedPreview.style.display = 'none';
-                    selectedList.innerHTML = '';
-                }
-                modal.style.display = 'none';
-                select.value = 'Yes'; // keep selection
-            });
-
-            // --- NEW: On event form submit, ensure selected materials are included ---
-            var eventForm = document.getElementById('eventForm');
-            eventForm.addEventListener('submit', function(e) {
-                // If provide_materials is Yes and no materials selected, prevent submit
-                if (select.value === 'Yes' && !selectedMaterialsInput.value) {
-                    alert('Please select materials to provide.');
-                    e.preventDefault();
-                }
-            });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- Pass booked events from PHP to JS ---
-            var bookedEvents = <?php echo json_encode($booked_events); ?>;
-
-            // --- FullCalendar setup ---
-            var calendarEl = document.getElementById('calendar');
-            var calendarEvents = bookedEvents.map(function(ev) {
-                return {
-                    title: ev.name,
-                    start: ev.date,
-                    allDay: true,
-                    backgroundColor: '#dc3545', // red for booked
-                    borderColor: '#dc3545',
-                    textColor: '#fff'
-                };
-            });
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                height: 500,
-                events: calendarEvents
-            });
-            calendar.render();
-
-            // --- Disable booked dates in event_date input ---
-            var eventDateInput = document.getElementById('event_date');
-            var eventNameInput = document.getElementById('event_name');
-            var bookedDates = bookedEvents.map(function(ev) { return ev.date; });
-
-            // Helper to format date to yyyy-mm-dd
-            function formatDate(date) {
-                var d = new Date(date);
-                var month = '' + (d.getMonth() + 1);
-                var day = '' + d.getDate();
-                var year = d.getFullYear();
-                if (month.length < 2) month = '0' + month;
-                if (day.length < 2) day = '0' + day;
-                return [year, month, day].join('-');
-            }
-
-            // Disable booked dates on input[type="date"]
-            eventDateInput.addEventListener('focus', function() {
-                // Remove any previous min/max restrictions
-                eventDateInput.removeAttribute('min');
-                eventDateInput.removeAttribute('max');
-            });
-
-            eventDateInput.addEventListener('input', function() {
-                var selected = eventDateInput.value;
-                if (bookedDates.includes(selected)) {
-                    alert('This date is already booked for another event.');
-                    eventDateInput.value = '';
-                }
-            });
-
-            // Prevent manual entry of booked dates
-            eventDateInput.addEventListener('keydown', function(e) {
-                setTimeout(function() {
-                    var selected = eventDateInput.value;
-                    if (bookedDates.includes(selected)) {
-                        alert('This date is already booked for another event.');
-                        eventDateInput.value = '';
-                    }
-                }, 10);
-            });
-
-            // Show event name on calendar when selecting a new date
-            eventDateInput.addEventListener('change', function() {
-                var date = eventDateInput.value;
-                var name = eventNameInput.value || 'Event';
-                calendar.removeAllEvents();
-                // Add booked events
-                calendarEvents.forEach(function(ev) { calendar.addEvent(ev); });
-                // Add new event if not booked
-                if (date && !bookedDates.includes(date)) {
-                    calendar.addEvent({
-                        title: name,
-                        start: date,
-                        allDay: true,
-                        backgroundColor: '#007bff',
-                        borderColor: '#007bff',
-                        textColor: '#fff'
-                    });
-                }
-            });
-            // Also update event name if changed
-            eventNameInput.addEventListener('input', function() {
-                var date = eventDateInput.value;
-                var name = eventNameInput.value || 'Event';
-                calendar.removeAllEvents();
-                calendarEvents.forEach(function(ev) { calendar.addEvent(ev); });
-                if (date && !bookedDates.includes(date)) {
-                    calendar.addEvent({
-                        title: name,
-                        start: date,
-                        allDay: true,
-                        backgroundColor: '#007bff',
-                        borderColor: '#007bff',
-                        textColor: '#fff'
-                    });
-                }
-            });
-        });
-        </script>
-    </body>
-    <style>
-        /* ...existing code... */
-        .modal-content {
-            background: #fff; margin: 5% auto; padding: 32px 24px;
-            border: 1px solid #007bff; width: 1200px; /* Increased from 900px */
-            border-radius: 12px;
-            position: relative; box-shadow: 0 8px 32px rgba(0,123,255,0.15);
+            slideIndex = (slideIndex % slides.length) + 1;
+            slides[slideIndex - 1].style.display = "block";
+            setTimeout(showSlides, 2000);
         }
-        .modal-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .modal-table th, .modal-table td {
-            border: 1px solid #e3e3e3;
-            padding: 8px 10px;
-            text-align: left;
-        }
-        .modal-table th {
-            background: #f0f8ff;
-            color: #007bff;
-            font-weight: 600;
-        }
-        .modal-table tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-        .modal-table tr:hover {
-            background: #e6f0ff;
-        }
-        .modal-content h4 {
-            font-size: 16px;
-            margin-top: 18px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        .modal-content hr {
-            border: none;
-            border-top: 1px solid #e3e3e3;
-        }
-        .close {
-            color: #aaa; position: absolute; right: 18px; top: 12px;
-            font-size: 32px; font-weight: bold; cursor: pointer;
-            transition: color 0.2s;
-        }
-        .close:hover { color: #007bff; }
-        @media (max-width: 600px) {
-            .container { max-width: 98%; }
-            .modal-content { width: 98%; padding: 12px; }
-            .modal-table th, .modal-table td { padding: 6px 4px; font-size: 12px; }
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    </html>
-    <?php
-}
-?>
-
+        showSlides();
+    </script>
+</body>
+</html>

@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if($_SESSION['user_type'] == 'admin') {
                 header("Location: admin/admin.php");
             } else {
-                header("Location: index.php");
+                header("Location: userpage.php");
             }
             exit; 
         } else {
