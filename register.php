@@ -32,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $update->close();
                     $registration_success = true;
                     unset($_SESSION['pending_user']);
+                    // Do NOT change Account_status here; keep as 'Deactivated'
                 } else {
                     $verification_error = "Incorrect verification code. Please try again.";
                 }
@@ -78,8 +79,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows > 0) {
             echo "Username or email already exists.";
         } else {
-            // Insert user with verification code and verified=0
-            $stmt = $connection->prepare("INSERT INTO users (username,password, email, user_type, verification_code, verified) VALUES (?, ?, ?, ?, ?, 0)");
+            // Insert user with verification code, verified=0, and Account_status='Deactivated'
+            $stmt = $connection->prepare("INSERT INTO users (username,password, email, user_type, verification_code, verified, Account_status) VALUES (?, ?, ?, ?, ?, 0, 'Deactivated')");
             $stmt->bind_param("sssss", $username, $hashed_password, $email, $user_type, $verification_code);
 
             if ($stmt->execute()) {

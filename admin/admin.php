@@ -127,6 +127,9 @@ DISCONNECTIVITY($connection);
                     <?php endif; ?>
                 </button>
             </a>
+            <a href="manage_accounts.php">
+                <button type="button">Manage Accounts</button>
+            </a>
         </div>
         <a class="logout-link" href="../logout.php">Logout</a>
     </div>
