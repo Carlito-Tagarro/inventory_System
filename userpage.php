@@ -15,6 +15,8 @@ function clean($data) {
     return htmlspecialchars(trim($data));
 }
 
+$submit_status = null; // Track submit status
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect and sanitize form data
     $event_name = clean($_POST['event_name']);
@@ -135,14 +137,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
     if ($stmt->execute()) {
-        echo "<h2>Event submitted successfully!</h2>";
-        echo '<a href="index.php">Back to form</a>';
+        $_SESSION['submit_status'] = "success";
     } else {
-        echo "<h2>Error submitting event: " . $stmt->error . "</h2>";
-        echo '<a href="index.php">Back to form</a>';
+        $_SESSION['submit_status'] = "error";
+        $_SESSION['submit_error'] = $stmt->error;
     }
     $stmt->close();
     $connection->close();
+
+    // Redirect back to userpage.php to avoid blank page and resubmission
+    header("Location: userpage.php");
+    exit;
 } else {
 
     // --- Fetch booked event dates and names ---
@@ -158,6 +163,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ];
         }
         $result->free();
+            echo "<script>var bookedEvents = " . json_encode($booked_events) . ";</script>";
+
     }
     DISCONNECTIVITY($connection);
     ?>
@@ -167,194 +174,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Event Form</title>
         <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png">
-        <style>
-        nav {
-    padding: 16px 0;
-    margin-bottom: 32px;
-    margin-top: 32px; /* Added margin-top */
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: 20px;
-    background-color: #fff;
-}
-
-.nav-container {
-    display: flex;
-    justify-content: center;
-    gap: 104px; /* Increased gap from 32px to 84px */
-    width: 100%;
-}
-
-nav img {
-    height: 50px;
-    margin-left: 50px;
-
-}
-
-nav a {
-    color: #333;
-    text-decoration: none;
-    font-weight: 400;
-    font-size: 1.1rem;
-    transition: 0.2s;
-    
-}
-nav a:hover {
-    color: #007bff;
-}
-nav a[href="logout.php"]:hover {
-    color: red;
-}
-
-            body { font-family: Arial, sans-serif; background: #f7f7f7; }
-            .container { 
-                max-width: 1200px;
-                margin: 40px auto;
-                background: #fff;
-                padding: 30px;
-                border-radius: 8px;
-                box-shadow: 0 2px 8px #ccc;
-            }
-            h2 { text-align: center; }
-            form { 
-                display: flex; 
-                flex-wrap: wrap; 
-                gap: 16px; 
-                justify-content: center; /* Center fieldsets horizontally */
-                gap: 50px
-            }
-            fieldset {
-                border: 1px solid #007bff;
-                border-radius: 4px;
-                padding: 16px;
-                margin-bottom: 16px;
-                min-width: 220px;
-                width: 20%; /* Make fieldsets equal width and responsive */
-                box-sizing: border-box;
-                
-            }
-            .form-group { 
-                flex: 1 1 100%; /* Take full width inside fieldset */
-                display: flex; 
-                flex-direction: column;
-                margin-top: 20px; 
-            }
-            
-            .form-group.button-group {
-                flex: 1 1 100%;
-                align-items: center; 
-                width: 100%;
-            }
-            label { margin-bottom: 4px; font-weight: bold; }
-            input, select, textarea { padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
-            .full-width { flex: 1 1 100%; }
-            button { 
-                padding: 6px 12px;
-                font-size: 15px;
-                width: auto;
-                min-width: 0;
-                max-width: 120px; /* limit button width */
-                background: #007bff; 
-                color: #fff; 
-                border: none; 
-                border-radius: 4px; 
-                cursor: pointer;
-                display: inline-block;
-                /* margin: 16px 0 0 0; */
-            }
-            button:hover { background: #0056b3; }
-            fieldset { border: 1px solid #007bff; border-radius: 4px; padding: 16px; margin-bottom: 16px; }
-            legend { font-weight: 500; font-size: 1.1rem; padding: 0 10px; }
-            /* Modal styles */
-            .modal {
-                display: none; 
-                position: fixed; 
-                z-index: 999; 
-                left: 0; top: 0; width: 100%; height: 100%;
-                overflow: auto; background: rgba(0,0,0,0.4);
-            }
-            .modal-content {
-                background: #fff; 
-                margin: 5% auto; 
-                padding: 32px 24px;
-                border: 1px solid #007bff; 
-                width: 1200px; /* Increased from 900px */
-                border-radius: 12px;
-                position: relative; 
-                box-shadow: 0 8px 32px rgba(0,123,255,0.15);
-            }
-            .modal-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 8px;
-                font-size: 14px;
-            }
-            .modal-table th, .modal-table td {
-                border: 1px solid #e3e3e3;
-                padding: 8px 10px;
-                text-align: left;
-            }
-            .modal-table th {
-                background: #f0f8ff;
-                color: #007bff;
-                font-weight: 600;
-            }
-            .modal-table tr:nth-child(even) {
-                background: #f9f9f9;
-            }
-            .modal-table tr:hover {
-                background: #e6f0ff;
-            }
-            .modal-content h4 {
-                font-size: 16px;
-                margin-top: 18px;
-                margin-bottom: 8px;
-                font-weight: 600;
-            }
-            .modal-content hr {
-                border: none;
-                border-top: 1px solid #e3e3e3;
-            }
-            .close {
-                color: #aaa; position: absolute; right: 18px; top: 12px;
-                font-size: 32px; font-weight: bold; cursor: pointer;
-                transition: color 0.2s;
-            }
-            .close:hover { color: #007bff; }
-            @media (max-width: 900px) {
-                .container { max-width: 98%; }
-                form { flex-direction: column; align-items: center; }
-                fieldset { width: 98%; min-width: unset; }
-            }
-            @media (max-width: 600px) {
-                .container { max-width: 98%; }
-                .modal-content { width: 98%; padding: 12px; }
-                .modal-table th, .modal-table td { padding: 6px 4px; font-size: 12px; }
-                fieldset { width: 98%; min-width: unset; }
-            }
-            /*Center event name of Calender*/
-            .fc-event-title, .fc-event-main {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 100%;
-                width: 100%;
-                text-align: center;
-            }
-        </style>
+        <!-- Add external CSS -->
+        <link rel="stylesheet" href="CSS/userpage.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+        <!-- Remove embedded <style> block -->
     </head>
     <body>
-        <nav>
-            <img src="images/AUDENTES LOGO.png" alt="Company Logo">
-        <div class="nav-container">
-            <a href="landingpage.php">HOME</a>
-            <a href="https://www.facebook.com/audentestechnologies">ABOUT</a>
-            <a href="https://www.facebook.com/audentestechnologies">CONTACT US</a>
-            <a href="logout.php">LOGOUT</a>
+    <nav>
+    <img src="images/AUDENTES LOGO.png" alt="Company Logo">
+
+    <div class="nav-container">
+        <!-- Hamburger -->
+        <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false">
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+        </button>
+
+        <!-- Links -->
+        <div class="nav-links" id="navLinks">
+            <a href="index.php">Home</a>
+            <a href="https://www.facebook.com/audentestechnologies" target="_blank">About</a>
+            <a href="https://www.facebook.com/audentestechnologies" target="_blank">Contact</a>
+            <a href="logout.php" class="logout-link">Logout</a>
         </div>
-        
-    </nav>
+    </div>
+</nav>
+
+
     <!-- <div style="display:flex; gap:40px;">
     <div class="container">
     </div> -->
@@ -364,7 +212,7 @@ nav a[href="logout.php"]:hover {
     </div>
         <div class="container">
             <h2>Event Form</h2>
-            <form action="index.php" method="post" id="eventForm">
+            <form action="userpage.php" method="post" id="eventForm">
                 <fieldset>
                     <legend>Event Details</legend>
                     <div class="form-group">
@@ -606,319 +454,35 @@ nav a[href="logout.php"]:hover {
                 </form>
             </div>
         </div>
+        <!-- Remove embedded <script> block -->
+        <!-- Output bookedEvents and bookedDates for JS -->
         <script>
-        // Modal JS
-        document.addEventListener('DOMContentLoaded', function() {
-            var select = document.getElementById('provide_materials');
-            var modal = document.getElementById('materialsModal');
-            var closeBtn = document.getElementById('closeModal');
-            var categoryFilter = document.getElementById('categoryFilter');
-            var nameSearch = document.getElementById('nameSearch');
-            var materialsTable = document.getElementById('materialsTable');
-            select.addEventListener('change', function() {
-                if (select.value === 'Yes') {
-                    modal.style.display = 'block';
-                } else {
-                    modal.style.display = 'none';
-                    // Clear selected materials if "No" is chosen
-                    var selectedPreview = document.getElementById('selectedMaterialsPreview');
-                    var selectedList = document.getElementById('selectedMaterialsList');
-                    selectedPreview.style.display = 'none';
-                    selectedList.innerHTML = '';
-                    // Also uncheck all checkboxes and clear quantities in modal
-                    var rows = document.querySelectorAll('#materialsTable tbody tr');
-                    rows.forEach(function(row) {
-                        var checkbox = row.querySelector('input[type="checkbox"]');
-                        var qtyInput = row.querySelector('input[type="number"]');
-                        if (checkbox) checkbox.checked = false;
-                        if (qtyInput) {
-                            qtyInput.value = '';
-                            qtyInput.disabled = true;
-                        }
-                    });
-                }
-            });
-            closeBtn.onclick = function() {
-                modal.style.display = 'none';
-                select.value = '';
-            };
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            };
-            // Filter logic
-            function filterTable() {
-                var categoryValue = categoryFilter.value;
-                var searchValue = nameSearch.value.toLowerCase();
-                var rows = materialsTable.querySelectorAll('tbody tr');
-                rows.forEach(function(row) {
-                    var matchesCategory = (categoryValue === 'All' || row.getAttribute('data-category') === categoryValue);
-                    var nameCell = row.querySelector('td:nth-child(3)');
-                    var matchesSearch = nameCell && nameCell.textContent.toLowerCase().includes(searchValue);
-                    if (matchesCategory && matchesSearch) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            }
-            categoryFilter.addEventListener('change', filterTable);
-            nameSearch.addEventListener('input', filterTable);
-
-            // Enable quantity input only if checkbox is checked
-            var table = document.getElementById('materialsTable');
-            table.addEventListener('change', function(e) {
-                if (e.target.type === 'checkbox') {
-                    var row = e.target.closest('tr');
-                    var qtyInput = row.querySelector('input[type="number"]');
-                    if (qtyInput) {
-                        qtyInput.disabled = !e.target.checked;
-                        if (!e.target.checked) qtyInput.value = '';
-                    }
-                }
-                // Quantity input validation
-                if (e.target.type === 'number') {
-                    var row = e.target.closest('tr');
-                    var availableCell = row.querySelector('td:nth-child(4)');
-                    var available = parseInt(availableCell.textContent, 10);
-                    var val = parseInt(e.target.value, 10);
-                    if (val > available) {
-                        e.target.value = available;
-                    } else if (val < 1 && e.target.value !== '') {
-                        e.target.value = 1;
-                    }
-                }
-            });
-            // On page load, disable all quantity inputs
-            var qtyInputs = table.querySelectorAll('input[type="number"]');
-            qtyInputs.forEach(function(input) {
-                input.disabled = true;
-                // Prevent manual input above available
-                input.addEventListener('input', function(e) {
-                    var row = input.closest('tr');
-                    var availableCell = row.querySelector('td:nth-child(4)');
-                    var available = parseInt(availableCell.textContent, 10);
-                    var val = parseInt(input.value, 10);
-                    if (val > available) {
-                        input.value = available;
-                    } else if (val < 1 && input.value !== '') {
-                        input.value = 1;
-                    }
-                });
-            });
-            // Show selected materials outside modal
-            var materialsForm = document.getElementById('materialsForm');
-            var selectedPreview = document.getElementById('selectedMaterialsPreview');
-            var selectedList = document.getElementById('selectedMaterialsList');
-            var submitMaterialsBtn = document.getElementById('submitMaterialsBtn');
-            var selectedMaterialsInput = document.getElementById('selected_materials_input');
-            materialsForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                var selected = [];
-                var rows = materialsTable.querySelectorAll('tbody tr');
-                rows.forEach(function(row) {
-                    var checkbox = row.querySelector('input[type="checkbox"]');
-                    var qtyInput = row.querySelector('input[type="number"]');
-                    if (checkbox && checkbox.checked && qtyInput && qtyInput.value) {
-                        var name = row.querySelector('td:nth-child(3)').textContent;
-                        var qty = qtyInput.value;
-                        var type = row.querySelector('td:nth-child(2)').textContent;
-                        selected.push({name: name, qty: qty, type: type});
-                    }
-                });
-                // Store selected materials as JSON in hidden input
-                selectedMaterialsInput.value = JSON.stringify(selected);
-
-                // Display selected materials as table
-                var selectedPreview = document.getElementById('selectedMaterialsPreview');
-                var selectedList = document.getElementById('selectedMaterialsList');
-                if (selected.length > 0) {
-                    selectedPreview.style.display = 'block';
-                    var html = '';
-                    selected.forEach(function(item) {
-                        html += '<tr><td style="padding:8px;">' + item.name + '</td><td style="padding:8px;">' + item.qty + '</td></tr>';
-                    });
-                    selectedList.innerHTML = html;
-                } else {
-                    selectedPreview.style.display = 'none';
-                    selectedList.innerHTML = '';
-                }
-                modal.style.display = 'none';
-                select.value = 'Yes'; // keep selection
-            });
-
-            // --- NEW: On event form submit, ensure selected materials are included ---
-            var eventForm = document.getElementById('eventForm');
-            eventForm.addEventListener('submit', function(e) {
-                // If provide_materials is Yes and no materials selected, prevent submit
-                if (select.value === 'Yes' && !selectedMaterialsInput.value) {
-                    alert('Please select materials to provide.');
-                    e.preventDefault();
-                }
-            });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- Pass booked events from PHP to JS ---
             var bookedEvents = <?php echo json_encode($booked_events); ?>;
-
-            // --- FullCalendar setup ---
-            var calendarEl = document.getElementById('calendar');
-            var calendarEvents = bookedEvents.map(function(ev) {
-                return {
-                    title: ev.name,
-                    start: ev.date,
-                    allDay: true,
-                    backgroundColor: '#dc3545', // red for booked
-                    borderColor: '#dc3545',
-                    textColor: '#fff'
-                };
-            });
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                height: 500,
-                events: calendarEvents
-            });
-            calendar.render();
-
-            // --- Disable booked dates in event_date input ---
-            var eventDateInput = document.getElementById('event_date');
-            var eventNameInput = document.getElementById('event_name');
             var bookedDates = bookedEvents.map(function(ev) { return ev.date; });
-
-            // Helper to format date to yyyy-mm-dd
-            function formatDate(date) {
-                var d = new Date(date);
-                var month = '' + (d.getMonth() + 1);
-                var day = '' + d.getDate();
-                var year = d.getFullYear();
-                if (month.length < 2) month = '0' + month;
-                if (day.length < 2) day = '0' + day;
-                return [year, month, day].join('-');
-            }
-
-            // Disable booked dates on input[type="date"]
-            eventDateInput.addEventListener('focus', function() {
-                // Remove any previous min/max restrictions
-                eventDateInput.removeAttribute('min');
-                eventDateInput.removeAttribute('max');
-            });
-
-            eventDateInput.addEventListener('input', function() {
-                var selected = eventDateInput.value;
-                if (bookedDates.includes(selected)) {
-                    alert('This date is already booked for another event.');
-                    eventDateInput.value = '';
-                }
-            });
-
-            // Prevent manual entry of booked dates
-            eventDateInput.addEventListener('keydown', function(e) {
-                setTimeout(function() {
-                    var selected = eventDateInput.value;
-                    if (bookedDates.includes(selected)) {
-                        alert('This date is already booked for another event.');
-                        eventDateInput.value = '';
-                    }
-                }, 10);
-            });
-
-            // Show event name on calendar when selecting a new date
-            eventDateInput.addEventListener('change', function() {
-                var date = eventDateInput.value;
-                var name = eventNameInput.value || 'Event';
-                calendar.removeAllEvents();
-                // Add booked events
-                calendarEvents.forEach(function(ev) { calendar.addEvent(ev); });
-                // Add new event if not booked
-                if (date && !bookedDates.includes(date)) {
-                    calendar.addEvent({
-                        title: name,
-                        start: date,
-                        allDay: true,
-                        backgroundColor: '#007bff',
-                        borderColor: '#007bff',
-                        textColor: '#fff'
-                    });
-                }
-            });
-            // Also update event name if changed
-            eventNameInput.addEventListener('input', function() {
-                var date = eventDateInput.value;
-                var name = eventNameInput.value || 'Event';
-                calendar.removeAllEvents();
-                calendarEvents.forEach(function(ev) { calendar.addEvent(ev); });
-                if (date && !bookedDates.includes(date)) {
-                    calendar.addEvent({
-                        title: name,
-                        start: date,
-                        allDay: true,
-                        backgroundColor: '#007bff',
-                        borderColor: '#007bff',
-                        textColor: '#fff'
-                    });
-                }
-            });
-        });
+            <?php if (isset($_SESSION['submit_status'])): ?>
+                document.addEventListener('DOMContentLoaded', function() {
+                    <?php if ($_SESSION['submit_status'] === "success"): ?>
+                        alert("Event submitted successfully!");
+                        document.getElementById('eventForm').reset();
+                        var selectedPreview = document.getElementById('selectedMaterialsPreview');
+                        var selectedList = document.getElementById('selectedMaterialsList');
+                        selectedPreview.style.display = 'none';
+                        selectedList.innerHTML = '';
+                    <?php else: ?>
+                        alert("Error submitting event: <?php echo addslashes($_SESSION['submit_error']); ?>");
+                    <?php endif; ?>
+                });
+            <?php
+                unset($_SESSION['submit_status']);
+                unset($_SESSION['submit_error']);
+            endif;
+            ?>
         </script>
+        <!-- Add external JS -->
+        <script src="JavaScripts/userpage.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     </body>
-    <style>
-        /* ...existing code... */
-        .modal-content {
-            background: #fff; margin: 5% auto; padding: 32px 24px;
-            border: 1px solid #007bff; width: 1200px; /* Increased from 900px */
-            border-radius: 12px;
-            position: relative; box-shadow: 0 8px 32px rgba(0,123,255,0.15);
-        }
-        .modal-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .modal-table th, .modal-table td {
-            border: 1px solid #e3e3e3;
-            padding: 8px 10px;
-            text-align: left;
-        }
-        .modal-table th {
-            background: #f0f8ff;
-            color: #007bff;
-            font-weight: 600;
-        }
-        .modal-table tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-        .modal-table tr:hover {
-            background: #e6f0ff;
-        }
-        .modal-content h4 {
-            font-size: 16px;
-            margin-top: 18px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        .modal-content hr {
-            border: none;
-            border-top: 1px solid #e3e3e3;
-        }
-        .close {
-            color: #aaa; position: absolute; right: 18px; top: 12px;
-            font-size: 32px; font-weight: bold; cursor: pointer;
-            transition: color 0.2s;
-        }
-        .close:hover { color: #007bff; }
-        @media (max-width: 600px) {
-            .container { max-width: 98%; }
-            .modal-content { width: 98%; padding: 12px; }
-            .modal-table th, .modal-table td { padding: 6px 4px; font-size: 12px; }
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     </html>
     <?php
 }
 ?>
-

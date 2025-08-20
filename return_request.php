@@ -40,7 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
     $stmt->close();
 
-    echo "<h2>Return request submitted!</h2><a href='index.php'>Back to Home</a>";
+    $_SESSION['return_submit_status'] = "success";
+    // Redirect back to avoid blank page and resubmission
+    header("Location: return_request.php");
     DISCONNECTIVITY($conn);
     exit;
 }
@@ -158,6 +160,21 @@ document.getElementById('event_id').addEventListener('change', function() {
     };
     xhr.send('request_mats=' + encodeURIComponent(requestMats));
 });
+
+    // Show JS message after form submit (PHP sets JS variable)
+    <?php if (isset($_SESSION['return_submit_status'])): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            <?php if ($_SESSION['return_submit_status'] === "success"): ?>
+                alert("Return request submitted!");
+                document.getElementById('returnForm').reset();
+                document.getElementById('materialsTableContainer').innerHTML = '';
+            <?php endif; ?>
+        });
+    <?php
+        // Unset after showing
+        unset($_SESSION['return_submit_status']);
+    endif;
+    ?>
 </script>
 </body>
 </html>
