@@ -178,4 +178,3 @@ document.getElementById('event_id').addEventListener('change', function() {
 </script>
 </body>
 </html>
-<!-- Deprecated: The return unused materials form is now shown as a modal in index.php -->
