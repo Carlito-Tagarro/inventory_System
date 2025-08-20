@@ -1,9 +1,9 @@
 <?php
 function CONNECTIVITY() {
-    $servername = "sql210.infinityfree.com"; 
-    $username = "if0_39703877"; 
-    $password = "lAVNKIaYL4S"; 
-    $dbname = "if0_39703877_inventory_system"; 
+    $servername = "localhost"; 
+    $username = "root"; 
+    $password = ""; 
+    $dbname = "inventory_system"; 
 
     
     $connection = new mysqli($servername, $username, $password, $dbname);
