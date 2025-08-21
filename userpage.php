@@ -477,6 +477,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 unset($_SESSION['submit_error']);
             endif;
             ?>
+
+            // Prevent booking on already booked dates
+            document.addEventListener('DOMContentLoaded', function() {
+                var eventForm = document.getElementById('eventForm');
+                if (eventForm) {
+                    eventForm.addEventListener('submit', function(e) {
+                        var eventDateInput = document.getElementById('event_date');
+                        if (eventDateInput) {
+                            var selectedDate = eventDateInput.value;
+                            if (bookedDates.includes(selectedDate)) {
+                                alert("This date is already booked for another event. Please choose a different date.");
+                                e.preventDefault();
+                                return false;
+                            }
+                        }
+                    });
+                }
+            });
         </script>
         <!-- Add external JS -->
         <script src="JavaScripts/userpage.js"></script>
