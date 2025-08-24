@@ -66,35 +66,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <title>Sign In</title>
   <link rel="icon" type="image/png" href="images/images__1_-removebg-preview.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <style>
-    body {
-        background: linear-gradient(135deg, #a94442, #1e40af);
-        font-family: 'Segoe UI', Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        padding: 16px;
-        box-sizing: border-box;
-    }
-    .form_container {
-        background: #fff;
-        max-width: 420px;
-        width: 100%;
-        padding: 32px 28px;
-        border-radius: 16px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-        animation: fadeIn 0.6s ease-in-out;
-    }
-    @keyframes fadeIn {
-        from {opacity: 0; transform: translateY(-10px);}
-        to {opacity: 1; transform: translateY(0);}
-    }
-    h2 {
-        text-align: center;
-        color: #a94442;
-        margin-bottom: 24px;
+  <link rel="stylesheet" href="CSS/login.css">
+</head>
+<body>
+  <div class="form_container">
+      <h2>Sign In</h2>
+      <?php if (!empty($error_message)) { echo "<div class='error-message'>$error_message</div>"; } ?>
+      <form method="POST" action="">
+          <div class="form_group">
+              <label for="username">Username</label>
+              <i class="fa fa-user"></i>
+              <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($saved_username); ?>" placeholder="Enter your username" required>
+          </div>
+          <div class="form_group">
+              <label for="password">Password</label>
+              <i class="fa fa-lock"></i>
+              <input type="password" id="password" name="password" placeholder="Enter your password" required>
+          </div>
+          <div class="remember_me">
+              <input type="checkbox" id="remember" name="remember" <?php echo !empty($saved_username) ? "checked" : ""; ?>>
+              <label for="remember">Remember Me</label>
+          </div>
+          <input type="submit" value="Sign In" class="button_submit">
+      </form>
+      <div class="links">
+          <a href="register.php">Don’t have an account? Register here</a>
+      </div>
+  </div>
+</body>
+</html>
         font-size: 1.8rem;
     }
     .error-message {
