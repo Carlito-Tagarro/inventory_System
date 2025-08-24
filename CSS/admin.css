@@ -1,0 +1,134 @@
+  body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 420px;
+            width: 95%;
+            margin: 40px auto;
+            background: #fff;
+            padding: 28px 16px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+            text-align: center;
+        }
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 18px;
+        }
+        h1 {
+            color: #222;
+            margin-bottom: 14px;
+            font-size: 2rem;
+        }
+        p {
+            color: #666;
+            margin-bottom: 28px;
+            font-size: 1rem;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+        .btn-group a {
+            text-decoration: none;
+        }
+        button {
+            width: 100%;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin-bottom: 0;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            position: relative;
+        }
+        button:hover, button:focus {
+            background: #0056b3;
+            outline: none;
+        }
+        .logout-link {
+            display: inline-block;
+            margin-top: 18px;
+            color: #dc3545;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+        .notification-badge {
+            display: inline-block;
+            min-width: 20px;
+            padding: 2px 7px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #fff;
+            background: #dc3545;
+            border-radius: 12px;
+            vertical-align: top;
+            margin-left: 6px;
+            position: absolute;
+            top: 8px;
+            right: 18px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                max-width: 98vw;
+                padding: 16px 6px;
+                margin: 18px auto;
+                border-radius: 0;
+            }
+            .logo {
+                width: 60px;
+                margin-bottom: 10px;
+            }
+            h1 {
+                font-size: 1.3rem;
+                margin-bottom: 10px;
+            }
+            p {
+                font-size: 0.95rem;
+                margin-bottom: 18px;
+            }
+            .btn-group {
+                gap: 10px;
+            }
+            button {
+                font-size: 0.98rem;
+                padding: 10px 0;
+            }
+            .notification-badge {
+                top: 6px;
+                right: 12px;
+                font-size: 12px;
+                min-width: 16px;
+                padding: 1px 5px;
+            }
+            .logout-link {
+                font-size: 0.98rem;
+            }
+        }
+        @media (min-width: 900px) {
+            .container {
+                max-width: 600px;
+                padding: 40px 32px;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            button {
+                font-size: 1.15rem;
+            }
+        }

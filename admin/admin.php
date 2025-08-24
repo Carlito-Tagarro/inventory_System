@@ -31,80 +31,13 @@ DISCONNECTIVITY($connection);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="../images/images__1_-removebg-preview.png"> 
+    <link rel="icon" type="image/x-icon" href="../images/images__1_-removebg-preview.png">
+    <link rel="stylesheet" href="../styles/admin.css">
     <title>Admin</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 500px;
-            margin: 60px auto;
-            background: #fff;
-            padding: 32px 24px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 18px;
-        }
-        p {
-            color: #666;
-            margin-bottom: 32px;
-        }
-        .btn-group {
-            margin-bottom: 24px;
-        }
-        .btn-group a {
-            text-decoration: none;
-            margin: 0 8px;
-        }
-        button {
-            background: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 8px;
-            transition: background 0.2s;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .logout-link {
-            display: inline-block;
-            margin-top: 18px;
-            color: #dc3545;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .logout-link:hover {
-            text-decoration: underline;
-        }
-        .notification-badge {
-            display: inline-block;
-            min-width: 20px;
-            padding: 2px 7px;
-            font-size: 13px;
-            font-weight: bold;
-            color: #fff;
-            background: #dc3545;
-            border-radius: 12px;
-            vertical-align: top;
-            margin-left: 6px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
-        <!-- <img src="../images/images__1_-removebg-preview.png" alt=""> -->
+        <img class="logo" src="../images/images__1_-removebg-preview.png" alt="Logo">
         <h1>Welcome to the Admin Page</h1>
         <p>This is a protected area for administrators.</p>
         <div class="btn-group">
