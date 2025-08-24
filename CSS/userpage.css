@@ -348,15 +348,15 @@ button:hover {
     margin-right: 0 !important;
 }
 /* Remove previous blue button styles */
-.fc-button-primary {
-    /* background: linear-gradient(90deg, #007bff 60%, #0056b3 100%) !important; */
-    /* border: none !important; */
-    /* border-radius: 6px !important; */
-    /* font-weight: 600 !important; */
-}
-.fc-button-primary:hover {
-    /* background: linear-gradient(90deg, #0056b3 60%, #007bff 100%) !important; */
-}
+/* .fc-button-primary {
+    background: linear-gradient(90deg, #007bff 60%, #0056b3 100%) !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+} */
+/* .fc-button-primary:hover {
+     background: linear-gradient(90deg, #0056b3 60%, #007bff 100%) !important; 
+} */
 .fc-toolbar-title {
     color: #007bff !important;
     font-size: 1.4rem !important;
