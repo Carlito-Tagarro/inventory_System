@@ -211,6 +211,68 @@ DISCONNECTIVITY($connection);
         .cancel-btn:hover {
             background: #9e9e9e;
         }
+
+        /* Responsive styles */
+        @media (max-width: 900px) {
+            .container-flex {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
+            table {
+                width: 100%;
+                font-size: 0.98rem;
+            }
+            .form-card {
+                width: 100%;
+                margin: 24px 0;
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            nav {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 8px 0;
+            }
+            nav img {
+                height: 36px;
+                margin-left: 0;
+            }
+            .nav-container {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            table, th, td {
+                font-size: 0.92rem;
+                padding: 8px 6px;
+            }
+            .form-card {
+                padding: 16px 10px;
+                border-radius: 8px;
+                width: 100%;
+                margin: 12px 0;
+            }
+            .action-btn {
+                min-width: 36px;
+                font-size: 0.88rem;
+                padding: 3px 6px;
+            }
+        }
+        @media (max-width: 420px) {
+            table {
+                font-size: 0.85rem;
+            }
+            .form-card h3 {
+                font-size: 1.1rem;
+            }
+            .form-card label, .form-card input, .form-card button {
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
 <body>

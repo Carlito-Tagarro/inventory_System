@@ -69,7 +69,7 @@
     <link rel="icon" type="image/x-icon" href="../images/images__1_-removebg-preview.png"> 
     <title>Brochure Inventory</title>
     <style>
-        body {
+       body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background: #f4f6f8;
             margin: 0;
@@ -123,7 +123,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.07);
             width: 340px;
             margin: 50px;
-            
         }
         .form-card h3 {
             margin-top: 0;
@@ -160,7 +159,6 @@
             background: #1565c0; 
         }
         nav {
-            
             padding: 16px 0;
             margin-bottom: 32px;
             display: grid;
@@ -184,18 +182,17 @@
             font-weight: 600;
             font-size: 1.1rem;
         }
-        /* Add below existing styles or merge with previous .action-btn styles if present */
         .action-btn {
             color: #fff;
             border: none;
-            padding: 4px 8px; /* smaller padding */
+            padding: 4px 8px;
             border-radius: 4px;
             cursor: pointer;
             text-decoration: none;
-            font-weight: 400; /* changed from 600 to 400 */
+            font-weight: 400;
             font-size: 0.95rem;
             display: inline-block;
-            min-width: 48px; /* smaller min width */
+            min-width: 48px;
             text-align: center;
         }
         .edit-btn {
@@ -215,6 +212,68 @@
         }
         .cancel-btn:hover {
             background: #9e9e9e;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 900px) {
+            .container-flex {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
+            table {
+                width: 100%;
+                font-size: 0.98rem;
+            }
+            .form-card {
+                width: 100%;
+                margin: 24px 0;
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            nav {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 8px 0;
+            }
+            nav img {
+                height: 36px;
+                margin-left: 0;
+            }
+            .nav-container {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            table, th, td {
+                font-size: 0.92rem;
+                padding: 8px 6px;
+            }
+            .form-card {
+                padding: 16px 10px;
+                border-radius: 8px;
+                width: 100%;
+                margin: 12px 0;
+            }
+            .action-btn {
+                min-width: 36px;
+                font-size: 0.88rem;
+                padding: 3px 6px;
+            }
+        }
+        @media (max-width: 420px) {
+            table {
+                font-size: 0.85rem;
+            }
+            .form-card h3 {
+                font-size: 1.1rem;
+            }
+            .form-card label, .form-card input, .form-card button {
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
