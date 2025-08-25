@@ -56,111 +56,7 @@ DISCONNECTIVITY($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../images/images__1_-removebg-preview.png"> 
     <title>Return Requests</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 30px;
-        }
-        h2 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px #ccc;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            background: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            margin-top: 18px;
-        }
-        th, td {
-            padding: 12px 18px;
-            text-align: left;
-        }
-        th {
-            background: #1976d2;
-            color: #fff;
-            font-weight: 600;
-            border-bottom: 2px solid #1565c0;
-        }
-        tr:nth-child(even) {
-            background: #f2f7fb;
-        }
-        tr:hover {
-            background: #e3f2fd;
-        }
-        td {
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .action-btn {
-            color: #fff;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: 400;
-            font-size: 0.95rem;
-            display: inline-block;
-            min-width: 60px;
-            text-align: center;
-            margin-right: 8px;
-        }
-        .approve-btn {
-            background: #1976d2;
-        }
-        .approve-btn:hover {
-            background: #1565c0;
-        }
-        .decline-btn {
-            background: #d32f2f;
-        }
-        .decline-btn:hover {
-            background: #b71c1c;
-        }
-        nav {
-            padding: 16px 0;
-            margin-bottom: 32px;
-            display: grid;
-            grid-template-columns: auto 1fr;
-            align-items: center;
-            gap: 20px;
-        }
-        .nav-container {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            width: 100%;
-        }
-        nav img {
-            height: 50px;
-            margin-left: 20px;
-        }
-        nav a {
-            color: #333;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        ul {
-            margin: 0;
-            padding-left: 18px;
-        }
-        .no-data {
-            text-align: center;
-            color: #888;
-            font-style: italic;
-        }
-    </style>
+    <link rel="stylesheet" href="../CSS/admin_return.css">
 </head>
 <body>
     <nav>
@@ -174,6 +70,7 @@ DISCONNECTIVITY($conn);
     </nav>
     <div class="container">
         <h2>Pending Material Return Requests</h2>
+        <div style="overflow-x:auto;">
         <table>
             <caption style="caption-side:top; text-align:left; font-size:1.3rem; color:#333; margin-bottom:12px; font-weight:600;">
                 Material Return Requests
@@ -221,6 +118,7 @@ DISCONNECTIVITY($conn);
             <?php endif; ?>
             </tbody>
         </table>
+        </div>
     </div>
 </body>
 </html>
