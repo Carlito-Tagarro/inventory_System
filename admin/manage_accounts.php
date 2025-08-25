@@ -30,57 +30,80 @@ DISCONNECTIVITY($connection);
     <meta charset="UTF-8">
     <title>Manage Accounts</title>
     <link rel="icon" type="image/x-icon" href="../images/images__1_-removebg-preview.png">
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; }
-        .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 32px 24px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);}
-        h2 { text-align: center; color: #333; margin-bottom: 24px;}
-        table { width: 100%; border-collapse: collapse; margin-bottom: 18px;}
-        th, td { padding: 10px 8px; border-bottom: 1px solid #e2e8f0; text-align: center;}
-        th { background: #3182ce; color: #fff;}
-        tr:nth-child(even) { background: #f7fafc;}
-        .btn { padding: 6px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;}
-        .activate { background: #38a169; color: #fff;}
-        .deactivate { background: #e53e3e; color: #fff;}
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../CSS/manage_account.css">
 </head>
 <body>
     <div class="container">
         <h2>Manage User Accounts</h2>
-        <table>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>User Type</th>
-                <th>Verified</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-            <?php while ($row = $result->fetch_assoc()): ?>
+        <div class="table-responsive">
+            <table>
                 <tr>
-                    <td><?php echo htmlspecialchars($row['username']); ?></td>
-                    <td><?php echo htmlspecialchars($row['email']); ?></td>
-                    <td><?php echo htmlspecialchars($row['user_type']); ?></td>
-                    <td><?php echo $row['verified'] ? 'Yes' : 'No'; ?></td>
-                    <td><?php echo htmlspecialchars($row['Account_status']); ?></td>
-                    <td>
-                        <?php if ($row['Account_status'] === 'Deactivated'): ?>
-                            <form method="POST" style="display:inline;">
-                                <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
-                                <input type="hidden" name="action" value="activate">
-                                <button type="submit" class="btn activate">Activate</button>
-                            </form>
-                        <?php else: ?>
-                            <form method="POST" style="display:inline;">
-                                <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
-                                <input type="hidden" name="action" value="deactivate">
-                                <button type="submit" class="btn deactivate">Deactivate</button>
-                            </form>
-                        <?php endif; ?>
-                    </td>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <!-- <th>User Type</th>
+                    <th>Verified</th> -->
+                    <th>Status</th>
+                    <th>Action</th>
                 </tr>
-            <?php endwhile; ?>
-        </table>
-        <a href="admin.php" style="color:#3182ce; text-decoration:none;">&#8592; Back to Admin Home</a>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['username']); ?></td>
+                        <td><?php echo htmlspecialchars($row['email']); ?></td>
+                        <!-- <td><?php echo htmlspecialchars($row['user_type']); ?></td>
+                        <td><?php echo $row['verified'] ? 'Yes' : 'No'; ?></td> -->
+                        <td><?php echo htmlspecialchars($row['Account_status']); ?></td>
+                        <td>
+                            <?php if ($row['Account_status'] === 'Deactivated'): ?>
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
+                                    <input type="hidden" name="action" value="activate">
+                                    <button type="submit" class="btn activate">Activate</button>
+                                </form>
+                            <?php else: ?>
+                                <form method="POST" style="display:inline;">
+                                    <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
+                                    <input type="hidden" name="action" value="deactivate">
+                                    <button type="submit" class="btn deactivate">Deactivate</button>
+                                </form>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </table>
+        </div>
+        <div class="user-card-list">
+            <?php
+            // Re-run query for card view
+            $connection = CONNECTIVITY();
+            $result2 = $connection->query("SELECT user_id, username, email, user_type, verified, Account_status FROM users WHERE user_type != 'admin'");
+            while ($row = $result2->fetch_assoc()):
+            ?>
+            <div class="user-card">
+                <div class="card-row"><span class="card-label">Username:</span> <span class="card-value"><?php echo htmlspecialchars($row['username']); ?></span></div>
+                <div class="card-row"><span class="card-label">Email:</span> <span class="card-value"><?php echo htmlspecialchars($row['email']); ?></span></div>
+                <!-- <div class="card-row"><span class="card-label">Type:</span> <span class="card-value"><?php echo htmlspecialchars($row['user_type']); ?></span></div>
+                <div class="card-row"><span class="card-label">Verified:</span> <span class="card-value"><?php echo $row['verified'] ? 'Yes' : 'No'; ?></span></div> -->
+                <div class="card-row"><span class="card-label">Status:</span> <span class="card-value"><?php echo htmlspecialchars($row['Account_status']); ?></span></div>
+                <div class="card-actions">
+                    <?php if ($row['Account_status'] === 'Deactivated'): ?>
+                        <form method="POST">
+                            <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
+                            <input type="hidden" name="action" value="activate">
+                            <button type="submit" class="btn activate">Activate</button>
+                        </form>
+                    <?php else: ?>
+                        <form method="POST">
+                            <input type="hidden" name="user_id" value="<?php echo $row['user_id']; ?>">
+                            <input type="hidden" name="action" value="deactivate">
+                            <button type="submit" class="btn deactivate">Deactivate</button>
+                        </form>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endwhile; DISCONNECTIVITY($connection); ?>
+        </div>
+        <a href="admin.php" class="back-link">&#8592; Back to Admin Home</a>
     </div>
 </body>
 </html>

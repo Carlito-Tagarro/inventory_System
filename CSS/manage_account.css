@@ -1,0 +1,164 @@
+      :root {
+            --primary: #3182ce;
+            --success: #38a169;
+            --danger: #e53e3e;
+            --background: #f4f4f4;
+            --container-bg: #fff;
+            --text-dark: #222;
+            --text-light: #fff;
+            --border-radius: 10px;
+            --shadow: 0 2px 12px rgba(0,0,0,0.10);
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--background);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: var(--container-bg);
+            padding: 32px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 28px;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            min-width: 600px;
+        }
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+            font-size: 1rem;
+        }
+        th {
+            background: var(--primary);
+            color: var(--text-light);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        tr:nth-child(even) {
+            background: #f7fafc;
+        }
+        .btn {
+            padding: 7px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+        .activate {
+            background: var(--success);
+            color: var(--text-light);
+        }
+        .activate:hover {
+            background: #2f855a;
+        }
+        .deactivate {
+            background: var(--danger);
+            color: var(--text-light);
+        }
+        .deactivate:hover {
+            background: #c53030;
+        }
+        a.back-link {
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: color 0.2s;
+        }
+        a.back-link:hover {
+            color: #225ea8;
+            text-decoration: underline;
+        }
+        @media (max-width: 700px) {
+            .container {
+                max-width: 98vw;
+                padding: 16px 5px;
+            }
+            h2 {
+                font-size: 1.4rem;
+            }
+            table, th, td {
+                font-size: 0.95rem;
+            }
+        }
+        @media (max-width: 500px) {
+            .container {
+                padding: 8px 2px;
+            }
+            .table-responsive {
+                min-width: 0;
+            }
+            table {
+                min-width: 400px;
+            }
+            th, td {
+                padding: 8px 4px;
+                font-size: 0.85rem;
+                word-break: break-word;
+            }
+            .btn {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+            }
+        }
+        @media (max-width: 400px) {
+            .table-responsive {
+                display: none;
+            }
+            .user-card-list {
+                display: block;
+            }
+            .user-card {
+                background: var(--container-bg);
+                box-shadow: var(--shadow);
+                border-radius: var(--border-radius);
+                margin-bottom: 14px;
+                padding: 12px 8px;
+                font-size: 0.9rem;
+            }
+            .user-card .card-row {
+                margin-bottom: 6px;
+            }
+            .user-card .card-label {
+                font-weight: 500;
+                color: var(--primary);
+                margin-right: 6px;
+            }
+            .user-card .card-value {
+                color: var(--text-dark);
+            }
+            .user-card .card-actions {
+                margin-top: 8px;
+            }
+            .user-card .btn {
+                width: 100%;
+                margin-bottom: 4px;
+            }
+        }
+        @media (min-width: 401px) {
+            .user-card-list {
+                display: none;
+            }
+        }
