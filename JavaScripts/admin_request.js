@@ -267,7 +267,7 @@ function downloadRequestPDF() {
         // Insert a page break before Material section
         materialSection.style.pageBreakBefore = 'always';
         // Optionally add extra spacing if needed
-        materialSection.style.marginTop = '150px';
+        materialSection.style.marginTop = '200px';
     }
 
     // Add spacing before each section title except the first

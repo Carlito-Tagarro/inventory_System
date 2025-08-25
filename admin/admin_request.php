@@ -145,6 +145,7 @@ DISCONNECTIVITY($connection);
         </div>
         <div class="table-container">
             <h2>Processed Requests History</h2>
+            <h4>Note: Click <span style="color:crimson;">View Details</span> to Download the PDF Format of the Request Form</h4>
             <table>
                 <thead>
                     <tr>
@@ -202,7 +203,6 @@ DISCONNECTIVITY($connection);
                 </div>
             </div>
             <?php endif; ?>
-        </div>
     </div>
 
     <!-- Modal -->
