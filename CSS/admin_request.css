@@ -60,7 +60,7 @@ th, td {
     text-align: left;
 }
 th {
-    background: #22223b;
+    background: #a94442;
     color: #fff;
     font-weight: 600;
     letter-spacing: 0.5px;
@@ -113,6 +113,73 @@ button:hover {
     padding: 28px 30px 18px 30px;
     overflow-y: auto;
 }
+@media (max-width: 1100px) {
+    .tables-flex {
+        flex-direction: column;
+        gap: 32px;
+    }
+    .table-container {
+        width: 100%;
+    }
+}
+@media (max-width: 900px) {
+    nav {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        flex-direction: column;
+    }
+    .nav-container {
+        flex-direction: column;
+        gap: 18px;
+        align-items: flex-start;
+    }
+    .tables-flex {
+        flex-direction: column;
+        gap: 24px;
+    }
+    .table-container {
+        width: 100%;
+    }
+    table {
+        font-size: 14px;
+    }
+}
+@media (max-width: 700px) {
+    body {
+        padding: 10px;
+    }
+    .tables-flex {
+        margin-top: 10px;
+    }
+    .table-container {
+        width: 100%;
+        margin-bottom: 18px;
+    }
+    table, th, td {
+        font-size: 13px;
+    }
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+    }
+}
+@media (max-width: 500px) {
+    nav img {
+        height: 36px;
+        margin-left: 8px;
+    }
+    h2 {
+        font-size: 1.1rem;
+    }
+    th, td {
+        padding: 8px 6px;
+    }
+    button {
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+}
 @media (max-width: 900px) {
     .modal-content {
         width: 99vw;
@@ -126,6 +193,8 @@ button:hover {
     .modal-left, .modal-right {
         min-width: 0 !important;
         width: 99vw;
+        max-width: 100%;
+        margin-bottom: 18px;
     }
 }
 @media (max-width: 600px) {
@@ -133,6 +202,27 @@ button:hover {
         width: 99vw;
         padding: 8px 1vw 8px 1vw;
         max-height: 98vh;
+    }
+    .modal-left, .modal-right {
+        width: 100%;
+        min-width: 0 !important;
+        margin-bottom: 12px;
+    }
+    .modal-content .modal-section-title {
+        font-size: 1rem;
+        margin: 18px 0 8px 0;
+    }
+    .modal-details-table th, .modal-details-table td {
+        font-size: 13px;
+        padding: 4px 0;
+    }
+}
+@media (max-width: 400px) {
+    .modal-content {
+        padding: 4px 0 4px 0;
+    }
+    .modal-section-title {
+        font-size: 0.95rem;
     }
 }
 .modal-content .modal-section-title {
