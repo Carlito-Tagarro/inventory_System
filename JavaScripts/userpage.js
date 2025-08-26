@@ -286,5 +286,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// --- Show JS message after form submit (PHP sets JS variable) ---
-// In userpage.php, set a <script> block for this logic after form submit.
+
