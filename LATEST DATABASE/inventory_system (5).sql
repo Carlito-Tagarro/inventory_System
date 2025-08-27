@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 20, 2025 at 10:08 AM
+-- Generation Time: Aug 27, 2025 at 06:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -144,7 +144,8 @@ CREATE TABLE `event_form_history` (
 --
 
 INSERT INTO `event_form_history` (`event_form_id`, `event_name`, `event_title`, `event_date`, `sender_email`, `date_time_ingress`, `date_time_egress`, `place`, `location`, `sponsorship_budg`, `target_audience`, `number_audience`, `set_up`, `booth_size`, `booth_inclusion`, `number_tables`, `number_chairs`, `speaking_slot`, `date_time`, `program_target`, `technical_team`, `trainer_needed`, `ready_to_use`, `provide_materials`, `created_at`, `request_status`, `processed_at`, `user_id`, `request_mats`) VALUES
-(57, 'EVENT', 'adsad', '2025-08-20', 'carlitotagarro27@gmail.com', '2025-08-20 15:12:00', '2025-08-20 15:12:00', 'ASDASD', 'ASDASD', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'Yes', '2025-08-20 15:12:23', 'Approved', '2025-08-20 15:12:40', 17, 322);
+(57, 'EVENT', 'adsad', '2025-08-20', 'carlitotagarro27@gmail.com', '2025-08-20 15:12:00', '2025-08-20 15:12:00', 'ASDASD', 'ASDASD', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'Yes', '2025-08-20 15:12:23', 'Approved', '2025-08-20 15:12:40', 17, 322),
+(58, 'SANA GUMAGANA', 'ARAY KO', '2025-08-29', 'carlitotagarro27@gmail.com', '2025-08-20 16:23:00', '2025-08-20 16:23:00', 'aray ko', 'AWIT', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'No', '2025-08-20 16:23:42', 'Declined', '2025-08-20 16:25:22', 17, 0);
 
 -- --------------------------------------------------------
 
@@ -257,18 +258,19 @@ CREATE TABLE `users` (
   `Account_status` enum('Activated','Deactivated','','') NOT NULL,
   `verification_code` varchar(10) NOT NULL,
   `verified` tinyint(1) DEFAULT 0,
-  `full_name` varchar(50) NOT NULL
+  `reset_token` varchar(64) NOT NULL,
+  `token_expiry` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `user_type`, `Account_status`, `verification_code`, `verified`, `full_name`) VALUES
-(13, 'administration', '$2y$10$CP9GOla6e9kfDWiDpgDTsux.PJ0UpiXL2hBTudOpsGPAKeArFDr.W', 'carlitotagarro0@gmail.com', 'admin', '', '921859', 1, ''),
-(16, 'Joseph', '$2y$10$cmBgp4rPBQ9OeNkUsVlSd.Fk0BsnC1OSX.pvpaONNsmJGx0DOm/vC', 'ch4rlestzy27@gmail.com', 'trainer', 'Activated', '470291', 1, ''),
-(17, 'Charles', '$2y$10$ttP/DBufXS5kHS9CrgEtd.jQXcdVlsFYnNRrkPY4bxUyefKMh9V1a', 'carlitotagarro27@gmail.com', 'trainer', 'Activated', '412464', 1, ''),
-(22, 'Charlito', '$2y$10$zT3YGflFo1b4bBgS/uIOFOOvFxJOzR8L2gu67A3hSwx.sY7YsySiC', 'carlitotagarro0927@gmail.com', 'trainer', 'Deactivated', '700235', 1, '');
+INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `user_type`, `Account_status`, `verification_code`, `verified`, `reset_token`, `token_expiry`) VALUES
+(13, 'administration', '$2y$10$oJS7luv6feZ6hvkqZR0.ReJYZ/0LcUk1v83n/Sm0EakRN96Cvt7lW', 'carlitotagarro0@gmail.com', 'admin', '', '921859', 1, '', '0000-00-00 00:00:00'),
+(16, 'Joseph', '$2y$10$cmBgp4rPBQ9OeNkUsVlSd.Fk0BsnC1OSX.pvpaONNsmJGx0DOm/vC', 'ch4rlestzy27@gmail.com', 'trainer', 'Activated', '470291', 1, '', '2025-08-27 11:19:40'),
+(17, 'Charles', '$2y$10$fHwDU6Aa/NyPGFp7IKes5uvGXTWaVKAMuNY4dbLdWKX3ZZSxDFeVS', 'carlitotagarro27@gmail.com', 'trainer', 'Activated', '412464', 1, '', '0000-00-00 00:00:00'),
+(22, 'Charlito', '$2y$10$zT3YGflFo1b4bBgS/uIOFOOvFxJOzR8L2gu67A3hSwx.sY7YsySiC', 'carlitotagarro0927@gmail.com', 'trainer', 'Deactivated', '700235', 1, '', '2025-08-27 11:19:40');
 
 --
 -- Indexes for dumped tables
@@ -339,7 +341,7 @@ ALTER TABLE `brochures`
 -- AUTO_INCREMENT for table `event_form`
 --
 ALTER TABLE `event_form`
-  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `marketing_materials`
