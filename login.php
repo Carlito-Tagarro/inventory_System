@@ -91,6 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </form>
       <div class="links">
           <a href="register.php">Don’t have an account? Register here</a>
+          <br>
+          <a href="forgot_pass.php">Forgot your password? Reset it here</a>
       </div>
   </div>
 </body>
