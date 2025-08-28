@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2025 at 06:04 AM
+-- Generation Time: Aug 28, 2025 at 10:06 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -80,7 +80,8 @@ CREATE TABLE `event_form` (
   `date_time_egress` datetime NOT NULL,
   `place` varchar(100) NOT NULL,
   `location` varchar(255) NOT NULL,
-  `sponsorship_budg` enum('Free','Sponsorship','','') NOT NULL,
+  `sponsorship_budg` enum('Yes','No','','') NOT NULL,
+  `amount` int(11) DEFAULT NULL,
   `target_audience` text DEFAULT NULL,
   `number_audience` int(11) NOT NULL,
   `set_up` enum('Yes','No','','') DEFAULT NULL,
@@ -88,12 +89,15 @@ CREATE TABLE `event_form` (
   `booth_inclusion` text DEFAULT NULL,
   `number_tables` int(3) DEFAULT NULL,
   `number_chairs` int(3) DEFAULT NULL,
-  `speaking_slot` varchar(255) DEFAULT NULL,
+  `speaking_slot` enum('Yes','No','','') DEFAULT NULL,
+  `speaker_name` varchar(50) DEFAULT NULL,
   `date_time` datetime NOT NULL,
-  `program_target` varchar(255) DEFAULT NULL,
+  `duration` varchar(50) DEFAULT NULL,
+  `Topic` varchar(255) DEFAULT NULL,
   `technical_team` enum('Yes','No','','') NOT NULL,
+  `technical_task` text DEFAULT NULL,
   `trainer_needed` enum('Yes','No','','') NOT NULL,
-  `ready_to_use` text DEFAULT NULL,
+  `trainer_task` text DEFAULT NULL,
   `provide_materials` enum('Yes','No','','') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `request_status` enum('Pending','Approved','Decline','') NOT NULL,
@@ -111,26 +115,30 @@ CREATE TABLE `event_form_history` (
   `event_form_id` int(11) NOT NULL,
   `event_name` varchar(255) DEFAULT NULL,
   `event_title` varchar(255) DEFAULT NULL,
-  `event_date` date DEFAULT NULL,
+  `event_date` varchar(100) DEFAULT NULL,
   `sender_email` varchar(255) DEFAULT NULL,
   `date_time_ingress` datetime DEFAULT NULL,
   `date_time_egress` datetime DEFAULT NULL,
   `place` varchar(255) DEFAULT NULL,
   `location` varchar(255) DEFAULT NULL,
-  `sponsorship_budg` enum('Free','Sponsorship','','') NOT NULL,
+  `sponsorship_budg` enum('Yes','No','','') NOT NULL,
+  `amount` int(11) DEFAULT NULL,
   `target_audience` varchar(255) DEFAULT NULL,
   `number_audience` int(11) DEFAULT NULL,
-  `set_up` varchar(255) DEFAULT NULL,
+  `set_up` enum('Yes','No','','') DEFAULT NULL,
   `booth_size` varchar(255) DEFAULT NULL,
   `booth_inclusion` varchar(255) DEFAULT NULL,
   `number_tables` int(11) DEFAULT NULL,
   `number_chairs` int(11) DEFAULT NULL,
   `speaking_slot` varchar(255) DEFAULT NULL,
+  `speaker_name` varchar(50) DEFAULT NULL,
   `date_time` datetime DEFAULT NULL,
-  `program_target` varchar(255) DEFAULT NULL,
+  `duration` varchar(50) DEFAULT NULL,
+  `Topic` varchar(255) DEFAULT NULL,
   `technical_team` varchar(255) DEFAULT NULL,
+  `technical_task` varchar(255) DEFAULT NULL,
   `trainer_needed` varchar(255) DEFAULT NULL,
-  `ready_to_use` varchar(255) DEFAULT NULL,
+  `trainer_task` varchar(255) DEFAULT NULL,
   `provide_materials` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `request_status` varchar(50) DEFAULT NULL,
@@ -138,14 +146,6 @@ CREATE TABLE `event_form_history` (
   `user_id` int(11) DEFAULT NULL,
   `request_mats` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `event_form_history`
---
-
-INSERT INTO `event_form_history` (`event_form_id`, `event_name`, `event_title`, `event_date`, `sender_email`, `date_time_ingress`, `date_time_egress`, `place`, `location`, `sponsorship_budg`, `target_audience`, `number_audience`, `set_up`, `booth_size`, `booth_inclusion`, `number_tables`, `number_chairs`, `speaking_slot`, `date_time`, `program_target`, `technical_team`, `trainer_needed`, `ready_to_use`, `provide_materials`, `created_at`, `request_status`, `processed_at`, `user_id`, `request_mats`) VALUES
-(57, 'EVENT', 'adsad', '2025-08-20', 'carlitotagarro27@gmail.com', '2025-08-20 15:12:00', '2025-08-20 15:12:00', 'ASDASD', 'ASDASD', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'Yes', '2025-08-20 15:12:23', 'Approved', '2025-08-20 15:12:40', 17, 322),
-(58, 'SANA GUMAGANA', 'ARAY KO', '2025-08-29', 'carlitotagarro27@gmail.com', '2025-08-20 16:23:00', '2025-08-20 16:23:00', 'aray ko', 'AWIT', '', '', 0, '', '', '', 0, 0, '', '0000-00-00 00:00:00', '', 'No', 'No', '', 'No', '2025-08-20 16:23:42', 'Declined', '2025-08-20 16:25:22', 17, 0);
 
 -- --------------------------------------------------------
 
@@ -341,7 +341,7 @@ ALTER TABLE `brochures`
 -- AUTO_INCREMENT for table `event_form`
 --
 ALTER TABLE `event_form`
-  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `marketing_materials`
