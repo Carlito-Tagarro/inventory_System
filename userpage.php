@@ -36,10 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $number_chairs = intval($_POST['number_chairs']);
     $speaking_slot = clean($_POST['speaking_slot']);
     $date_time = clean($_POST['date_time']);
-    $program_target = clean($_POST['program_target']);
+    $topic = clean($_POST['topic']);
     $technical_team = clean($_POST['technical_team']);
     $trainer_needed = clean($_POST['trainer_needed']);
-    $ready_to_use = clean($_POST['ready_to_use']);
+    $trainer_task = clean($_POST['trainer_task']);
     $provide_materials = clean($_POST['provide_materials']);
 
     
@@ -123,8 +123,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO event_form (
         event_name, event_title, event_date, date_time_ingress, date_time_egress, place, location,
         sponsorship_budg, target_audience, number_audience, set_up, booth_size, booth_inclusion,
-        number_tables, number_chairs, speaking_slot, date_time, program_target, technical_team,
-        trainer_needed, ready_to_use, provide_materials, user_id, request_mats
+        number_tables, number_chairs, speaking_slot, date_time, Topic, technical_team,
+        trainer_needed, trainer_task, provide_materials, user_id, request_mats
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $connection->prepare($sql);
@@ -132,8 +132,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         "sssssssssisssiisssssssis",
         $event_name, $event_title, $event_date, $date_time_ingress, $date_time_egress, $place, $location,
         $sponsorship_budg, $target_audience, $number_audience, $set_up, $booth_size, $booth_inclusion,
-        $number_tables, $number_chairs, $speaking_slot, $date_time, $program_target, $technical_team,
-        $trainer_needed, $ready_to_use, $provide_materials, $user_id, $request_mats
+        $number_tables, $number_chairs, $speaking_slot, $date_time, $topic, $technical_team,
+        $trainer_needed, $trainer_task, $provide_materials, $user_id, $request_mats
     );
 
     if ($stmt->execute()) {
@@ -150,21 +150,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 } else {
 
-    // --- Fetch booked event dates and names ---
+    // --- Fetch booked event ingress datetimes and names ---
     $connection = CONNECTIVITY();
     $booked_events = [];
     // Only fetch events with request_status = 'Approved'
-    $result = $connection->query("SELECT event_date, event_name FROM event_form_history WHERE request_status = 'Approved'");
+    $result = $connection->query("SELECT date_time_ingress, event_name FROM event_form_history WHERE request_status = 'Approved'");
     if ($result) {
         while ($row = $result->fetch_assoc()) {
             $booked_events[] = [
-                'date' => $row['event_date'],
+                'date' => $row['date_time_ingress'], // now using ingress
                 'name' => $row['event_name']
             ];
         }
         $result->free();
-            echo "<script>var bookedEvents = " . json_encode($booked_events) . ";</script>";
-
+        echo "<script>var bookedEvents = " . json_encode($booked_events) . ";</script>";
     }
     DISCONNECTIVITY($connection);
     ?>
@@ -458,7 +457,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Output bookedEvents and bookedDates for JS -->
         <script>
             var bookedEvents = <?php echo json_encode($booked_events); ?>;
-            var bookedDates = bookedEvents.map(function(ev) { return ev.date; });
+            // Use ingress for bookedDates
+            var bookedDates = bookedEvents.map(function(ev) { return ev.date.split('T')[0]; }); // get date part
             <?php if (isset($_SESSION['submit_status'])): ?>
                 document.addEventListener('DOMContentLoaded', function() {
                     <?php if ($_SESSION['submit_status'] === "success"): ?>
@@ -483,11 +483,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 var eventForm = document.getElementById('eventForm');
                 if (eventForm) {
                     eventForm.addEventListener('submit', function(e) {
-                        var eventDateInput = document.getElementById('event_date');
-                        if (eventDateInput) {
-                            var selectedDate = eventDateInput.value;
-                            if (bookedDates.includes(selectedDate)) {
-                                alert("This date is already booked for another event. Please choose a different date.");
+                        // Use ingress input for booking check
+                        var ingressInput = document.getElementById('date_time_ingress');
+                        if (ingressInput) {
+                            var selectedIngress = ingressInput.value.split('T')[0];
+                            if (bookedDates.includes(selectedIngress)) {
+                                alert("This ingress date is already booked for another event. Please choose a different ingress date.");
                                 e.preventDefault();
                                 return false;
                             }

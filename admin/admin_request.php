@@ -67,8 +67,8 @@ $history_query = "SELECT h.event_form_id, h.event_name, h.event_title, h.event_d
     COALESCE(h.sender_email, u.email) AS sender_email, 
     h.date_time_ingress, h.date_time_egress, h.place, h.location, h.sponsorship_budg, 
     h.target_audience, h.number_audience, h.set_up, h.booth_size, h.booth_inclusion, 
-    h.number_tables, h.number_chairs, h.speaking_slot, h.date_time, h.program_target, 
-    h.technical_team, h.trainer_needed, h.ready_to_use, h.provide_materials, 
+    h.number_tables, h.number_chairs, h.speaking_slot, h.date_time, h.Topic, 
+    h.technical_team, h.trainer_needed, h.trainer_task, h.provide_materials, 
     h.created_at, h.user_id, h.request_mats, h.request_status, h.processed_at
     FROM event_form_history h
     LEFT JOIN users u ON h.user_id = u.user_id
