@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
+//reverted
 
 // Modal JS
 document.addEventListener('DOMContentLoaded', function() {

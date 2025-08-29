@@ -16,7 +16,7 @@ function clean($data) {
 }
 
 $submit_status = null; // Track submit status
-
+//reverted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect and sanitize form data
     $event_name = clean($_POST['event_name']);
