@@ -453,7 +453,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </form>
             </div>
         </div>
-        <!-- Remove embedded <script> block -->
+        
         <!-- Output bookedEvents and bookedDates for JS -->
         <script>
             var bookedEvents = <?php echo json_encode($booked_events); ?>;
@@ -497,7 +497,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             });
         </script>
-        <!-- Add external JS -->
         <script src="JavaScripts/userpage.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     </body>
