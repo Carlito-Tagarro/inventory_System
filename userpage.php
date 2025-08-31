@@ -481,10 +481,10 @@ if ($result) {
             endif;
             ?>
 
-            // Prevent booking on already booked dates
+            
            
         </script>
-        <!-- Add external JS -->
+       
         <script src="JavaScripts/userpage.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     </body>

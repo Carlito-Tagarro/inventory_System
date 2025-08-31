@@ -218,12 +218,13 @@ document.addEventListener('DOMContentLoaded', function() {
         var year = d.getFullYear();
         if (month.length < 2) month = '0' + month;
         if (day.length < 2) day = '0' + day;
-        return [year, month, day].join('-');
+        return [month, day, year].join('/'); // changed from '-' to '/'
     }
     bookedEvents.forEach(function(ev) {
         var startDate = new Date(ev.start);
         var endDate = new Date(ev.end);
-        for (var d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        // Fix: Only include dates from startDate up to but not including endDate
+        for (var d = new Date(startDate); d < endDate; d.setDate(d.getDate() + 1)) {
             var dateStr = formatDate(d);
             if (!bookedDates.includes(dateStr)) {
                 bookedDates.push(dateStr);
