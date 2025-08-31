@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
         events: calendarEvents,
         eventContent: function(arg) {
             // Only show event name, no time
-            return { html: '<div style="background:#e53950;color:#fff;padding:2px 8px;border-radius:4px;font-size:13px;">' + arg.event.title + '</div>' };
+            return { html: '<div style="background:#a94442;color:#fff;padding:2px 8px;border-radius:4px;font-size:13px;">' + arg.event.title + '</div>' };
         }
     });
     calendar.render();
