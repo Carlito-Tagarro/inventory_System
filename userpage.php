@@ -16,7 +16,7 @@ function clean($data) {
 }
 
 $submit_status = null; // Track submit status
-//reverted
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect and sanitize form data
     $event_name = clean($_POST['event_name']);
@@ -150,20 +150,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 } else {
 
-    // --- Fetch booked event ingress datetimes and names ---
+    // --- Fetch booked event dates and names ---
     $connection = CONNECTIVITY();
     $booked_events = [];
     // Only fetch events with request_status = 'Approved'
-    $result = $connection->query("SELECT date_time_ingress, event_name FROM event_form_history WHERE request_status = 'Approved'");
+    $result = $connection->query("SELECT event_date, event_name FROM event_form_history WHERE request_status = 'Approved'");
     if ($result) {
         while ($row = $result->fetch_assoc()) {
             $booked_events[] = [
-                'date' => $row['date_time_ingress'], // now using ingress
+                'date' => $row['event_date'],
                 'name' => $row['event_name']
             ];
         }
         $result->free();
-        echo "<script>var bookedEvents = " . json_encode($booked_events) . ";</script>";
+            echo "<script>var bookedEvents = " . json_encode($booked_events) . ";</script>";
+
     }
     DISCONNECTIVITY($connection);
     ?>
@@ -453,12 +454,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </form>
             </div>
         </div>
-        
+        <!-- Remove embedded <script> block -->
         <!-- Output bookedEvents and bookedDates for JS -->
         <script>
             var bookedEvents = <?php echo json_encode($booked_events); ?>;
-            // Use ingress for bookedDates
-            var bookedDates = bookedEvents.map(function(ev) { return ev.date.split('T')[0]; }); // get date part
+            var bookedDates = bookedEvents.map(function(ev) { return ev.date; });
             <?php if (isset($_SESSION['submit_status'])): ?>
                 document.addEventListener('DOMContentLoaded', function() {
                     <?php if ($_SESSION['submit_status'] === "success"): ?>
@@ -483,12 +483,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 var eventForm = document.getElementById('eventForm');
                 if (eventForm) {
                     eventForm.addEventListener('submit', function(e) {
-                        // Use ingress input for booking check
-                        var ingressInput = document.getElementById('date_time_ingress');
-                        if (ingressInput) {
-                            var selectedIngress = ingressInput.value.split('T')[0];
-                            if (bookedDates.includes(selectedIngress)) {
-                                alert("This ingress date is already booked for another event. Please choose a different ingress date.");
+                        var eventDateInput = document.getElementById('event_date');
+                        if (eventDateInput) {
+                            var selectedDate = eventDateInput.value;
+                            if (bookedDates.includes(selectedDate)) {
+                                alert("This date is already booked for another event. Please choose a different date.");
                                 e.preventDefault();
                                 return false;
                             }
@@ -497,6 +496,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             });
         </script>
+        <!-- Add external JS -->
         <script src="JavaScripts/userpage.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     </body>
