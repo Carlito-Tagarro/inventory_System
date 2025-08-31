@@ -154,18 +154,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $connection = CONNECTIVITY();
     $booked_events = [];
     // Only fetch events with request_status = 'Approved'
-    $result = $connection->query("SELECT event_date, event_name FROM event_form_history WHERE request_status = 'Approved'");
-    if ($result) {
-        while ($row = $result->fetch_assoc()) {
-            $booked_events[] = [
-                'date' => $row['event_date'],
-                'name' => $row['event_name']
-            ];
-        }
-        $result->free();
-            echo "<script>var bookedEvents = " . json_encode($booked_events) . ";</script>";
-
-    }
+    $result = $connection->query("SELECT date_time_ingress, date_time_egress, event_name FROM event_form_history WHERE request_status = 'Approved'");
+$booked_events = [];
+if ($result) {
+   while ($row = $result->fetch_assoc()) {
+    $start = date('c', strtotime($row['date_time_ingress']));
+    $end = date('c', strtotime($row['date_time_egress']));
+    $booked_events[] = [
+        'start' => $start,
+        'end' => $end,
+        'name' => $row['event_name']
+    ];
+}
+    $result->free();
+    echo "<script>var bookedEvents = " . json_encode($booked_events) . ";</script>";
+}
     DISCONNECTIVITY($connection);
     ?>
     <html lang="en">
@@ -458,7 +461,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- Output bookedEvents and bookedDates for JS -->
         <script>
             var bookedEvents = <?php echo json_encode($booked_events); ?>;
-            var bookedDates = bookedEvents.map(function(ev) { return ev.date; });
+            // var bookedDates = bookedEvents.map(function(ev) { return ev.date; });
             <?php if (isset($_SESSION['submit_status'])): ?>
                 document.addEventListener('DOMContentLoaded', function() {
                     <?php if ($_SESSION['submit_status'] === "success"): ?>
@@ -479,22 +482,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ?>
 
             // Prevent booking on already booked dates
-            document.addEventListener('DOMContentLoaded', function() {
-                var eventForm = document.getElementById('eventForm');
-                if (eventForm) {
-                    eventForm.addEventListener('submit', function(e) {
-                        var eventDateInput = document.getElementById('event_date');
-                        if (eventDateInput) {
-                            var selectedDate = eventDateInput.value;
-                            if (bookedDates.includes(selectedDate)) {
-                                alert("This date is already booked for another event. Please choose a different date.");
-                                e.preventDefault();
-                                return false;
-                            }
-                        }
-                    });
-                }
-            });
+           
         </script>
         <!-- Add external JS -->
         <script src="JavaScripts/userpage.js"></script>

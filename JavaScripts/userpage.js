@@ -188,102 +188,151 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// --- Calendar and Booked Dates JS ---
-// The following variables must be set in a <script> in userpage.php before including this JS:
-// var bookedEvents = [...]; // array of {date, name}
-// var bookedDates = [...]; // array of dates
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Pass booked events from PHP to JS ---
-    // var bookedEvents = ...; // set in PHP
-    // var bookedDates = ...; // set in PHP
-
     var calendarEl = document.getElementById('calendar');
     var eventNameInput = document.getElementById('event_name');
-    var eventDateInput = document.getElementById('event_date');
+    var ingressInput = document.getElementById('date_time_ingress');
+    var egressInput = document.getElementById('date_time_egress');
+
+    // Map bookedEvents to FullCalendar events with start and end datetime
     var calendarEvents = bookedEvents.map(function(ev) {
         return {
             title: ev.name,
-            start: ev.date,
-            allDay: true,
+            start: ev.start,  // datetime string
+            end: ev.end,      // datetime string
+            allDay: false,    // since we have time info
             backgroundColor: '#dc3545', // red for booked
             borderColor: '#dc3545',
             textColor: '#fff'
         };
     });
+
+    // Extract booked dates (yyyy-mm-dd) from bookedEvents ingress and egress ranges
+var bookedDates = [];
+// Helper to format Date object to yyyy-mm-dd
+function formatDate(date) {
+    var d = new Date(date);
+    var month = '' + (d.getMonth() + 1);
+    var day = '' + d.getDate();
+    var year = d.getFullYear();
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    return [year, month, day].join('-');
+}
+// For each booked event, add all dates covered by ingress to egress to bookedDates
+bookedEvents.forEach(function(ev) {
+    var startDate = new Date(ev.start);
+    var endDate = new Date(ev.end);
+    for (var d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        var dateStr = formatDate(d);
+        if (!bookedDates.includes(dateStr)) {
+            bookedDates.push(dateStr);
+        }
+    }
+});
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         height: 500,
-        events: calendarEvents
+        events: calendarEvents,
+        // optionally, you can add timeGridWeek or timeGridDay views to see times
     });
     calendar.render();
 
-    // Disable booked dates in event_date input
-    // Helper to format date to yyyy-mm-dd
-    function formatDate(date) {
-        var d = new Date(date);
-        var month = '' + (d.getMonth() + 1);
-        var day = '' + d.getDate();
-        var year = d.getFullYear();
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-        return [year, month, day].join('-');
+    // Helper: parse datetime string to Date object
+    function parseDateTime(dtString) {
+        return new Date(dtString);
     }
 
-    eventDateInput.addEventListener('focus', function() {
-        eventDateInput.removeAttribute('min');
-        eventDateInput.removeAttribute('max');
-    });
-
-    eventDateInput.addEventListener('input', function() {
-        var selected = eventDateInput.value;
-        if (bookedDates.includes(selected)) {
-            alert('This date is already booked for another event.');
-            eventDateInput.value = '';
-        }
-    });
-
-    eventDateInput.addEventListener('keydown', function(e) {
-        setTimeout(function() {
-            var selected = eventDateInput.value;
-            if (bookedDates.includes(selected)) {
-                alert('This date is already booked for another event.');
-                eventDateInput.value = '';
+    // Helper: check if a datetime range overlaps with any booked event
+    function isDateTimeRangeBooked(start, end) {
+        for (var i = 0; i < bookedEvents.length; i++) {
+            var bookedStart = parseDateTime(bookedEvents[i].start);
+            var bookedEnd = parseDateTime(bookedEvents[i].end);
+            // Check if ranges overlap
+            if (start < bookedEnd && end > bookedStart) {
+                return true;
             }
-        }, 10);
-    });
+        }
+        return false;
+    }
 
-    eventDateInput.addEventListener('change', function() {
-        var date = eventDateInput.value;
+    // Assuming you have inputs for ingress and egress datetime, e.g.:
+    var ingressInput = document.getElementById('date_time_ingress');
+    var egressInput = document.getElementById('date_time_egress');
+
+    function validateDateTimeInputs() {
+        if (!ingressInput || !egressInput) return;
+
+        var start = new Date(ingressInput.value);
+        var end = new Date(egressInput.value);
+
+        if (start >= end) {
+            alert("Ingress datetime must be before egress datetime.");
+            return false;
+        }
+
+        if (isDateTimeRangeBooked(start, end)) {
+            alert("This datetime range overlaps with an already booked event. Please choose a different time.");
+            return false;
+        }
+        return true;
+    }
+
+    // Add event listeners to validate on input/change
+    if (ingressInput && egressInput) {
+        ingressInput.addEventListener('change', function() {
+            validateDateTimeInputs();
+        });
+        egressInput.addEventListener('change', function() {
+            validateDateTimeInputs();
+        });
+    }
+
+    // On form submit, prevent booking if overlap
+    var eventForm = document.getElementById('eventForm');
+if (eventForm) {
+    eventForm.addEventListener('submit', function(e) {
+        var eventDateInput = document.getElementById('event_date');
+        if (eventDateInput) {
+            var selectedDate = eventDateInput.value;
+            if (bookedDates.includes(selectedDate)) {
+                alert("This date is already booked for another event. Please choose a different date.");
+                e.preventDefault();
+                return false;
+            }
+        }
+        // Also validate ingress/egress datetime overlaps
+        if (!validateDateTimeInputs()) {
+            e.preventDefault();
+            return false;
+        }
+    });
+}
+
+
+    // Optionally, update calendar preview when inputs change
+    function updateCalendarPreview() {
         var name = eventNameInput.value || 'Event';
+        var start = ingressInput ? ingressInput.value : null;
+        var end = egressInput ? egressInput.value : null;
+
         calendar.removeAllEvents();
         calendarEvents.forEach(function(ev) { calendar.addEvent(ev); });
-        if (date && !bookedDates.includes(date)) {
+
+        if (start && end && !isDateTimeRangeBooked(new Date(start), new Date(end))) {
             calendar.addEvent({
                 title: name,
-                start: date,
-                allDay: true,
+                start: start,
+                end: end,
+                allDay: false,
                 backgroundColor: '#007bff',
                 borderColor: '#007bff',
                 textColor: '#fff'
             });
         }
-    });
-    eventNameInput.addEventListener('input', function() {
-        var date = eventDateInput.value;
-        var name = eventNameInput.value || 'Event';
-        calendar.removeAllEvents();
-        calendarEvents.forEach(function(ev) { calendar.addEvent(ev); });
-        if (date && !bookedDates.includes(date)) {
-            calendar.addEvent({
-                title: name,
-                start: date,
-                allDay: true,
-                backgroundColor: '#007bff',
-                borderColor: '#007bff',
-                textColor: '#fff'
-            });
-        }
-    });
+    }
+
+    if (ingressInput) ingressInput.addEventListener('input', updateCalendarPreview);
+    if (egressInput) egressInput.addEventListener('input', updateCalendarPreview);
+    if (eventNameInput) eventNameInput.addEventListener('input', updateCalendarPreview);
 });
-
-
