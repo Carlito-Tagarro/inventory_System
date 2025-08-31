@@ -228,7 +228,7 @@ if ($result) {
                     </div>
                     <div class="form-group">
                         <label for="event_date">Event Date</label>
-                        <input type="date" name="event_date" id="event_date" required>
+                        <input type="text" name="event_date" id="event_date" required>
                     </div>
                     <div class="form-group">
                         <label for="date_time_ingress">Date Time Ingress</label>
