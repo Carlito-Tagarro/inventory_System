@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['username'] = $user_acc['username'];
                 $_SESSION['user_type'] = $user_acc['user_type'];
 
-                // ✅ Save username in cookie if Remember Me is checked
+                // Save username in cookie if Remember Me is checked
                 if ($remember) {
                     setcookie("remember_username", $username, time() + (86400 * 30), "/"); // 30 days
                 } else {
