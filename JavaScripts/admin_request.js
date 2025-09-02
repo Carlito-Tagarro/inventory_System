@@ -22,7 +22,7 @@ function renderModal(data, materials, isPending) {
             title: "II. Budgeting & Audience",
             fields: [
                 {label: "Sponsorship Budget", key: "sponsorship_budg"},
-                {label: "Amount", key: "amount"},
+                {label: "Amount (₱)", key: "amount"},
                 {label: "Target Audience", key: "target_audience"},
                 {label: "Number Audience", key: "number_audience"}
             ]
