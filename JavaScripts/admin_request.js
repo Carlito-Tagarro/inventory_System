@@ -10,9 +10,11 @@ function renderModal(data, materials, isPending) {
                 {label: "Event Name", key: "event_name"},
                 {label: "Event Title", key: "event_title"},
                 {label: "Event Date", key: "event_date"},
+                {label: "Number of Event Days", key: "event_duration"},
                 {label: "Date Time Ingress", key: "date_time_ingress"},
                 {label: "Date Time Egress", key: "date_time_egress"},
-                {label: "Place", key: "place"},
+                {label: "Claiming of ID", key: "claiming_id"},
+                {label: "Event Place", key: "place"},
                 {label: "Location", key: "location"}
             ]
         },
@@ -20,6 +22,7 @@ function renderModal(data, materials, isPending) {
             title: "II. Budgeting & Audience",
             fields: [
                 {label: "Sponsorship Budget", key: "sponsorship_budg"},
+                {label: "Amount", key: "amount"},
                 {label: "Target Audience", key: "target_audience"},
                 {label: "Number Audience", key: "number_audience"}
             ]
@@ -39,10 +42,10 @@ function renderModal(data, materials, isPending) {
             fields: [
                 {label: "Speaking Slot", key: "speaking_slot"},
                 {label: "Date Time", key: "date_time"},
-                {label: "Program Target", key: "program_target"},
+                {label: "Topic", key: "topic"},
                 {label: "Technical Team", key: "technical_team"},
                 {label: "Trainer Needed", key: "trainer_needed"},
-                {label: "Ready To Use", key: "ready_to_use"},
+                {label: "Trainer Task", key: "trainer_task"},
                 {label: "Provide Materials", key: "provide_materials"}
             ]
         }

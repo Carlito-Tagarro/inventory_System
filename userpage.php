@@ -22,11 +22,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $event_name = clean($_POST['event_name']);
     $event_title = clean($_POST['event_title']);
     $event_date = clean($_POST['event_date']);
+    $event_duration = clean($_POST['event_duration']);
     $date_time_ingress = clean($_POST['date_time_ingress']);
     $date_time_egress = clean($_POST['date_time_egress']);
+    $claiming_id = clean($_POST['claiming_id']);
     $place = clean($_POST['place']);
     $location = clean($_POST['location']);
     $sponsorship_budg = clean($_POST['sponsorship_budg']);
+    $amount = floatval($_POST['amount']);
     $target_audience = clean($_POST['target_audience']);
     $number_audience = intval($_POST['number_audience']);
     $set_up = clean($_POST['set_up']);
@@ -121,17 +124,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // --- Insert event form, including request_mats (or NULL if none) ---
     $connection = CONNECTIVITY();
     $sql = "INSERT INTO event_form (
-        event_name, event_title, event_date, date_time_ingress, date_time_egress, place, location,
-        sponsorship_budg, target_audience, number_audience, set_up, booth_size, booth_inclusion,
+        event_name, event_title, event_date, event_duration, date_time_ingress, date_time_egress, claiming_id, place, location,
+        sponsorship_budg, amount, target_audience, number_audience, set_up, booth_size, booth_inclusion,
         number_tables, number_chairs, speaking_slot, date_time, Topic, technical_team,
         trainer_needed, trainer_task, provide_materials, user_id, request_mats
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     $stmt = $connection->prepare($sql);
     $stmt->bind_param(
-        "sssssssssisssiisssssssis",
-        $event_name, $event_title, $event_date, $date_time_ingress, $date_time_egress, $place, $location,
-        $sponsorship_budg, $target_audience, $number_audience, $set_up, $booth_size, $booth_inclusion,
+        "ssssssssssisisssiisssssssis",
+        $event_name, $event_title, $event_date, $event_duration, $date_time_ingress, $date_time_egress, $claiming_id, $place, $location,
+        $sponsorship_budg, $amount, $target_audience, $number_audience, $set_up, $booth_size, $booth_inclusion,
         $number_tables, $number_chairs, $speaking_slot, $date_time, $topic, $technical_team,
         $trainer_needed, $trainer_task, $provide_materials, $user_id, $request_mats
     );
@@ -231,6 +234,10 @@ if ($result) {
                         <input type="text" name="event_date" id="event_date" required>
                     </div>
                     <div class="form-group">
+                        <label for="event_duration">Number of Event Days</label>
+                        <input type="text" name="event_duration" id="event_duration" required>
+                    </div>
+                    <div class="form-group">
                         <label for="date_time_ingress">Date Time Ingress</label>
                         <input type="datetime-local" name="date_time_ingress" id="date_time_ingress" required>
                     </div>
@@ -238,8 +245,12 @@ if ($result) {
                         <label for="date_time_egress">Date Time Egress</label>
                         <input type="datetime-local" name="date_time_egress" id="date_time_egress" required>
                     </div>
+                     <div class="form-group">
+                        <label for="claiming_id">Claiming of ID</label>
+                        <textarea name="claiming_id" id="claiming_id"></textarea>
+                    </div>
                     <div class="form-group">
-                        <label for="place">Place</label>
+                        <label for="place">Event Place</label>
                         <input type="text" name="place" id="place" maxlength="100" required>
                     </div>
                     <div class="form-group">
@@ -256,6 +267,10 @@ if ($result) {
                             <option value="Free">Free</option>
                             <option value="Sponsorship">Sponsorship</option>
                         </select>
+                    <div class="form-group">
+                        <label for="amount">Amount (₱)</label>
+                        <input type="number" name="amount" id="amount" min="0">
+                    </div>
                     </div>
                     <div class="form-group">
                         <label for="target_audience">Target Audience</label>
@@ -295,17 +310,21 @@ if ($result) {
                 </fieldset>
                 <fieldset>
                     <legend>Programs & Marketing</legend>
-                    <div class="form-group">
+                   <div class="form-group">
                         <label for="speaking_slot">Speaking Slot</label>
-                        <input type="text" name="speaking_slot" id="speaking_slot" maxlength="255">
+                        <select name="speaking_slot" id="speaking_slot">
+                            <option value="">--Select--</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="date_time">Date Time</label>
                         <input type="datetime-local" name="date_time" id="date_time">
                     </div>
                     <div class="form-group">
-                        <label for="program_target">Program Target</label>
-                        <input type="text" name="program_target" id="program_target" maxlength="255">
+                        <label for="topic">Topic</label>
+                        <input type="text" name="topic" id="topic" maxlength="255">
                     </div>
                     <div class="form-group">
                         <label for="technical_team">Technical Team</label>
@@ -324,8 +343,8 @@ if ($result) {
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="ready_to_use">Ready to Use</label>
-                        <textarea name="ready_to_use" id="ready_to_use"></textarea>
+                        <label for="trainer_task">Trainer Task</label>
+                        <textarea name="trainer_task" id="trainer_task"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="provide_materials">Provide Materials</label>
