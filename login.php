@@ -4,7 +4,7 @@ include 'connection.php';
 
 $error_message = "";
 
-// ✅ Auto-fill username from cookie if available
+//Auto-fill username from cookie if available
 $saved_username = isset($_COOKIE['remember_username']) ? $_COOKIE['remember_username'] : "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
