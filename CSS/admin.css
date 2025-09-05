@@ -40,7 +40,7 @@
         }
         button {
             width: 100%;
-            background: #007bff;
+            background: #a94d4d;
             color: #fff;
             border: none;
             padding: 12px 0;
@@ -54,7 +54,7 @@
             position: relative;
         }
         button:hover, button:focus {
-            background: #0056b3;
+            background: #8a3d3d;
             outline: none;
         }
         .logout-link {
