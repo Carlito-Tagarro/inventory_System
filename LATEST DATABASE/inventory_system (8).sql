@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 28, 2025 at 10:06 AM
+-- Generation Time: Sep 05, 2025 at 10:21 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -75,15 +75,17 @@ CREATE TABLE `event_form` (
   `event_form_id` int(11) NOT NULL,
   `event_name` varchar(100) NOT NULL,
   `event_title` varchar(100) NOT NULL,
-  `event_date` date NOT NULL,
+  `event_date` varchar(50) NOT NULL,
+  `event_duration` varchar(100) NOT NULL,
   `date_time_ingress` datetime NOT NULL,
   `date_time_egress` datetime NOT NULL,
+  `claiming_id` text DEFAULT NULL,
   `place` varchar(100) NOT NULL,
   `location` varchar(255) NOT NULL,
-  `sponsorship_budg` enum('Yes','No','','') NOT NULL,
+  `sponsorship_budg` enum('Free','Sponsorship','','') NOT NULL,
   `amount` int(11) DEFAULT NULL,
   `target_audience` text DEFAULT NULL,
-  `number_audience` int(11) NOT NULL,
+  `number_audience` text NOT NULL,
   `set_up` enum('Yes','No','','') DEFAULT NULL,
   `booth_size` text DEFAULT NULL,
   `booth_inclusion` text DEFAULT NULL,
@@ -93,12 +95,13 @@ CREATE TABLE `event_form` (
   `speaker_name` varchar(50) DEFAULT NULL,
   `date_time` datetime NOT NULL,
   `duration` varchar(50) DEFAULT NULL,
-  `Topic` varchar(255) DEFAULT NULL,
+  `topic` varchar(255) DEFAULT NULL,
   `technical_team` enum('Yes','No','','') NOT NULL,
   `technical_task` text DEFAULT NULL,
   `trainer_needed` enum('Yes','No','','') NOT NULL,
   `trainer_task` text DEFAULT NULL,
   `provide_materials` enum('Yes','No','','') NOT NULL,
+  `requested_by` varchar(100) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `request_status` enum('Pending','Approved','Decline','') NOT NULL,
   `user_id` int(11) DEFAULT NULL,
@@ -116,36 +119,46 @@ CREATE TABLE `event_form_history` (
   `event_name` varchar(255) DEFAULT NULL,
   `event_title` varchar(255) DEFAULT NULL,
   `event_date` varchar(100) DEFAULT NULL,
+  `event_duration` varchar(100) NOT NULL,
   `sender_email` varchar(255) DEFAULT NULL,
   `date_time_ingress` datetime DEFAULT NULL,
   `date_time_egress` datetime DEFAULT NULL,
+  `claiming_id` varchar(255) DEFAULT NULL,
   `place` varchar(255) DEFAULT NULL,
   `location` varchar(255) DEFAULT NULL,
-  `sponsorship_budg` enum('Yes','No','','') NOT NULL,
+  `sponsorship_budg` varchar(20) NOT NULL,
   `amount` int(11) DEFAULT NULL,
   `target_audience` varchar(255) DEFAULT NULL,
-  `number_audience` int(11) DEFAULT NULL,
+  `number_audience` varchar(255) DEFAULT NULL,
   `set_up` enum('Yes','No','','') DEFAULT NULL,
   `booth_size` varchar(255) DEFAULT NULL,
   `booth_inclusion` varchar(255) DEFAULT NULL,
   `number_tables` int(11) DEFAULT NULL,
   `number_chairs` int(11) DEFAULT NULL,
-  `speaking_slot` varchar(255) DEFAULT NULL,
+  `speaking_slot` varchar(20) DEFAULT NULL,
   `speaker_name` varchar(50) DEFAULT NULL,
   `date_time` datetime DEFAULT NULL,
   `duration` varchar(50) DEFAULT NULL,
-  `Topic` varchar(255) DEFAULT NULL,
+  `topic` varchar(255) DEFAULT NULL,
   `technical_team` varchar(255) DEFAULT NULL,
   `technical_task` varchar(255) DEFAULT NULL,
   `trainer_needed` varchar(255) DEFAULT NULL,
   `trainer_task` varchar(255) DEFAULT NULL,
   `provide_materials` varchar(255) DEFAULT NULL,
+  `requested_by` varchar(100) NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `request_status` varchar(50) DEFAULT NULL,
   `processed_at` datetime DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `request_mats` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `event_form_history`
+--
+
+INSERT INTO `event_form_history` (`event_form_id`, `event_name`, `event_title`, `event_date`, `event_duration`, `sender_email`, `date_time_ingress`, `date_time_egress`, `claiming_id`, `place`, `location`, `sponsorship_budg`, `amount`, `target_audience`, `number_audience`, `set_up`, `booth_size`, `booth_inclusion`, `number_tables`, `number_chairs`, `speaking_slot`, `speaker_name`, `date_time`, `duration`, `topic`, `technical_team`, `technical_task`, `trainer_needed`, `trainer_task`, `provide_materials`, `requested_by`, `created_at`, `request_status`, `processed_at`, `user_id`, `request_mats`) VALUES
+(83, 'VCT 2025', 'TESTING', 'October 1-5, 2025', '5', 'carlitotagarro27@gmail.com', '2025-10-01 17:13:00', '2025-10-05 05:13:00', 'October 8, 2025 | 6:00 PM – 11:00 PM or October 9, 2025 | 7:00 AM\r\n Meeting Room 2 – Registration Counter', 'Kahit saan dian sa Etivac', 'Etivac', 'Sponsorship', 100000, 'Mga Valorant Players', '1 million playas', '', '4x4', 'Submitted', 4, 5, 'Yes', 'Mr. Francis Xavier Hernandez', '2025-10-01 05:12:00', '10 minutes', 'How to move like a Radiant?', 'Yes', 'iassist ang hindi marunong gumamit ng mga device', 'Yes', 'Mag train ng mahihinang nilalang', 'No', 'Carlito R. Tagarro', '2025-09-05 16:16:44', 'Approved', '2025-09-05 16:17:53', 17, 0);
 
 -- --------------------------------------------------------
 
@@ -341,7 +354,7 @@ ALTER TABLE `brochures`
 -- AUTO_INCREMENT for table `event_form`
 --
 ALTER TABLE `event_form`
-  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT for table `marketing_materials`
