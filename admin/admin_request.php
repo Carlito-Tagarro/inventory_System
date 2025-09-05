@@ -70,7 +70,7 @@ $history_query = "SELECT h.event_form_id, h.event_name, h.event_title, h.event_d
     h.number_tables, h.number_chairs, h.speaking_slot, h.date_time, h.topic, 
     h.technical_team, h.trainer_needed, h.trainer_task, h.provide_materials, 
     h.created_at, h.user_id, h.request_mats, h.request_status, h.processed_at,
-    h.event_duration,h.claiming_id,h.amount
+    h.event_duration,h.claiming_id,h.amount, h.duration, h.speaker_name
     FROM event_form_history h
     LEFT JOIN users u ON h.user_id = u.user_id
     ORDER BY h.processed_at DESC LIMIT ? OFFSET ?";

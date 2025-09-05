@@ -41,7 +41,9 @@ function renderModal(data, materials, isPending) {
             title: "IV. Programs & Marketing",
             fields: [
                 {label: "Speaking Slot", key: "speaking_slot"},
+                {label: "Speaker", key: "speaker_name"},
                 {label: "Date Time", key: "date_time"},
+                {label: "Duration", key: "duration"},
                 {label: "Topic", key: "topic"},
                 {label: "Technical Team", key: "technical_team"},
                 {label: "Trainer Needed", key: "trainer_needed"},

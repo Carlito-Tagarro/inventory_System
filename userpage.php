@@ -38,7 +38,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $number_tables = intval($_POST['number_tables']);
     $number_chairs = intval($_POST['number_chairs']);
     $speaking_slot = clean($_POST['speaking_slot']);
+    $speaker_name = clean($_POST['speaker_name']);
     $date_time = clean($_POST['date_time']);
+    $duration = clean($_POST['duration']);
     $topic = clean($_POST['topic']);
     $technical_team = clean($_POST['technical_team']);
     $trainer_needed = clean($_POST['trainer_needed']);
@@ -126,16 +128,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO event_form (
         event_name, event_title, event_date, event_duration, date_time_ingress, date_time_egress, claiming_id, place, location,
         sponsorship_budg, amount, target_audience, number_audience, set_up, booth_size, booth_inclusion,
-        number_tables, number_chairs, speaking_slot, date_time, Topic, technical_team,
+        number_tables, number_chairs, speaking_slot, speaker_name, date_time, duration, Topic, technical_team,
         trainer_needed, trainer_task, provide_materials, user_id, request_mats
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     $stmt = $connection->prepare($sql);
     $stmt->bind_param(
-        "ssssssssssisisssiisssssssis",
+        "ssssssssssisisssiisssssssssis",
         $event_name, $event_title, $event_date, $event_duration, $date_time_ingress, $date_time_egress, $claiming_id, $place, $location,
         $sponsorship_budg, $amount, $target_audience, $number_audience, $set_up, $booth_size, $booth_inclusion,
-        $number_tables, $number_chairs, $speaking_slot, $date_time, $topic, $technical_team,
+        $number_tables, $number_chairs, $speaking_slot, $speaker_name, $date_time, $duration, $topic, $technical_team,
         $trainer_needed, $trainer_task, $provide_materials, $user_id, $request_mats
     );
 
@@ -278,7 +280,7 @@ if ($result) {
                     </div>
                     <div class="form-group">
                         <label for="number_audience">Number Audience</label>
-                        <input type="number" name="number_audience" id="number_audience" min="0">
+                        <textarea name="number_audience" id="number_audience"></textarea>
                     </div>
                 </fieldset>
                 <fieldset>
@@ -317,10 +319,18 @@ if ($result) {
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
+                     <div class="form-group">
+                        <label for="speaker_name">Speaker</label>
+                        <input type="text" name="speaker_name" id="speaker_name" maxlength="100">
+                    </div>    
                     </div>
                     <div class="form-group">
                         <label for="date_time">Date Time</label>
                         <input type="datetime-local" name="date_time" id="date_time">
+                    </div>
+                     <div class="form-group">
+                        <label for="duration">Duration</label>
+                        <input type="text" name="duration" id="duration" maxlength="255">
                     </div>
                     <div class="form-group">
                         <label for="topic">Topic</label>
