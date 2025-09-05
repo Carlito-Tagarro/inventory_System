@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sponsorship_budg = clean($_POST['sponsorship_budg']);
     $amount = floatval($_POST['amount']);
     $target_audience = clean($_POST['target_audience']);
-    $number_audience = intval($_POST['number_audience']);
+    $number_audience = clean($_POST['number_audience']); 
     $set_up = clean($_POST['set_up']);
     $booth_size = clean($_POST['booth_size']);
     $booth_inclusion = clean($_POST['booth_inclusion']);
