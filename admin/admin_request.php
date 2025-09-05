@@ -108,7 +108,7 @@ DISCONNECTIVITY($connection);
             <a href="swags_inventory.php">Swags Inventory</a>
         </div>
     </nav>
-      <h4>Note: Click <span style="color:#b91c1c;">View Details</span> to Download the PDF Format of the Request Form</h4>
+      <h4>Note: Click <span style="color:#b91c1c;"> View Details </span>in the History Table to Download the PDF Format of the Request Form</h4>
     <div class="tables-flex">
         <div class="table-container">
             <h2>Event Requests</h2>
