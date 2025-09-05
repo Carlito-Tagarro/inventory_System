@@ -43,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $duration = clean($_POST['duration']);
     $topic = clean($_POST['topic']);
     $technical_team = clean($_POST['technical_team']);
+    $technical_task = clean($_POST['technical_task']);
     $trainer_needed = clean($_POST['trainer_needed']);
     $trainer_task = clean($_POST['trainer_task']);
     $provide_materials = clean($_POST['provide_materials']);
@@ -128,16 +129,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql = "INSERT INTO event_form (
         event_name, event_title, event_date, event_duration, date_time_ingress, date_time_egress, claiming_id, place, location,
         sponsorship_budg, amount, target_audience, number_audience, set_up, booth_size, booth_inclusion,
-        number_tables, number_chairs, speaking_slot, speaker_name, date_time, duration, Topic, technical_team,
+        number_tables, number_chairs, speaking_slot, speaker_name, date_time, duration, Topic, technical_team, technical_task,
         trainer_needed, trainer_task, provide_materials, user_id, request_mats
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     $stmt = $connection->prepare($sql);
     $stmt->bind_param(
-        "ssssssssssisssssiisssssssssis",
+        "ssssssssssisssssiissssssssssis",
         $event_name, $event_title, $event_date, $event_duration, $date_time_ingress, $date_time_egress, $claiming_id, $place, $location,
         $sponsorship_budg, $amount, $target_audience, $number_audience, $set_up, $booth_size, $booth_inclusion,
-        $number_tables, $number_chairs, $speaking_slot, $speaker_name, $date_time, $duration, $topic, $technical_team,
+        $number_tables, $number_chairs, $speaking_slot, $speaker_name, $date_time, $duration, $topic, $technical_team, $technical_task, 
         $trainer_needed, $trainer_task, $provide_materials, $user_id, $request_mats
     );
 
@@ -343,6 +344,10 @@ if ($result) {
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
+                    </div>
+                     <div class="form-group">
+                        <label for="technical_task">Technical Task</label>
+                        <textarea name="technical_task" id="technical_task"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="trainer_needed">Trainer Needed</label>
