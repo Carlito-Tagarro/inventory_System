@@ -134,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt = $connection->prepare($sql);
     $stmt->bind_param(
-        "ssssssssssisisssiisssssssssis",
+        "ssssssssssisssssiisssssssssis",
         $event_name, $event_title, $event_date, $event_duration, $date_time_ingress, $date_time_egress, $claiming_id, $place, $location,
         $sponsorship_budg, $amount, $target_audience, $number_audience, $set_up, $booth_size, $booth_inclusion,
         $number_tables, $number_chairs, $speaking_slot, $speaker_name, $date_time, $duration, $topic, $technical_team,
