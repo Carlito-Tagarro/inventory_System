@@ -51,7 +51,7 @@
     .dot.active{background:#a94d4d}
 
     /* Footer */
-    footer{background:#222;color:#fff;padding:20px 0;text-align:center;margin-top:40px}
+    footer{background:#a94d4d;color:#fff;padding:20px 0;text-align:center;margin-top:40px}
     footer .socials{margin:10px 0}
     footer .socials a{color:#fff;margin:0 10px;font-size:1.2rem;transition:.3s}
     footer .socials a:hover{color:#a94d4d}

@@ -11,12 +11,8 @@ include 'connection.php';
   <title>Audentes Technologies</title>
   <link rel="icon" type="image/x-icon" href="images/images__1_-removebg-preview.png">
   <link rel="stylesheet" href="CSS/index.css">
-
-  <!-- Preload critical assets -->
   <link rel="preload" as="image" href="images/images__1_-removebg-preview.png">
   <link rel="preload" as="image" href="images/slide1.jpg">
-
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" media="all">
 
 </head>
@@ -38,7 +34,7 @@ include 'connection.php';
     </div>
   </nav>
 
-  <!-- Main Content -->
+  
   <main>
     <!-- Hero -->
     <section class="hero container">
