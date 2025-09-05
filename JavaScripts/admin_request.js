@@ -49,7 +49,8 @@ function renderModal(data, materials, isPending) {
                 {label: "Technical Task", key: "technical_task"},
                 {label: "Trainer Needed", key: "trainer_needed"},
                 {label: "Trainer Task", key: "trainer_task"},
-                {label: "Provide Materials", key: "provide_materials"}
+                {label: "Provide Materials", key: "provide_materials"},
+                {label: "Requested By", key: "requested_by"}
             ]
         }
     ];
