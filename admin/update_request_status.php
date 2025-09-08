@@ -1,4 +1,3 @@
-
 <?php
 
 //ADMIN INVENTORY AND REQUESTS FUNCTIONS !!!
@@ -122,6 +121,17 @@ if ($event_row && $event_row['request_mats'] && $status === 'Approved') {
             mysqli_stmt_execute($insert_stmt);
 
             if (mysqli_stmt_affected_rows($insert_stmt) > 0) {
+                // Move team members to team_history
+                $team_result = mysqli_query($connection, "SELECT attendee_name FROM team WHERE event_form_id = $id");
+                while ($team_row = mysqli_fetch_assoc($team_result)) {
+                    $attendee_name = $team_row['attendee_name'];
+                    $insert_team = $connection->prepare("INSERT INTO team_history (event_form_id, attendee_name) VALUES (?, ?)");
+                    $insert_team->bind_param("is", $id, $attendee_name);
+                    $insert_team->execute();
+                    $insert_team->close();
+                }
+                // Delete team members from team table
+                mysqli_query($connection, "DELETE FROM team WHERE event_form_id = $id");
                 mysqli_query($connection, "DELETE FROM event_form WHERE event_form_id = $id");
                 echo json_encode(['success' => true]);
             } else {
@@ -139,4 +149,3 @@ if ($event_row && $event_row['request_mats'] && $status === 'Approved') {
 }
 
 
-   

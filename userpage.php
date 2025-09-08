@@ -144,6 +144,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
     if ($stmt->execute()) {
+        $event_form_id = $connection->insert_id;
+        // Save team members to Team table
+        for ($i = 1; $i <= 5; $i++) {
+            for ($j = 1; $j <= 2; $j++) {
+                $field = "team_member_{$i}_{$j}";
+                if (!empty($_POST[$field])) {
+                    $attendee_name = clean($_POST[$field]);
+                    $stmt_att = $connection->prepare("INSERT INTO team (event_form_id, attendee_name) VALUES (?, ?)");
+                    $stmt_att->bind_param("is", $event_form_id, $attendee_name);
+                    $stmt_att->execute();
+                    $stmt_att->close();
+                }
+            }
+        }
         $_SESSION['submit_status'] = "success";
     } else {
         $_SESSION['submit_status'] = "error";
@@ -374,6 +388,36 @@ if ($result) {
                         <label for="requested_by">Requested By</label>
                         <input type="text" name="requested_by" id="requested_by" maxlength="100">
                     </div>
+                </fieldset>
+                <!-- New Team Members Table -->
+                <fieldset>
+                    <legend>Team Members</legend>
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:12px;">
+                        
+                        <tbody>
+                            <tr>
+                                <td><input type="text" name="team_member_1_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_1_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="team_member_2_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_2_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="team_member_3_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_3_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="team_member_4_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_4_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="team_member_5_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <small style="color:#888;">Enter the names of people who will come with the event.</small>
                 </fieldset>
                 <!-- New fieldset to show selected items from modal -->
                 <fieldset>

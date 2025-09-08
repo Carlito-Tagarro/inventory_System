@@ -81,6 +81,15 @@ function renderModal(data, materials, isPending) {
         }
     });
     rightHtml += '</table>';
+    // Add Team Members section if present
+    if (data.team_members && Array.isArray(data.team_members) && data.team_members.length > 0) {
+        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">Team Members</div>';
+        rightHtml += '<table class="modal-details-table" style="width:100%;"><thead><tr><th>Name</th></tr></thead><tbody>';
+        data.team_members.forEach(name => {
+            rightHtml += `<tr><td>${name}</td></tr>`;
+        });
+        rightHtml += '</tbody></table>';
+    }
     if (materials && materials.length > 0) {
         // Change section title to include Roman numeral V.
         rightHtml += '<div class="modal-section-title" style="margin-top:18px;">V. Requested Materials</div>';

@@ -31,6 +31,13 @@ if ($row && $row['request_mats']) {
 } else {
     $row['requested_materials'] = [];
 }
+// SO NO NEED TO RELOAD TEAM MEMBERS TO SEE IN VIEW DETAILS HISTORY
+$team_members = [];
+$team_query = mysqli_query($connection, "SELECT attendee_name FROM team_history WHERE event_form_id = $id");
+while ($team_row = mysqli_fetch_assoc($team_query)) {
+    $team_members[] = $team_row['attendee_name'];
+}
+$row['team_members'] = $team_members;
 
 echo json_encode($row);
 DISCONNECTIVITY($connection);
