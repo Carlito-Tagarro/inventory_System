@@ -276,6 +276,35 @@ if ($result) {
                         <input type="text" name="location" id="location" maxlength="255" required>
                     </div>
                 </fieldset>
+                 <fieldset>
+                    <legend>Team Members</legend>
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:12px;">
+                        
+                        <tbody>
+                            <tr>
+                                <td><input type="text" name="team_member_1_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_1_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="team_member_2_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_2_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="team_member_3_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_3_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="team_member_4_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_4_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" name="team_member_5_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <small style="color:#888;">Enter the names of people that will help for this event.</small>
+                </fieldset>
                 <fieldset>
                     <legend>Budgeting & Audience</legend>
                     <div class="form-group">
@@ -389,37 +418,6 @@ if ($result) {
                         <input type="text" name="requested_by" id="requested_by" maxlength="100" required>
                     </div>
                 </fieldset>
-                <!-- New Team Members Table -->
-                <fieldset>
-                    <legend>Team Members</legend>
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:12px;">
-                        
-                        <tbody>
-                            <tr>
-                                <td><input type="text" name="team_member_1_1" maxlength="100" style="width:95%"></td>
-                                <td><input type="text" name="team_member_1_2" maxlength="100" style="width:95%"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" name="team_member_2_1" maxlength="100" style="width:95%"></td>
-                                <td><input type="text" name="team_member_2_2" maxlength="100" style="width:95%"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" name="team_member_3_1" maxlength="100" style="width:95%"></td>
-                                <td><input type="text" name="team_member_3_2" maxlength="100" style="width:95%"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" name="team_member_4_1" maxlength="100" style="width:95%"></td>
-                                <td><input type="text" name="team_member_4_2" maxlength="100" style="width:95%"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" name="team_member_5_1" maxlength="100" style="width:95%"></td>
-                                <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <small style="color:#888;">Enter the names of people that will help for this event.</small>
-                </fieldset>
-                <!-- New fieldset to show selected items from modal -->
                 <fieldset>
                     <legend>Selected Materials</legend>
                     <div id="selectedMaterialsPreview" class="form-group full-width" style="margin-top:8px;">
