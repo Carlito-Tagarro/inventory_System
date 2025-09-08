@@ -4,7 +4,6 @@ function renderModal(data, materials, isPending) {
     const sections = [
 
         {
-            title: "I. Event Details",
             fields: [
                 {label: "Sender Email", key: "sender_email"},
                 {label: "Event Name", key: "event_name"},
