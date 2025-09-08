@@ -83,11 +83,13 @@ function renderModal(data, materials, isPending) {
     rightHtml += '</table>';
     // Add Team Members section if present
     if (data.team_members && Array.isArray(data.team_members) && data.team_members.length > 0) {
-        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">Team Members</div>';
-        rightHtml += '<table class="modal-details-table" style="width:100%;"><thead><tr><th>Name</th></tr></thead><tbody>';
-        data.team_members.forEach(name => {
-            rightHtml += `<tr><td>${name}</td></tr>`;
-        });
+        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">II. Team</div>';
+        rightHtml += '<table class="modal-details-table" style="width:100%;"><thead><tr><th style="width:50%;">&nbsp;</th><th style="width:50%;">&nbsp;</th></tr></thead><tbody>';
+        for (let i = 0; i < data.team_members.length; i += 2) {
+            let left = data.team_members[i] || '';
+            let right = data.team_members[i+1] || '';
+            rightHtml += `<tr><td>${left}</td><td>${right}</td></tr>`;
+        }
         rightHtml += '</tbody></table>';
     }
     if (materials && materials.length > 0) {
