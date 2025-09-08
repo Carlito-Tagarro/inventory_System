@@ -386,7 +386,7 @@ if ($result) {
                     </div>
                     <div class="form-group">
                         <label for="requested_by">Requested By</label>
-                        <input type="text" name="requested_by" id="requested_by" maxlength="100">
+                        <input type="text" name="requested_by" id="requested_by" maxlength="100" required>
                     </div>
                 </fieldset>
                 <!-- New Team Members Table -->
