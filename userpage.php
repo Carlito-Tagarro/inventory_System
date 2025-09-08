@@ -301,6 +301,18 @@ if ($result) {
                                 <td><input type="text" name="team_member_5_1" maxlength="100" style="width:95%"></td>
                                 <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
                             </tr>
+                             <tr>
+                                <td><input type="text" name="team_member_5_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                             <tr>
+                                <td><input type="text" name="team_member_5_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
+                            </tr>
+                             <tr>
+                                <td><input type="text" name="team_member_5_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
+                            </tr>
                         </tbody>
                     </table>
                     <small style="color:#888;">Enter the names of people that will help for this event.</small>
