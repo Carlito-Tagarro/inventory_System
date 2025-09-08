@@ -260,7 +260,7 @@ if ($result) {
                     </div>
                      <div class="form-group">
                         <label for="contact_number">Contact Number</label>
-                        <input type="text" name="contact_number" id="contact_number" placeholder="e.g +63 --- --- ----" required>
+                        <input type="text" name="contact_number" id="contact_number" placeholder="e.g 09202029871" required>
                     </div>
                     <div class="form-group">
                         <label for="event_duration">Number of Event Days</label>
