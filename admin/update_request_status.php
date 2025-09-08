@@ -102,7 +102,7 @@ if ($event_row && $event_row['request_mats'] && $status === 'Approved') {
         if ($row) {
             // Insert into history table using prepared statement
             $fields = [
-                'event_form_id','event_name','event_title','event_date','event_duration','sender_email','date_time_ingress','date_time_egress','claiming_id','place','location','sponsorship_budg','amount','target_audience','number_audience','set_up','booth_size','booth_inclusion','number_tables','number_chairs','speaking_slot','speaker_name','date_time','duration','topic','technical_team','technical_task','trainer_needed','trainer_task','provide_materials','requested_by','created_at','user_id','request_mats','request_status','processed_at'
+                'event_form_id','event_name','event_title','event_date','event_duration','contact_person','sender_email','date_time_ingress','date_time_egress','claiming_id','place','location','sponsorship_budg','amount','target_audience','number_audience','set_up','booth_size','booth_inclusion','number_tables','number_chairs','speaking_slot','speaker_name','date_time','duration','topic','technical_team','technical_task','trainer_needed','trainer_task','provide_materials','requested_by','created_at','user_id','request_mats','request_status','processed_at'
             ];
             $values = [];
             foreach ($fields as $field) {

@@ -10,6 +10,7 @@ function renderModal(data, materials, isPending) {
                 {label: "Event Name", key: "event_name"},
                 {label: "Event Title", key: "event_title"},
                 {label: "Event Date", key: "event_date"},
+                {label: "Contact Person", key: "contact_person"},
                 {label: "Number of Event Days", key: "event_duration"},
                 {label: "Date Time Ingress", key: "date_time_ingress"},
                 {label: "Date Time Egress", key: "date_time_egress"},
