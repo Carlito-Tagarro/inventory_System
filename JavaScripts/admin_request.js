@@ -25,7 +25,8 @@ function renderModal(data, materials, isPending) {
                 {label: "Sponsorship Budget", key: "sponsorship_budg"},
                 {label: "Amount (₱)", key: "amount"},
                 {label: "Target Audience", key: "target_audience"},
-                {label: "Number of Audience", key: "number_audience"}
+                {label: "Number of Audience", key: "number_audience"},
+                {label: "Other Company attending (Exhibitor)", key: "other_attendee"}
             ]
         },
         {

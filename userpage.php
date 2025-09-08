@@ -33,7 +33,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sponsorship_budg = clean($_POST['sponsorship_budg']);
     $amount = floatval($_POST['amount']);
     $target_audience = clean($_POST['target_audience']);
-    $number_audience = clean($_POST['number_audience']); 
+    $number_audience = clean($_POST['number_audience']);
+    $other_attendee = clean($_POST['other_attendee']); 
     $set_up = clean($_POST['set_up']);
     $booth_size = clean($_POST['booth_size']);
     $booth_inclusion = clean($_POST['booth_inclusion']);
@@ -131,16 +132,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $connection = CONNECTIVITY();
     $sql = "INSERT INTO event_form (
         event_name, event_title, event_date, contact_person, contact_number, event_duration, date_time_ingress, date_time_egress, claiming_id, place, location,
-        sponsorship_budg, amount, target_audience, number_audience, set_up, booth_size, booth_inclusion,
+        sponsorship_budg, amount, target_audience, number_audience, other_attendee, set_up, booth_size, booth_inclusion,
         number_tables, number_chairs, speaking_slot, speaker_name, date_time, duration, Topic, technical_team, technical_task,
         trainer_needed, trainer_task, provide_materials, requested_by, user_id, request_mats
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     $stmt = $connection->prepare($sql);
     $stmt->bind_param(
-        "ssssssssssssisssssiisssssssssssis",
+        "ssssssssssssissssssiisssssssssssis",
         $event_name, $event_title, $event_date, $contact_person, $contact_number, $event_duration, $date_time_ingress, $date_time_egress, $claiming_id, $place, $location,
-        $sponsorship_budg, $amount, $target_audience, $number_audience, $set_up, $booth_size, $booth_inclusion,
+        $sponsorship_budg, $amount, $target_audience, $number_audience, $other_attendee, $set_up, $booth_size, $booth_inclusion,
         $number_tables, $number_chairs, $speaking_slot, $speaker_name, $date_time, $duration, $topic, $technical_team, $technical_task,
         $trainer_needed, $trainer_task, $provide_materials, $requested_by, $user_id, $request_mats
     );
@@ -325,7 +326,7 @@ if ($result) {
                             </tr>
                         </tbody>
                     </table>
-                    <small style="color:#888;">Enter the names of people that will help for this event.</small>
+                    <small style="color:#888;">Enter the names of people that will go to this event.</small>
                 </fieldset>
                 <fieldset>
                     <legend>Budgeting & Audience</legend>
@@ -348,6 +349,10 @@ if ($result) {
                     <div class="form-group">
                         <label for="number_audience">Number of Audience</label>
                         <textarea name="number_audience" id="number_audience"></textarea>
+                    </div>
+                     <div class="form-group">
+                        <label for="other_attendee">Other Company attending (Exhibitor):</label>
+                        <textarea name="other_attendee" id="other_attendee"></textarea>
                     </div>
                 </fieldset>
                 <fieldset>
