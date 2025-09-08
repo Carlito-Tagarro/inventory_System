@@ -346,7 +346,7 @@ if ($result) {
                         <textarea name="target_audience" id="target_audience"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="number_audience">Number Audience</label>
+                        <label for="number_audience">Number of Audience</label>
                         <textarea name="number_audience" id="number_audience"></textarea>
                     </div>
                 </fieldset>
