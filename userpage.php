@@ -23,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $event_title = clean($_POST['event_title']);
     $event_date = clean($_POST['event_date']);
     $contact_person = clean($_POST['contact_person']);
+    $contact_number = clean($_POST['contact_number']);
     $event_duration = clean($_POST['event_duration']);
     $date_time_ingress = clean($_POST['date_time_ingress']);
     $date_time_egress = clean($_POST['date_time_egress']);
@@ -129,16 +130,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // --- Insert event form, including request_mats (or NULL if none) ---
     $connection = CONNECTIVITY();
     $sql = "INSERT INTO event_form (
-        event_name, event_title, event_date, contact_person, event_duration, date_time_ingress, date_time_egress, claiming_id, place, location,
+        event_name, event_title, event_date, contact_person, contact_number, event_duration, date_time_ingress, date_time_egress, claiming_id, place, location,
         sponsorship_budg, amount, target_audience, number_audience, set_up, booth_size, booth_inclusion,
         number_tables, number_chairs, speaking_slot, speaker_name, date_time, duration, Topic, technical_team, technical_task,
         trainer_needed, trainer_task, provide_materials, requested_by, user_id, request_mats
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
     $stmt = $connection->prepare($sql);
     $stmt->bind_param(
-        "sssssssssssisssssiisssssssssssis",
-        $event_name, $event_title, $event_date, $contact_person, $event_duration, $date_time_ingress, $date_time_egress, $claiming_id, $place, $location,
+        "ssssssssssssisssssiisssssssssssis",
+        $event_name, $event_title, $event_date, $contact_person, $contact_number, $event_duration, $date_time_ingress, $date_time_egress, $claiming_id, $place, $location,
         $sponsorship_budg, $amount, $target_audience, $number_audience, $set_up, $booth_size, $booth_inclusion,
         $number_tables, $number_chairs, $speaking_slot, $speaker_name, $date_time, $duration, $topic, $technical_team, $technical_task,
         $trainer_needed, $trainer_task, $provide_materials, $requested_by, $user_id, $request_mats
@@ -255,6 +256,10 @@ if ($result) {
                     <div class="form-group">
                         <label for="contact_person">Contact Person</label>
                         <input type="text" name="contact_person" id="contact_person" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="contact_number">Contact Number</label>
+                        <input type="text" name="contact_number" id="contact_number" placeholder="e.g +63 --- --- ----" required>
                     </div>
                     <div class="form-group">
                         <label for="event_duration">Number of Event Days</label>
