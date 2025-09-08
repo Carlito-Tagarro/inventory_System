@@ -417,7 +417,7 @@ if ($result) {
                             </tr>
                         </tbody>
                     </table>
-                    <small style="color:#888;">Enter the names of people who will come with the event.</small>
+                    <small style="color:#888;">Enter the names of people that will help for this event.</small>
                 </fieldset>
                 <!-- New fieldset to show selected items from modal -->
                 <fieldset>
