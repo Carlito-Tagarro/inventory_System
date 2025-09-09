@@ -326,16 +326,16 @@ if ($result) {
                                 <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
                             </tr>
                              <tr>
-                                <td><input type="text" name="team_member_5_1" maxlength="100" style="width:95%"></td>
-                                <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_6_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_6_2" maxlength="100" style="width:95%"></td>
                             </tr>
                              <tr>
-                                <td><input type="text" name="team_member_5_1" maxlength="100" style="width:95%"></td>
-                                <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_7_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_7_2" maxlength="100" style="width:95%"></td>
                             </tr>
                              <tr>
-                                <td><input type="text" name="team_member_5_1" maxlength="100" style="width:95%"></td>
-                                <td><input type="text" name="team_member_5_2" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_8_1" maxlength="100" style="width:95%"></td>
+                                <td><input type="text" name="team_member_8_2" maxlength="100" style="width:95%"></td>
                             </tr>
                         </tbody>
                     </table>
