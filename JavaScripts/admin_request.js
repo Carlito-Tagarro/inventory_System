@@ -86,7 +86,7 @@ function renderModal(data, materials, isPending) {
     rightHtml += '</table>';
     // Add Team Members section if present
     if (data.team_members && Array.isArray(data.team_members) && data.team_members.length > 0) {
-        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">II. Team</div>';
+        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">V. Team Attending</div>';
         rightHtml += '<table class="modal-details-table" style="width:100%;"><thead><tr><th style="width:50%;">&nbsp;</th><th style="width:50%;">&nbsp;</th></tr></thead><tbody>';
         for (let i = 0; i < data.team_members.length; i += 2) {
             let left = data.team_members[i] || '';
@@ -97,7 +97,7 @@ function renderModal(data, materials, isPending) {
     }
     if (materials && materials.length > 0) {
         // Change section title to include Roman numeral V.
-        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">V.Checklist (Provided by Marketing Team) – Should be answered by the marketing </div>';
+        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">X. Checklist (Provided by Marketing Team) – Should be answered by the marketing </div>';
         rightHtml += '<table class="modal-details-table" style="width:100%;"><tr><th>Category</th><th>Name</th><th>Quantity</th></tr>';
         materials.forEach(mat => {
             ['Brochure','Swag','Marketing Material'].forEach(type => {
