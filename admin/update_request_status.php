@@ -139,6 +139,24 @@ if ($event_row && $event_row['request_mats'] && $status === 'Approved') {
                 // Delete original
                 mysqli_query($connection, "DELETE FROM accommodation_transportation WHERE event_form_id = $id");
             }
+            // --- Move budget_form to history ---
+            $budget_query = mysqli_query($connection, "SELECT * FROM budget_form WHERE event_form_id = $id LIMIT 1");
+            $budget_row = mysqli_fetch_assoc($budget_query);
+            if ($budget_row) {
+                $budget_fields = ['event_form_id','air_transportation','land_transportation','commute_grab','service','transportation_amount','hotel','condo','accommodation_amount','breakfast','lunch','dinner','meal_amount','employee_transportation','contingency_fund','others','total_cash_advance','total_return'];
+                $budget_values = [];
+                foreach ($budget_fields as $f) {
+                    $budget_values[] = $budget_row[$f];
+                }
+                $budget_sql = "INSERT INTO budget_form_history (" . implode(',', $budget_fields) . ") VALUES (" . implode(',', array_fill(0, count($budget_fields), '?')) . ")";
+                $budget_stmt = mysqli_prepare($connection, $budget_sql);
+                $budget_types = 'iiiiidiidiiidsssdd';
+                mysqli_stmt_bind_param($budget_stmt, $budget_types, ...$budget_values);
+                mysqli_stmt_execute($budget_stmt);
+                mysqli_stmt_close($budget_stmt);
+                // Delete original
+                mysqli_query($connection, "DELETE FROM budget_form WHERE event_form_id = $id");
+            }
             if (mysqli_stmt_affected_rows($insert_stmt) > 0) {
                 // Move team members to team_history
                 $team_result = mysqli_query($connection, "SELECT attendee_name FROM team WHERE event_form_id = $id");

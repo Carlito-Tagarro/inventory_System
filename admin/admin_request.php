@@ -73,6 +73,21 @@ function fetch_accommodation_transportation($connection, $event_form_id) {
     return $info;
 }
 
+// Helper function to fetch budget_form info
+function fetch_budget_form($connection, $event_form_id) {
+    $info = [];
+    if ($event_form_id) {
+        $stmt = mysqli_prepare($connection, "SELECT * FROM budget_form WHERE event_form_id = ?");
+        mysqli_stmt_bind_param($stmt, "i", $event_form_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $row = mysqli_fetch_assoc($result);
+        if ($row) $info = $row;
+        mysqli_stmt_close($stmt);
+    }
+    return $info;
+}
+
 // Fetch event requests with sender email and requested materials
 $query = "SELECT event_form.*, users.email AS sender_email 
           FROM event_form 
@@ -84,6 +99,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     $row['requested_materials'] = fetch_requested_materials($connection, intval($row['request_mats']));
     $row['team_members'] = fetch_team_members($connection, intval($row['event_form_id']), false);
     $row['accommodation_transportation'] = fetch_accommodation_transportation($connection, intval($row['event_form_id']));
+    $row['budget_form'] = fetch_budget_form($connection, intval($row['event_form_id']));
     $event_requests[] = $row;
 }
 

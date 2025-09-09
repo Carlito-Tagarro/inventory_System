@@ -57,6 +57,15 @@ if ($acc_row) {
     $row['accommodation_transportation'] = [];
 }
 
+// Fetch budget_form from history
+$budget_query = mysqli_query($connection, "SELECT * FROM budget_form_history WHERE event_form_id = $id LIMIT 1");
+$budget_row = mysqli_fetch_assoc($budget_query);
+if ($budget_row) {
+    $row['budget_form'] = $budget_row;
+} else {
+    $row['budget_form'] = [];
+}
+
 echo json_encode($row);
 DISCONNECTIVITY($connection);
 ?>

@@ -190,6 +190,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_acc->execute();
         $stmt_acc->close();
         $_SESSION['submit_status'] = "success";
+        // Insert budget_form data
+        $budget_air_transportation = isset($_POST['budget_air_transportation']) ? 1 : 0;
+        $budget_land_transportation = isset($_POST['budget_land_transportation']) ? 1 : 0;
+        $budget_commute_grab = isset($_POST['budget_commute_grab']) ? 1 : 0;
+        $budget_service = isset($_POST['budget_service']) ? 1 : 0;
+        $budget_transportation_amount = isset($_POST['budget_transportation_amount']) ? floatval($_POST['budget_transportation_amount']) : 0.00;
+        $budget_hotel = isset($_POST['budget_hotel']) ? 1 : 0;
+        $budget_condo = isset($_POST['budget_condo']) ? 1 : 0;
+        $budget_accommodation_amount = isset($_POST['budget_accommodation_amount']) ? floatval($_POST['budget_accommodation_amount']) : 0.00;
+        $budget_breakfast = isset($_POST['budget_breakfast']) ? 1 : 0;
+        $budget_lunch = isset($_POST['budget_lunch']) ? 1 : 0;
+        $budget_dinner = isset($_POST['budget_dinner']) ? 1 : 0;
+        $budget_meal_amount = isset($_POST['budget_meal_amount']) ? floatval($_POST['budget_meal_amount']) : 0.00;
+        $employee_transportation = isset($_POST['employee_transportation']) ? clean($_POST['employee_transportation']) : NULL;
+        $budget_contingency_fund = isset($_POST['budget_contingency_fund']) ? floatval($_POST['budget_contingency_fund']) : 0.00;
+        $budget_others = isset($_POST['budget_others']) ? clean($_POST['budget_others']) : NULL;
+        $budget_total_cash_advance = isset($_POST['budget_total_cash_advance']) ? floatval($_POST['budget_total_cash_advance']) : 0.00;
+        $budget_total_return = isset($_POST['budget_total_return']) ? floatval($_POST['budget_total_return']) : 0.00;
+        $stmt_budget = $connection->prepare("INSERT INTO budget_form (
+            event_form_id, air_transportation, land_transportation, commute_grab, service, transportation_amount, hotel, condo, accommodation_amount, breakfast, lunch, dinner, meal_amount, employee_transportation, contingency_fund, others, total_cash_advance, total_return
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt_budget->bind_param(
+            "iiiiidiidiiidsssdd",
+            $event_form_id,
+            $budget_air_transportation,
+            $budget_land_transportation,
+            $budget_commute_grab,
+            $budget_service,
+            $budget_transportation_amount,
+            $budget_hotel,
+            $budget_condo,
+            $budget_accommodation_amount,
+            $budget_breakfast,
+            $budget_lunch,
+            $budget_dinner,
+            $budget_meal_amount,
+            $employee_transportation,
+            $budget_contingency_fund,
+            $budget_others,
+            $budget_total_cash_advance,
+            $budget_total_return
+        );
+        $stmt_budget->execute();
+        $stmt_budget->close();
     } else {
         $_SESSION['submit_status'] = "error";
         error_log('Event form SQL error: ' . $stmt->error);
@@ -519,6 +563,66 @@ if ($result) {
                                     Number of Men: <input type="number" name="number_men" min="0" style="width:60px;">
                                 </div>
                             </td>
+                        </tr>
+                    </table>
+                </fieldset>
+                <!-- Budget Table Section -->
+                <fieldset>
+                    <legend>Budget</legend>
+                    <table style="width:100%; border-collapse:collapse;">
+                        <tr>
+                            <td style="width:40%; vertical-align:top;">
+                                <label><input type="checkbox" name="budget_air_transportation"> Air transportation</label><br>
+                                <label><input type="checkbox" name="budget_land_transportation"> Land Transportation</label><br>
+                                <div style="margin-left:20px;">
+                                    <label><input type="checkbox" name="budget_commute_grab"> Commute (Grab)</label><br>
+                                    <label><input type="checkbox" name="budget_service"> Service</label>
+                                </div>
+                            </td>
+                            <td style="width:20%; vertical-align:top;">
+                                Amount: <input type="number" name="budget_transportation_amount" min="0" style="width:80px;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Accommodation:<br>
+                                <label><input type="checkbox" name="budget_hotel"> Hotel</label><br>
+                                <label><input type="checkbox" name="budget_condo"> Condo</label>
+                            </td>
+                            <td>
+                                Amount: <input type="number" name="budget_accommodation_amount" min="0" style="width:80px;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Meal:<br>
+                                <label><input type="checkbox" name="budget_breakfast"> Breakfast</label><br>
+                                <label><input type="checkbox" name="budget_lunch"> Lunch</label><br>
+                                <label><input type="checkbox" name="budget_dinner"> Dinner</label>
+                            </td>
+                            <td>
+                                Amount: <input type="number" name="budget_meal_amount" min="0" style="width:80px;">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Employee Transportation</td>
+                            <td><textarea name="employee_transportation" id="employee_transportation" style="width:80px;"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td>Contingency Fund</td>
+                            <td><input type="number" name="budget_contingency_fund" min="0" style="width:80px;"></td>
+                        </tr>
+                        <tr>
+                            <td>Others:</td>
+                             <td><textarea name="budget_others" id="budget_others" style="width:80px;"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">TOTAL CASH ADVANCE</td>
+                            <td><input type="number" name="budget_total_cash_advance" min="0" style="width:80px;"></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:bold;">TOTAL RETURN</td>
+                            <td><input type="number" name="budget_total_return" min="0" style="width:80px;"></td>
                         </tr>
                     </table>
                 </fieldset>

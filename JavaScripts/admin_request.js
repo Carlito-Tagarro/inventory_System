@@ -139,6 +139,30 @@ function renderModal(data, materials, isPending) {
         rightHtml += '</tr>';
         rightHtml += '</table>';
     }
+    // Display budget info if present
+    if (data.budget_form && typeof data.budget_form === 'object' && Object.keys(data.budget_form).length > 0) {
+        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">VII. Budget</div>';
+        rightHtml += '<table class="modal-details-table" style="width:100%;">';
+        const bf = data.budget_form;
+        rightHtml += `<tr><td>Air transportation</td><td>${bf.air_transportation ? '✔' : ''}</td></tr>`;
+        rightHtml += `<tr><td>Land transportation</td><td>${bf.land_transportation ? '✔' : ''}</td></tr>`;
+        rightHtml += `<tr><td>Commute (Grab)</td><td>${bf.commute_grab ? '✔' : ''}</td></tr>`;
+        rightHtml += `<tr><td>Service</td><td>${bf.service ? '✔' : ''}</td></tr>`;
+        rightHtml += `<tr><td>Transportation Amount</td><td>${bf.transportation_amount || ''}</td></tr>`;
+        rightHtml += `<tr><td>Hotel</td><td>${bf.hotel ? '✔' : ''}</td></tr>`;
+        rightHtml += `<tr><td>Condo</td><td>${bf.condo ? '✔' : ''}</td></tr>`;
+        rightHtml += `<tr><td>Accommodation Amount</td><td>${bf.accommodation_amount || ''}</td></tr>`;
+        rightHtml += `<tr><td>Breakfast</td><td>${bf.breakfast ? '✔' : ''}</td></tr>`;
+        rightHtml += `<tr><td>Lunch</td><td>${bf.lunch ? '✔' : ''}</td></tr>`;
+        rightHtml += `<tr><td>Dinner</td><td>${bf.dinner ? '✔' : ''}</td></tr>`;
+        rightHtml += `<tr><td>Meal Amount</td><td>${bf.meal_amount || ''}</td></tr>`;
+        rightHtml += `<tr><td>Employee Transportation</td><td>${bf.employee_transportation || ''}</td></tr>`;
+        rightHtml += `<tr><td>Contingency Fund</td><td>${bf.contingency_fund || ''}</td></tr>`;
+        rightHtml += `<tr><td>Others</td><td>${bf.others || ''}</td></tr>`;
+        rightHtml += `<tr><td>Total Cash Advance</td><td>${bf.total_cash_advance || ''}</td></tr>`;
+        rightHtml += `<tr><td>Total Return</td><td>${bf.total_return || ''}</td></tr>`;
+        rightHtml += '</table>';
+    }
     document.getElementById('modalRight').innerHTML = rightHtml;
 
     let actions = '';
