@@ -148,8 +148,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
         $event_form_id = $connection->insert_id;
-        // Save team members to Team table
-        for ($i = 1; $i <= 5; $i++) {
+        // To loop how many members will be shown
+        for ($i = 1; $i <= 8; $i++) {
             for ($j = 1; $j <= 2; $j++) {
                 $field = "team_member_{$i}_{$j}";
                 if (!empty($_POST[$field])) {
