@@ -5,7 +5,7 @@ function renderModal(data, materials, isPending) {
 
         {
             fields: [
-                {label: "Sender Email", key: "sender_email"},
+                // {label: "Sender Email", key: "sender_email"},
                 {label: "Event Name", key: "event_name"},
                 {label: "Event Title", key: "event_title"},
                 {label: "Event Date", key: "event_date"},
@@ -56,11 +56,11 @@ function renderModal(data, materials, isPending) {
             ]
         }
     ];
-    const extraFields = [
-        {label: "Event Form Id", key: "event_form_id"},
-        {label: "Created At", key: "created_at"},
-        {label: "Request Status", key: "request_status"}
-    ];
+    // const extraFields = [
+    //     {label: "Event Form Id", key: "event_form_id"},
+    //     {label: "Created At", key: "created_at"},
+    //     {label: "Request Status", key: "request_status"}
+    // ];
 
     let leftHtml = '';
     sections.forEach(section => {
