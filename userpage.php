@@ -1,6 +1,10 @@
 <?php
 include 'connection.php';
 session_start();
+// CSRF protection: generate token if not set
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'trainer') {
@@ -18,12 +22,23 @@ function clean($data) {
 $submit_status = null; // Track submit status
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // CSRF token validation
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        exit('Invalid CSRF token.');
+    }
     // Collect and sanitize form data
     $event_name = clean($_POST['event_name']);
     $event_title = clean($_POST['event_title']);
     $event_date = clean($_POST['event_date']);
     $contact_person = clean($_POST['contact_person']);
     $contact_number = clean($_POST['contact_number']);
+    // Validate contact number (Philippines mobile format: 09XXXXXXXXX or +639XXXXXXXXX)
+    if (!preg_match('/^(09\d{9}|\+639\d{9})$/', $contact_number)) {
+        $_SESSION['submit_status'] = "error";
+        $_SESSION['submit_error'] = "Invalid contact number format.";
+        header("Location: userpage.php");
+        exit;
+    }
     $event_duration = clean($_POST['event_duration']);
     $date_time_ingress = clean($_POST['date_time_ingress']);
     $date_time_egress = clean($_POST['date_time_egress']);
@@ -177,7 +192,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['submit_status'] = "success";
     } else {
         $_SESSION['submit_status'] = "error";
-        $_SESSION['submit_error'] = $stmt->error;
+        error_log('Event form SQL error: ' . $stmt->error);
+        $_SESSION['submit_error'] = "An error occurred while submitting the event. Please try again later.";
     }
     $stmt->close();
     $connection->close();
@@ -253,6 +269,7 @@ if ($result) {
         <div class="container">
             <h2>Event Form</h2>
             <form action="userpage.php" method="post" id="eventForm">
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8'); ?>">
                 <fieldset>
                     <legend>Event Details</legend>
                     <div class="form-group">
@@ -625,7 +642,7 @@ if ($result) {
                         selectedPreview.style.display = 'none';
                         selectedList.innerHTML = '';
                     <?php else: ?>
-                        alert("Error submitting event: <?php echo addslashes($_SESSION['submit_error']); ?>");
+                        alert("Error submitting event: <?php echo htmlspecialchars($_SESSION['submit_error'], ENT_QUOTES, 'UTF-8'); ?>");
                     <?php endif; ?>
                 });
             <?php

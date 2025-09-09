@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($user_acc['Account_status'] === 'Deactivated') {
                 $error_message = "Your account is deactivated. Please contact support or admin to activate your account.";
             } else {
+                session_regenerate_id(true); // Prevent session fixation
                 $_SESSION['user_id'] = $user_acc['user_id'];
                 $_SESSION['username'] = $user_acc['username'];
                 $_SESSION['user_type'] = $user_acc['user_type'];
@@ -97,4 +98,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 </body>
 </html>
-  
