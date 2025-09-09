@@ -500,7 +500,7 @@ if ($result) {
                             <td style="padding:4px 0 4px 0;">
                                 <label><input type="checkbox" name="air_transportation" value="1"> Air transportation</label><br>
                                 <label><input type="checkbox" name="land_transportation" value="1"> Land Transportation</label><br>
-                                <div style="margin-left:24px;">
+                                <div>
                                     <label><input type="checkbox" name="commute_grab" value="1"> Commute (Grab)</label><br>
                                     <label><input type="checkbox" name="service" value="1"> Service</label>
                                 </div>
