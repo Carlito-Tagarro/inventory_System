@@ -120,6 +120,25 @@ if ($event_row && $event_row['request_mats'] && $status === 'Approved') {
             mysqli_stmt_bind_param($insert_stmt, $types, ...$values);
             mysqli_stmt_execute($insert_stmt);
 
+            // --- Move accommodation/transportation to history ---
+            $acc_query = mysqli_query($connection, "SELECT * FROM accommodation_transportation WHERE event_form_id = $id");
+            $acc_row = mysqli_fetch_assoc($acc_query);
+            if ($acc_row) {
+                // Insert into history table (must exist)
+                $acc_fields = ['event_form_id','air_transportation','land_transportation','commute_grab','service','hotel','condo','number_women','number_men'];
+                $acc_values = [];
+                foreach ($acc_fields as $f) {
+                    $acc_values[] = $acc_row[$f];
+                }
+                $acc_sql = "INSERT INTO accommodation_transportation_history (" . implode(',', $acc_fields) . ") VALUES (" . implode(',', array_fill(0, count($acc_fields), '?')) . ")";
+                $acc_stmt = mysqli_prepare($connection, $acc_sql);
+                $acc_types = 'iiiiiiiii';
+                mysqli_stmt_bind_param($acc_stmt, $acc_types, ...$acc_values);
+                mysqli_stmt_execute($acc_stmt);
+                mysqli_stmt_close($acc_stmt);
+                // Delete original
+                mysqli_query($connection, "DELETE FROM accommodation_transportation WHERE event_form_id = $id");
+            }
             if (mysqli_stmt_affected_rows($insert_stmt) > 0) {
                 // Move team members to team_history
                 $team_result = mysqli_query($connection, "SELECT attendee_name FROM team WHERE event_form_id = $id");

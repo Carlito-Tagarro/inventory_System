@@ -161,6 +161,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
+        // Insert accommodation and transportation info
+        $air_transportation = isset($_POST['air_transportation']) ? 1 : 0;
+        $land_transportation = isset($_POST['land_transportation']) ? 1 : 0;
+        $commute_grab = isset($_POST['commute_grab']) ? 1 : 0;
+        $service = isset($_POST['service']) ? 1 : 0;
+        $hotel = isset($_POST['hotel']) ? 1 : 0;
+        $condo = isset($_POST['condo']) ? 1 : 0;
+        $number_women = isset($_POST['number_women']) ? intval($_POST['number_women']) : 0;
+        $number_men = isset($_POST['number_men']) ? intval($_POST['number_men']) : 0;
+        $stmt_acc = $connection->prepare("INSERT INTO accommodation_transportation (event_form_id, air_transportation, land_transportation, commute_grab, service, hotel, condo, number_women, number_men) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt_acc->bind_param("iiiiiiiii", $event_form_id, $air_transportation, $land_transportation, $commute_grab, $service, $hotel, $condo, $number_women, $number_men);
+        $stmt_acc->execute();
+        $stmt_acc->close();
         $_SESSION['submit_status'] = "success";
     } else {
         $_SESSION['submit_status'] = "error";
@@ -460,6 +473,38 @@ if ($result) {
                         </table>
                     </div>
                 </fieldset>
+                <fieldset>
+                    <legend>Accommodation and Transportation</legend>
+                    <table style="width:100%; border:none; border-collapse:collapse; margin:0; padding:0;">
+                        <tr>
+                            <td style="vertical-align:top; width:30%; padding:4px 0 4px 0; border-right:none;">
+                                Transportation:
+                            </td>
+                            <td style="padding:4px 0 4px 0;">
+                                <label><input type="checkbox" name="air_transportation" value="1"> Air transportation</label><br>
+                                <label><input type="checkbox" name="land_transportation" value="1"> Land Transportation</label><br>
+                                <div style="margin-left:24px;">
+                                    <label><input type="checkbox" name="commute_grab" value="1"> Commute (Grab)</label><br>
+                                    <label><input type="checkbox" name="service" value="1"> Service</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:top; width:30%; padding:4px 0 4px 0; border-right:none;">
+                                Accommodation:
+                            </td>
+                            <td style="padding:4px 0 4px 0;">
+                                <label><input type="checkbox" name="hotel" value="1"> Hotel</label><br>
+                                <label><input type="checkbox" name="condo" value="1"> Condo</label><br>
+                                <div style="margin-top:8px;">
+                                    Number of Women: <input type="number" name="number_women" min="0" style="width:60px;">
+                                    <br>
+                                    Number of Men: <input type="number" name="number_men" min="0" style="width:60px;">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
                 <div class="form-group button-group">
                     <button type="submit">Submit Form</button>
                 </div>
@@ -589,7 +634,7 @@ if ($result) {
             endif;
             ?>
 
-            
+
            
         </script>
        

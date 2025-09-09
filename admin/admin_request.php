@@ -58,6 +58,21 @@ function fetch_team_members($connection, $event_form_id, $is_history = false) {
     return $members;
 }
 
+// Helper function to fetch accommodation/transportation info
+function fetch_accommodation_transportation($connection, $event_form_id) {
+    $info = [];
+    if ($event_form_id) {
+        $stmt = mysqli_prepare($connection, "SELECT * FROM accommodation_transportation WHERE event_form_id = ?");
+        mysqli_stmt_bind_param($stmt, "i", $event_form_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $row = mysqli_fetch_assoc($result);
+        if ($row) $info = $row;
+        mysqli_stmt_close($stmt);
+    }
+    return $info;
+}
+
 // Fetch event requests with sender email and requested materials
 $query = "SELECT event_form.*, users.email AS sender_email 
           FROM event_form 
@@ -68,6 +83,7 @@ $event_requests = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $row['requested_materials'] = fetch_requested_materials($connection, intval($row['request_mats']));
     $row['team_members'] = fetch_team_members($connection, intval($row['event_form_id']), false);
+    $row['accommodation_transportation'] = fetch_accommodation_transportation($connection, intval($row['event_form_id']));
     $event_requests[] = $row;
 }
 
@@ -105,6 +121,7 @@ $history_requests = [];
 while ($row = mysqli_fetch_assoc($history_result)) {
     $row['requested_materials'] = fetch_requested_materials($connection, intval($row['request_mats']));
     $row['team_members'] = fetch_team_members($connection, intval($row['event_form_id']), true);
+    $row['accommodation_transportation'] = fetch_accommodation_transportation($connection, intval($row['event_form_id']));
     $history_requests[] = $row;
 }
 mysqli_stmt_close($stmt);

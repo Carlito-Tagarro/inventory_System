@@ -57,11 +57,11 @@ function renderModal(data, materials, isPending) {
             ]
         }
     ];
-    // const extraFields = [
-    //     {label: "Event Form Id", key: "event_form_id"},
-    //     {label: "Created At", key: "created_at"},
-    //     {label: "Request Status", key: "request_status"}
-    // ];
+    const extraFields = [
+        {label: "Event Form Id", key: "event_form_id"},
+        {label: "Created At", key: "created_at"},
+        {label: "Request Status", key: "request_status"}
+    ];
 
     let leftHtml = '';
     sections.forEach(section => {
@@ -106,6 +106,21 @@ function renderModal(data, materials, isPending) {
                 }
             });
         });
+        rightHtml += '</table>';
+    }
+    // Display accommodation and transportation info
+    if (data.accommodation_transportation && typeof data.accommodation_transportation === 'object' && Object.keys(data.accommodation_transportation).length > 0) {
+        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">VI. Accommodation & Transportation</div>';
+        rightHtml += '<table class="modal-details-table" style="width:100%;">';
+        const acc = data.accommodation_transportation;
+        rightHtml += `<tr><td>Air transportation</td><td>${acc.air_transportation ? 'Yes' : 'No'}</td></tr>`;
+        rightHtml += `<tr><td>Land Transportation</td><td>${acc.land_transportation ? 'Yes' : 'No'}</td></tr>`;
+        rightHtml += `<tr><td>Commute (Grab)</td><td>${acc.commute_grab ? 'Yes' : 'No'}</td></tr>`;
+        rightHtml += `<tr><td>Service</td><td>${acc.service ? 'Yes' : 'No'}</td></tr>`;
+        rightHtml += `<tr><td>Hotel</td><td>${acc.hotel ? 'Yes' : 'No'}</td></tr>`;
+        rightHtml += `<tr><td>Condo</td><td>${acc.condo ? 'Yes' : 'No'}</td></tr>`;
+        rightHtml += `<tr><td>Number of Women</td><td>${acc.number_women || 0}</td></tr>`;
+        rightHtml += `<tr><td>Number of Men</td><td>${acc.number_men || 0}</td></tr>`;
         rightHtml += '</table>';
     }
     document.getElementById('modalRight').innerHTML = rightHtml;
@@ -275,19 +290,14 @@ function downloadRequestPDF() {
     let boothSection = Array.from(modalContent.querySelectorAll('.modal-section-title'))
         .find(el => el.textContent.trim().startsWith('III. Booth & Other Setup'));
     if (boothSection) {
-        // Insert a page break before Booth section
         boothSection.style.pageBreakBefore = 'always';
-        // Optionally add extra spacing if needed
         boothSection.style.marginTop = '220px';
     }
-
     // Move "Booth & Other Setup" section to start of second page in PDF
     let materialSection = Array.from(modalContent.querySelectorAll('.modal-section-title'))
         .find(el => el.textContent.trim().startsWith('V. Requested Materials'));
     if (materialSection) {
-        // Insert a page break before Material section
         materialSection.style.pageBreakBefore = 'always';
-        // Optionally add extra spacing if needed
         materialSection.style.marginTop = '200px';
     }
 

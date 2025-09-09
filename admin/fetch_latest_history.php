@@ -39,6 +39,24 @@ while ($team_row = mysqli_fetch_assoc($team_query)) {
 }
 $row['team_members'] = $team_members;
 
+// Fetch accommodation/transportation from history
+$acc_query = mysqli_query($connection, "SELECT * FROM accommodation_transportation_history WHERE event_form_id = $id LIMIT 1");
+$acc_row = mysqli_fetch_assoc($acc_query);
+if ($acc_row) {
+    $row['accommodation_transportation'] = [
+        'air_transportation' => (bool)$acc_row['air_transportation'],
+        'land_transportation' => (bool)$acc_row['land_transportation'],
+        'commute_grab' => (bool)$acc_row['commute_grab'],
+        'service' => (bool)$acc_row['service'],
+        'hotel' => (bool)$acc_row['hotel'],
+        'condo' => (bool)$acc_row['condo'],
+        'number_women' => intval($acc_row['number_women']),
+        'number_men' => intval($acc_row['number_men'])
+    ];
+} else {
+    $row['accommodation_transportation'] = [];
+}
+
 echo json_encode($row);
 DISCONNECTIVITY($connection);
 ?>
