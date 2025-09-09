@@ -9,7 +9,8 @@ function CONNECTIVITY() {
     $connection = new mysqli($servername, $username, $password, $dbname);
 
     if ($connection->connect_error) {
-        die("Connection failure " . $connection->connect_error);
+        error_log('Database connection error: ' . $connection->connect_error);
+        exit('Database connection failed. Please try again later.');
     }
     return $connection;
 }
