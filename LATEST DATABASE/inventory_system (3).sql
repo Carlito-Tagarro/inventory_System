@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 08, 2025 at 10:57 AM
+-- Generation Time: Sep 09, 2025 at 10:47 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,51 @@ SET time_zone = "+00:00";
 --
 -- Database: `inventory_system`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accommodation_transportation`
+--
+
+CREATE TABLE `accommodation_transportation` (
+  `id` int(11) NOT NULL,
+  `event_form_id` int(11) DEFAULT NULL,
+  `air_transportation` tinyint(1) DEFAULT NULL,
+  `land_transportation` tinyint(1) DEFAULT NULL,
+  `commute_grab` tinyint(1) DEFAULT NULL,
+  `service` tinyint(1) DEFAULT NULL,
+  `hotel` tinyint(1) DEFAULT NULL,
+  `condo` tinyint(1) DEFAULT NULL,
+  `number_women` int(11) DEFAULT NULL,
+  `number_men` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accommodation_transportation_history`
+--
+
+CREATE TABLE `accommodation_transportation_history` (
+  `id` int(11) NOT NULL,
+  `event_form_id` int(11) NOT NULL,
+  `air_transportation` tinyint(1) NOT NULL,
+  `land_transportation` tinyint(1) NOT NULL,
+  `commute_grab` int(11) NOT NULL,
+  `service` int(11) NOT NULL,
+  `hotel` tinyint(4) NOT NULL,
+  `condo` tinyint(4) NOT NULL,
+  `number_women` int(11) NOT NULL,
+  `number_men` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `accommodation_transportation_history`
+--
+
+INSERT INTO `accommodation_transportation_history` (`id`, `event_form_id`, `air_transportation`, `land_transportation`, `commute_grab`, `service`, `hotel`, `condo`, `number_women`, `number_men`) VALUES
+(13, 113, 0, 1, 1, 0, 1, 0, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -64,6 +109,69 @@ INSERT INTO `brochures` (`brochure_id`, `brochure_name`, `quantity`, `total_broc
 (23, 'Agriscience and Technology Careers', 25, 0),
 (24, 'Health Sciences Careers', 0, 0),
 (25, 'Hospitality and Culinary Arts', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `budget_form`
+--
+
+CREATE TABLE `budget_form` (
+  `budget_id` int(11) NOT NULL,
+  `event_form_id` int(11) NOT NULL,
+  `air_transportation` tinyint(1) DEFAULT 0,
+  `land_transportation` tinyint(1) DEFAULT 0,
+  `commute_grab` tinyint(1) DEFAULT 0,
+  `service` tinyint(1) DEFAULT 0,
+  `transportation_amount` decimal(12,2) DEFAULT 0.00,
+  `hotel` tinyint(1) DEFAULT 0,
+  `condo` tinyint(1) DEFAULT 0,
+  `accommodation_amount` decimal(12,2) DEFAULT 0.00,
+  `breakfast` tinyint(1) DEFAULT 0,
+  `lunch` tinyint(1) DEFAULT 0,
+  `dinner` tinyint(1) DEFAULT 0,
+  `meal_amount` decimal(12,2) DEFAULT 0.00,
+  `employee_transportation` text DEFAULT NULL,
+  `contingency_fund` decimal(12,2) DEFAULT 0.00,
+  `others` text DEFAULT NULL,
+  `total_cash_advance` decimal(12,2) DEFAULT 0.00,
+  `total_return` decimal(12,2) DEFAULT 0.00
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `budget_form_history`
+--
+
+CREATE TABLE `budget_form_history` (
+  `budget_id` int(11) NOT NULL,
+  `event_form_id` int(11) NOT NULL,
+  `air_transportation` tinyint(1) NOT NULL,
+  `land_transportation` tinyint(1) NOT NULL,
+  `commute_grab` tinyint(1) NOT NULL,
+  `service` tinyint(1) NOT NULL,
+  `transportation_amount` float(11,2) NOT NULL,
+  `hotel` tinyint(1) NOT NULL,
+  `condo` tinyint(1) NOT NULL,
+  `accommodation_amount` float(11,2) NOT NULL,
+  `breakfast` tinyint(1) NOT NULL,
+  `lunch` tinyint(1) NOT NULL,
+  `dinner` tinyint(1) NOT NULL,
+  `meal_amount` float(11,2) NOT NULL,
+  `employee_transportation` varchar(255) NOT NULL,
+  `contingency_fund` float(11,2) NOT NULL,
+  `others` varchar(255) NOT NULL,
+  `total_cash_advance` float(11,2) NOT NULL,
+  `total_return` float(11,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `budget_form_history`
+--
+
+INSERT INTO `budget_form_history` (`budget_id`, `event_form_id`, `air_transportation`, `land_transportation`, `commute_grab`, `service`, `transportation_amount`, `hotel`, `condo`, `accommodation_amount`, `breakfast`, `lunch`, `dinner`, `meal_amount`, `employee_transportation`, `contingency_fund`, `others`, `total_cash_advance`, `total_return`) VALUES
+(2, 113, 0, 1, 1, 0, 5000.00, 1, 0, 5000.00, 1, 1, 1, 5000.00, 'BUS/GRAB', 10000.00, 'BUS/GRAB', 25000.00, 2000.00);
 
 -- --------------------------------------------------------
 
@@ -164,9 +272,7 @@ CREATE TABLE `event_form_history` (
 --
 
 INSERT INTO `event_form_history` (`event_form_id`, `event_name`, `event_title`, `event_date`, `contact_person`, `contact_number`, `event_duration`, `sender_email`, `date_time_ingress`, `date_time_egress`, `claiming_id`, `place`, `location`, `sponsorship_budg`, `amount`, `target_audience`, `number_audience`, `other_attendee`, `set_up`, `booth_size`, `booth_inclusion`, `number_tables`, `number_chairs`, `speaking_slot`, `speaker_name`, `date_time`, `duration`, `topic`, `technical_team`, `technical_task`, `trainer_needed`, `trainer_task`, `provide_materials`, `requested_by`, `created_at`, `request_status`, `processed_at`, `user_id`, `request_mats`) VALUES
-(94, '2025 PASUC Midterm Convention and General Assembly', 'Forging the Future: Empowering SUCs through Innovation,   Sustainability, and Excellence', 'September 9-11, 2025', '', '', '3 days', 'carlitotagarro27@gmail.com', '2025-09-09 01:48:00', '2025-09-11 13:48:00', 'July 8, 2025 | 6:00 PM – 11:00 PM or July 9, 2025 | 7:00 AM\r\n Meeting Room 2 – Registration Counter', 'Booth 24 &amp; 37   SMX Convention Center - Function Rooms 4 and 5', 'SMX Convention Center Manila, Pasay City', 'Sponsorship', 55000, 'SUC Presidents, Vice Presidents, Chancellors, Directors, \r\n Deans, faculty members, non-teaching staff, and key  \r\n government \r\n partners—are expected to attend.', '1,000 (113 State Universities and Colleges / 60 satellite campuses', '', 'Yes', '2.50m x 3.0m x 2.48m', 'Tables and Chairs', 2, 4, 'Yes', 'Mr. Francis Xavier Hernandez', '2025-09-11 13:30:00', '30 minutes', 'Ako', 'Yes', 'Help Assist with Technical Difficulties', 'Yes', 'Help Train People', 'Yes', '', '2025-09-08 13:56:13', 'Declined', '2025-09-08 13:58:01', 17, 325),
-(95, 'Testing Contact Person', 'Testing', 'September 1-5, 2025', 'Mr. Clingy Miggy', '', '5 days', 'carlitotagarro27@gmail.com', '2025-09-01 03:48:00', '2025-09-05 15:48:00', 'Basta', 'Hotel', 'Paranaque', 'Free', 445, 'Mga ewan', 'Madami boi', '', 'Yes', '4x4x4x4', 'Tables and Chairs', 5, 4, 'Yes', 'Mr. Francis Xavier Hernandez', '2025-09-04 15:49:00', '30 minutes', 'Ako', 'No', 'GG', 'No', 'GG', 'No', 'Mr.Tagarro', '2025-09-08 15:50:21', 'Declined', '2025-09-08 15:51:13', 17, 0),
-(96, 'Test  Other company attending and Contact Number', 'Testing', 'September 1-5, 2025', 'Mr. Clingy Miggy', '09405017962', '5 days', 'carlitotagarro27@gmail.com', '2025-09-01 16:51:00', '2025-09-05 16:51:00', 'TUMESTING LANG', 'TUMESTING LANG', 'Tumesting lang', 'Sponsorship', 55000, 'mga maangas', 'madami', 'SpaceX', 'No', 'Malaki Af', 'lahat', 5, 10, 'Yes', 'Mr. Francis Xavier Hernandez', '2025-09-05 14:30:00', '30 minutes', 'Ako', 'Yes', 'Need help for Technical Issues', 'Yes', 'Need help to assist explain the certifications', 'No', 'Mr. Carlito R. Tagarro', '2025-09-08 16:54:15', 'Approved', '2025-09-08 16:55:06', 17, 0);
+(113, 'Test Accomodation  and Budget', 'Grabe ba', 'September 1-5, 2025', 'Mr. Clingy Miggy', '09405017962', '5 days', 'carlitotagarro27@gmail.com', '2025-09-01 16:41:00', '2025-09-05 16:41:00', 'Aray ko', 'gg', 'gg', '', 0, '', '', '', '', '', '', 0, 0, 'No', '', '0000-00-00 00:00:00', '', '', 'No', '', 'No', '', 'No', 'Mr. Carlito R. Tagarro', '2025-09-09 16:42:35', 'Declined', '2025-09-09 16:42:53', 17, 0);
 
 -- --------------------------------------------------------
 
@@ -208,22 +314,6 @@ CREATE TABLE `material_request_form` (
   `name_material` varchar(255) NOT NULL,
   `material_quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `material_request_form`
---
-
-INSERT INTO `material_request_form` (`material_request_id`, `request_mats`, `name_brochures`, `brochure_quantity`, `name_swag`, `swag_quantity`, `name_material`, `material_quantity`) VALUES
-(325, 325, 'ALL PROGRAMS', 1, '', 0, '', 0),
-(326, 325, 'ADOBE', 1, '', 0, '', 0),
-(327, 325, 'AUTODESK', 1, '', 0, '', 0),
-(328, 325, 'AWS', 2, '', 0, '', 0),
-(329, 325, '', 0, '', 0, 'MATERIALS 1', 1),
-(330, 325, '', 0, '', 0, 'MATERIALS 2', 1),
-(331, 325, '', 0, '', 0, 'MATERIALS 3', 1),
-(332, 325, '', 0, 'SWAGS 1', 1, '', 0),
-(333, 325, '', 0, 'SWAGS 2', 1, '', 0),
-(334, 325, '', 0, 'SWAGS 3', 1, '', 0);
 
 -- --------------------------------------------------------
 
@@ -288,31 +378,6 @@ CREATE TABLE `team_history` (
   `attendee_name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `team_history`
---
-
-INSERT INTO `team_history` (`team_history_id`, `event_form_id`, `attendee_name`) VALUES
-(22, 94, 'Sir Francis'),
-(23, 94, 'Ms.Jaycel'),
-(24, 94, 'Sir Patrick'),
-(25, 94, 'Ms.Felice'),
-(26, 94, 'Sir MJ - Agile'),
-(27, 94, 'Ms.Sharlotte'),
-(28, 94, 'Sir Jerome'),
-(29, 94, 'Ms.Laine'),
-(30, 94, 'Driver ( Kuya Panoy )'),
-(31, 94, 'Ms.Charmain'),
-(32, 95, 'Carlito'),
-(33, 95, 'Charles'),
-(34, 96, 'Carlito'),
-(35, 96, 'Last'),
-(36, 96, 'Testing'),
-(37, 96, 'Sa'),
-(38, 96, 'Araw'),
-(39, 96, 'na'),
-(40, 96, 'to');
-
 -- --------------------------------------------------------
 
 --
@@ -347,10 +412,36 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `user_type`, `A
 --
 
 --
+-- Indexes for table `accommodation_transportation`
+--
+ALTER TABLE `accommodation_transportation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `event_form_id` (`event_form_id`);
+
+--
+-- Indexes for table `accommodation_transportation_history`
+--
+ALTER TABLE `accommodation_transportation_history`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `brochures`
 --
 ALTER TABLE `brochures`
   ADD PRIMARY KEY (`brochure_id`);
+
+--
+-- Indexes for table `budget_form`
+--
+ALTER TABLE `budget_form`
+  ADD PRIMARY KEY (`budget_id`),
+  ADD KEY `event_form_id` (`event_form_id`);
+
+--
+-- Indexes for table `budget_form_history`
+--
+ALTER TABLE `budget_form_history`
+  ADD PRIMARY KEY (`budget_id`);
 
 --
 -- Indexes for table `event_form`
@@ -415,16 +506,40 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `accommodation_transportation`
+--
+ALTER TABLE `accommodation_transportation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `accommodation_transportation_history`
+--
+ALTER TABLE `accommodation_transportation_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
 -- AUTO_INCREMENT for table `brochures`
 --
 ALTER TABLE `brochures`
   MODIFY `brochure_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
+-- AUTO_INCREMENT for table `budget_form`
+--
+ALTER TABLE `budget_form`
+  MODIFY `budget_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `budget_form_history`
+--
+ALTER TABLE `budget_form_history`
+  MODIFY `budget_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `event_form`
 --
 ALTER TABLE `event_form`
-  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `event_form_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT for table `marketing_materials`
@@ -436,7 +551,7 @@ ALTER TABLE `marketing_materials`
 -- AUTO_INCREMENT for table `material_request_form`
 --
 ALTER TABLE `material_request_form`
-  MODIFY `material_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=335;
+  MODIFY `material_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=347;
 
 --
 -- AUTO_INCREMENT for table `material_return_request`
@@ -454,13 +569,13 @@ ALTER TABLE `swags`
 -- AUTO_INCREMENT for table `team`
 --
 ALTER TABLE `team`
-  MODIFY `attendee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `attendee_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
 
 --
 -- AUTO_INCREMENT for table `team_history`
 --
 ALTER TABLE `team_history`
-  MODIFY `team_history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `team_history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -471,6 +586,18 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `accommodation_transportation`
+--
+ALTER TABLE `accommodation_transportation`
+  ADD CONSTRAINT `accommodation_transportation_ibfk_1` FOREIGN KEY (`event_form_id`) REFERENCES `event_form` (`event_form_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `budget_form`
+--
+ALTER TABLE `budget_form`
+  ADD CONSTRAINT `budget_form_ibfk_1` FOREIGN KEY (`event_form_id`) REFERENCES `event_form` (`event_form_id`);
 
 --
 -- Constraints for table `event_form`
