@@ -110,17 +110,33 @@ function renderModal(data, materials, isPending) {
     }
     // Display accommodation and transportation info
     if (data.accommodation_transportation && typeof data.accommodation_transportation === 'object' && Object.keys(data.accommodation_transportation).length > 0) {
+        // Grouped table format for Accommodation & Transportation
+        const acc = data.accommodation_transportation;
         rightHtml += '<div class="modal-section-title" style="margin-top:18px;">VI. Accommodation & Transportation</div>';
         rightHtml += '<table class="modal-details-table" style="width:100%;">';
-        const acc = data.accommodation_transportation;
-        rightHtml += `<tr><td>Air transportation</td><td>${acc.air_transportation ? 'Yes' : 'No'}</td></tr>`;
-        rightHtml += `<tr><td>Land Transportation</td><td>${acc.land_transportation ? 'Yes' : 'No'}</td></tr>`;
-        rightHtml += `<tr><td>Commute (Grab)</td><td>${acc.commute_grab ? 'Yes' : 'No'}</td></tr>`;
-        rightHtml += `<tr><td>Service</td><td>${acc.service ? 'Yes' : 'No'}</td></tr>`;
-        rightHtml += `<tr><td>Hotel</td><td>${acc.hotel ? 'Yes' : 'No'}</td></tr>`;
-        rightHtml += `<tr><td>Condo</td><td>${acc.condo ? 'Yes' : 'No'}</td></tr>`;
-        rightHtml += `<tr><td>Number of Women</td><td>${acc.number_women || 0}</td></tr>`;
-        rightHtml += `<tr><td>Number of Men</td><td>${acc.number_men || 0}</td></tr>`;
+        rightHtml += '<tr>';
+        rightHtml += '<td style="vertical-align:top; width:30%; padding:4px 0 4px 0; border-right:none;">Transportation:</td>';
+        rightHtml += '<td style="padding:4px 0 4px 0;">';
+        rightHtml += `<label><input type="checkbox" disabled ${acc.air_transportation ? 'checked' : ''}> Air transportation</label><br>`;
+        rightHtml += `<label><input type="checkbox" disabled ${acc.land_transportation ? 'checked' : ''}> Land Transportation</label><br>`;
+        rightHtml += '<div style="margin-left:24px;">';
+        rightHtml += `<label><input type="checkbox" disabled ${acc.commute_grab ? 'checked' : ''}> Commute (Grab)</label><br>`;
+        rightHtml += `<label><input type="checkbox" disabled ${acc.service ? 'checked' : ''}> Service</label>`;
+        rightHtml += '</div>';
+        rightHtml += '</td>';
+        rightHtml += '</tr>';
+        rightHtml += '<tr>';
+        rightHtml += '<td style="vertical-align:top; width:30%; padding:4px 0 4px 0; border-right:none;">Accommodation:</td>';
+        rightHtml += '<td style="padding:4px 0 4px 0;">';
+        rightHtml += `<label><input type="checkbox" disabled ${acc.hotel ? 'checked' : ''}> Hotel</label><br>`;
+        rightHtml += `<label><input type="checkbox" disabled ${acc.condo ? 'checked' : ''}> Condo</label><br>`;
+        rightHtml += '<div style="margin-top:8px;">';
+        rightHtml += `Number of Women: <input type="number" value="${acc.number_women || 0}" disabled style="width:60px;">`;
+        rightHtml += '<br>';
+        rightHtml += `Number of Men: <input type="number" value="${acc.number_men || 0}" disabled style="width:60px;">`;
+        rightHtml += '</div>';
+        rightHtml += '</td>';
+        rightHtml += '</tr>';
         rightHtml += '</table>';
     }
     document.getElementById('modalRight').innerHTML = rightHtml;
