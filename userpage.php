@@ -480,7 +480,7 @@ if ($result) {
                 <h3 style="margin-top:0; text-align:center;">
                     Provide Materials
                 </h3>
-                <p style="text-align:center; color:#555;">Please specify the materials you will provide for this event.</p>
+                <p style="text-align:center; color:#555;">Checklist (Provided by Marketing Team) – Should be answered by the marketing.</p>
                 <hr style="margin:16px 0;">
                 <!-- Filter Dropdown -->
                 <div style="margin-bottom:16px;">

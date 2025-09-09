@@ -4,6 +4,7 @@ function renderModal(data, materials, isPending) {
     const sections = [
 
         {
+            title: "I. Event Details",
             fields: [
                 // {label: "Sender Email", key: "sender_email"},
                 {label: "Event Name", key: "event_name"},
@@ -96,7 +97,7 @@ function renderModal(data, materials, isPending) {
     }
     if (materials && materials.length > 0) {
         // Change section title to include Roman numeral V.
-        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">V. Requested Materials</div>';
+        rightHtml += '<div class="modal-section-title" style="margin-top:18px;">V.Checklist (Provided by Marketing Team) – Should be answered by the marketing </div>';
         rightHtml += '<table class="modal-details-table" style="width:100%;"><tr><th>Category</th><th>Name</th><th>Quantity</th></tr>';
         materials.forEach(mat => {
             ['Brochure','Swag','Marketing Material'].forEach(type => {
