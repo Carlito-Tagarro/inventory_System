@@ -142,25 +142,62 @@ function renderModal(data, materials, isPending) {
     // Display budget info if present
     if (data.budget_form && typeof data.budget_form === 'object' && Object.keys(data.budget_form).length > 0) {
         rightHtml += '<div class="modal-section-title" style="margin-top:18px;">VII. Budget</div>';
-        rightHtml += '<table class="modal-details-table" style="width:100%;">';
         const bf = data.budget_form;
-        rightHtml += `<tr><td>Air transportation</td><td>${bf.air_transportation ? '✔' : ''}</td></tr>`;
-        rightHtml += `<tr><td>Land transportation</td><td>${bf.land_transportation ? '✔' : ''}</td></tr>`;
-        rightHtml += `<tr><td>Commute (Grab)</td><td>${bf.commute_grab ? '✔' : ''}</td></tr>`;
-        rightHtml += `<tr><td>Service</td><td>${bf.service ? '✔' : ''}</td></tr>`;
-        rightHtml += `<tr><td>Transportation Amount</td><td>${bf.transportation_amount || ''}</td></tr>`;
-        rightHtml += `<tr><td>Hotel</td><td>${bf.hotel ? '✔' : ''}</td></tr>`;
-        rightHtml += `<tr><td>Condo</td><td>${bf.condo ? '✔' : ''}</td></tr>`;
-        rightHtml += `<tr><td>Accommodation Amount</td><td>${bf.accommodation_amount || ''}</td></tr>`;
-        rightHtml += `<tr><td>Breakfast</td><td>${bf.breakfast ? '✔' : ''}</td></tr>`;
-        rightHtml += `<tr><td>Lunch</td><td>${bf.lunch ? '✔' : ''}</td></tr>`;
-        rightHtml += `<tr><td>Dinner</td><td>${bf.dinner ? '✔' : ''}</td></tr>`;
-        rightHtml += `<tr><td>Meal Amount</td><td>${bf.meal_amount || ''}</td></tr>`;
-        rightHtml += `<tr><td>Employee Transportation</td><td>${bf.employee_transportation || ''}</td></tr>`;
-        rightHtml += `<tr><td>Contingency Fund</td><td>${bf.contingency_fund || ''}</td></tr>`;
-        rightHtml += `<tr><td>Others</td><td>${bf.others || ''}</td></tr>`;
-        rightHtml += `<tr><td>Total Cash Advance</td><td>${bf.total_cash_advance || ''}</td></tr>`;
-        rightHtml += `<tr><td>Total Return</td><td>${bf.total_return || ''}</td></tr>`;
+        rightHtml += '<table class="modal-details-table" style="width:100%;">';
+        // Transportation row
+        rightHtml += '<tr>';
+        rightHtml += '<td style="vertical-align:top; width:40%; border-right:1px solid #22223b;">';
+        rightHtml += `<label><input type="checkbox" disabled ${bf.air_transportation ? 'checked' : ''}> Air transportation</label><br>`;
+        rightHtml += `<label><input type="checkbox" disabled ${bf.land_transportation ? 'checked' : ''}> Land Transportation</label><br>`;
+        rightHtml += '<div style="margin-left:24px;">';
+        rightHtml += `<label><input type="checkbox" disabled ${bf.commute_grab ? 'checked' : ''}> Commute (Grab)</label><br>`;
+        rightHtml += `<label><input type="checkbox" disabled ${bf.service ? 'checked' : ''}> Service</label>`;
+        rightHtml += '</div>';
+        rightHtml += '</td>';
+        rightHtml += `<td style="vertical-align:top; width:60%;">Amount: <input type="text" value="${bf.transportation_amount || ''}" disabled style="width:80px;"></td>`;
+        rightHtml += '</tr>';
+        // Accommodation row
+        rightHtml += '<tr>';
+        rightHtml += '<td style="vertical-align:top; width:40%; border-right:1px solid #22223b;">Accommodation:<br>';
+        rightHtml += `<label><input type="checkbox" disabled ${bf.hotel ? 'checked' : ''}> Hotel</label><br>`;
+        rightHtml += `<label><input type="checkbox" disabled ${bf.condo ? 'checked' : ''}> Condo</label>`;
+        rightHtml += '</td>';
+        rightHtml += `<td style="vertical-align:top; width:60%;">Amount: <input type="text" value="${bf.accommodation_amount || ''}" disabled style="width:80px;"></td>`;
+        rightHtml += '</tr>';
+        // Meal row
+        rightHtml += '<tr>';
+        rightHtml += '<td style="vertical-align:top; width:40%; border-right:1px solid #22223b;">Meal<br>';
+        rightHtml += `<label><input type="checkbox" disabled ${bf.breakfast ? 'checked' : ''}> Breakfast</label><br>`;
+        rightHtml += `<label><input type="checkbox" disabled ${bf.lunch ? 'checked' : ''}> Lunch</label><br>`;
+        rightHtml += `<label><input type="checkbox" disabled ${bf.dinner ? 'checked' : ''}> Dinner</label>`;
+        rightHtml += '</td>';
+        rightHtml += `<td style="vertical-align:top; width:60%;">Amount: <input type="text" value="${bf.meal_amount || ''}" disabled style="width:80px;"></td>`;
+        rightHtml += '</tr>';
+        // Employee Transportation row
+        rightHtml += '<tr>';
+        rightHtml += '<td style="border-right:1px solid #22223b;">Employee Transportation</td>';
+        rightHtml += `<td><input type="text" value="${bf.employee_transportation || ''}" disabled style="width:80px;"></td>`;
+        rightHtml += '</tr>';
+        // Contingency Fund row
+        rightHtml += '<tr>';
+        rightHtml += '<td style="border-right:1px solid #22223b;">Contingency Fund</td>';
+        rightHtml += `<td><input type="text" value="${bf.contingency_fund || ''}" disabled style="width:80px;"></td>`;
+        rightHtml += '</tr>';
+        // Others row
+        rightHtml += '<tr>';
+        rightHtml += '<td style="border-right:1px solid #22223b;">Others:</td>';
+        rightHtml += `<td><input type="text" value="${bf.others || ''}" disabled style="width:80px;"></td>`;
+        rightHtml += '</tr>';
+        // Total Cash Advance row
+        rightHtml += '<tr>';
+        rightHtml += '<td style="font-weight:bold; border-right:1px solid #22223b;">TOTAL CASH ADVANCE</td>';
+        rightHtml += `<td style="font-weight:bold;"><input type="text" value="${bf.total_cash_advance || ''}" disabled style="width:80px;"></td>`;
+        rightHtml += '</tr>';
+        // Total Return row
+        rightHtml += '<tr>';
+        rightHtml += '<td style="font-weight:bold; border-right:1px solid #22223b;">TOTAL RETURN</td>';
+        rightHtml += `<td style="font-weight:bold;"><input type="text" value="${bf.total_return || ''}" disabled style="width:80px;"></td>`;
+        rightHtml += '</tr>';
         rightHtml += '</table>';
     }
     document.getElementById('modalRight').innerHTML = rightHtml;
@@ -319,12 +356,12 @@ function downloadRequestPDF() {
 
     modalContent.insertBefore(pdfHeader, modalContent.firstChild);
 
-    // Optional: Add a title/header for the PDF
-    let header = document.createElement('div');
-    header.style.textAlign = 'center';
-    // header.style.marginBottom = '10px';
-    header.innerHTML = `<h2 style="color:#22223b;">Event Request Details</h2>`;
-    modalContent.insertBefore(header, pdfHeader.nextSibling);
+    // // Optional: Add a title/header for the PDF
+    // let header = document.createElement('div');
+    // header.style.textAlign = 'center';
+    // // header.style.marginBottom = '10px';
+    // header.innerHTML = `<h2 style="color:#22223b;">Event Request Details</h2>`;
+    // modalContent.insertBefore(header, pdfHeader.nextSibling);
 
     // Move "Booth & Other Setup" section to start of second page in PDF
     let boothSection = Array.from(modalContent.querySelectorAll('.modal-section-title'))

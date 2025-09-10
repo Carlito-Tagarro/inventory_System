@@ -59,10 +59,14 @@ function fetch_team_members($connection, $event_form_id, $is_history = false) {
 }
 
 // Helper function to fetch accommodation/transportation info
-function fetch_accommodation_transportation($connection, $event_form_id) {
+function fetch_accommodation_transportation($connection, $event_form_id, $is_history = false) {
     $info = [];
     if ($event_form_id) {
-        $stmt = mysqli_prepare($connection, "SELECT * FROM accommodation_transportation WHERE event_form_id = ?");
+        if ($is_history) {
+            $stmt = mysqli_prepare($connection, "SELECT * FROM accommodation_transportation_history WHERE event_form_id = ?");
+        } else {
+            $stmt = mysqli_prepare($connection, "SELECT * FROM accommodation_transportation WHERE event_form_id = ?");
+        }
         mysqli_stmt_bind_param($stmt, "i", $event_form_id);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
@@ -74,10 +78,14 @@ function fetch_accommodation_transportation($connection, $event_form_id) {
 }
 
 // Helper function to fetch budget_form info
-function fetch_budget_form($connection, $event_form_id) {
+function fetch_budget_form($connection, $event_form_id, $is_history = false) {
     $info = [];
     if ($event_form_id) {
-        $stmt = mysqli_prepare($connection, "SELECT * FROM budget_form WHERE event_form_id = ?");
+        if ($is_history) {
+            $stmt = mysqli_prepare($connection, "SELECT * FROM budget_form_history WHERE event_form_id = ?");
+        } else {
+            $stmt = mysqli_prepare($connection, "SELECT * FROM budget_form WHERE event_form_id = ?");
+        }
         mysqli_stmt_bind_param($stmt, "i", $event_form_id);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
@@ -98,8 +106,8 @@ $event_requests = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $row['requested_materials'] = fetch_requested_materials($connection, intval($row['request_mats']));
     $row['team_members'] = fetch_team_members($connection, intval($row['event_form_id']), false);
-    $row['accommodation_transportation'] = fetch_accommodation_transportation($connection, intval($row['event_form_id']));
-    $row['budget_form'] = fetch_budget_form($connection, intval($row['event_form_id']));
+    $row['accommodation_transportation'] = fetch_accommodation_transportation($connection, intval($row['event_form_id']), false);
+    $row['budget_form'] = fetch_budget_form($connection, intval($row['event_form_id']), false);
     $event_requests[] = $row;
 }
 
@@ -137,7 +145,8 @@ $history_requests = [];
 while ($row = mysqli_fetch_assoc($history_result)) {
     $row['requested_materials'] = fetch_requested_materials($connection, intval($row['request_mats']));
     $row['team_members'] = fetch_team_members($connection, intval($row['event_form_id']), true);
-    $row['accommodation_transportation'] = fetch_accommodation_transportation($connection, intval($row['event_form_id']));
+    $row['accommodation_transportation'] = fetch_accommodation_transportation($connection, intval($row['event_form_id']), true);
+    $row['budget_form'] = fetch_budget_form($connection, intval($row['event_form_id']), true);
     $history_requests[] = $row;
 }
 mysqli_stmt_close($stmt);
